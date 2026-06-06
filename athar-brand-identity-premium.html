@@ -1,0 +1,3368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATHAR | أثر — الهوية البصرية التفاعلية</title>
+<!-- Google Fonts: Cairo for Arabic, Inter for English, JetBrains Mono for codes -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══ DESIGN SYSTEM & VARIABLES ═══ */
+:root {
+  --navy-dark: #060913;
+  --navy-deep: #0B132B;
+  --navy-card: rgba(11, 19, 43, 0.45);
+  --cyan-primary: #00D4FF;
+  --cyan-glow: rgba(0, 212, 255, 0.4);
+  --white: #FFFFFF;
+  --silver: #E2E8F0;
+  --slate-gray: #64748B;
+  --slate-light: #94A3B8;
+  --border-glow: rgba(0, 212, 255, 0.12);
+  --glass-bg: rgba(6, 9, 19, 0.65);
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.2s ease;
+}
+
+/* ═══ BASE STYLES ═══ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--navy-dark);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+.ar {
+  font-family: 'Cairo', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--navy-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--navy-deep);
+  border-radius: 4px;
+  border: 2px solid var(--navy-dark);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan-primary);
+}
+
+/* Background Canvas Particles */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ═══ LAYOUT WRAPPER ═══ */
+.app-container {
+  display: flex;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ SIDEBAR NAVIGATION (SCROLLSPY) ═══ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  background: rgba(6, 9, 19, 0.8);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  margin-bottom: 50px;
+}
+
+.sidebar-logo-mark {
+  width: 32px;
+  height: 32px;
+}
+
+.sidebar-logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--white);
+}
+
+.sidebar-logo-text span {
+  color: var(--cyan-primary);
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.nav-item a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 18px;
+  color: var(--slate-light);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 12px;
+  transition: var(--transition-smooth);
+  border: 1px solid transparent;
+}
+
+.nav-item.active a,
+.nav-item a:hover {
+  color: var(--cyan-primary);
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  padding-right: 24px;
+}
+
+.nav-item a svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-footer {
+  font-size: 10px;
+  color: var(--slate-gray);
+  letter-spacing: 0.05em;
+}
+
+/* ═══ MAIN CONTENT ═══ */
+.main-content {
+  margin-left: 280px;
+  flex-grow: 1;
+  width: calc(100% - 280px);
+  padding: 0;
+  transition: var(--transition-smooth);
+}
+
+/* ═══ SECTION WRAPPER ═══ */
+section {
+  min-height: 100vh;
+  padding: 100px 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+}
+
+/* ═══ HERO SECTION ═══ */
+.hero-sec {
+  height: 100vh;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-background-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 212, 255, 0.05);
+  animation: rotate-ring 60s linear infinite;
+}
+
+.hr1 { width: 300px; height: 300px; border-style: solid; border-color: rgba(0, 212, 255, 0.15); }
+.hr2 { width: 500px; height: 500px; animation-duration: 90s; animation-direction: reverse; }
+.hr3 { width: 750px; height: 750px; border-color: rgba(0, 212, 255, 0.03); }
+.hr4 { width: 1050px; height: 1050px; animation-duration: 120s; }
+
+.hero-ripple {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--cyan-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 30px var(--cyan-primary);
+  animation: pulse-dot 3s ease-out infinite;
+}
+
+.hero-logo-box {
+  position: relative;
+  z-index: 10;
+  margin-bottom: 30px;
+}
+
+.hero-title {
+  font-size: 110px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--white);
+  line-height: 1;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+}
+
+.hero-title span {
+  color: var(--cyan-primary);
+  text-shadow: var(--glow-cyan);
+}
+
+.hero-subtitle-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--silver);
+  margin-top: 15px;
+  letter-spacing: 0.05em;
+  opacity: 0.95;
+}
+
+.hero-subtitle-en {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  color: var(--slate-light);
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+
+.hero-scroll-btn {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--slate-light);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: var(--transition-smooth);
+}
+
+.hero-scroll-btn:hover {
+  color: var(--cyan-primary);
+}
+
+.hero-scroll-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  animation: bounce-arrow 2s infinite;
+}
+
+/* ═══ GENERAL SECTION STYLING ═══ */
+.sec-header {
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.sec-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--cyan-primary);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.sec-label::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: var(--cyan-primary);
+  box-shadow: var(--glow-cyan);
+}
+
+.sec-title {
+  font-family: 'Cairo', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--white);
+}
+
+.sec-desc {
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  color: var(--slate-light);
+  margin-top: 10px;
+  max-width: 680px;
+  font-weight: 300;
+}
+
+/* ═══ 01 - LOGO SYSTEM ═══ */
+.logo-container {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(12px);
+}
+
+.logo-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-label {
+  font-size: 12px;
+  color: var(--slate-light);
+  font-weight: 500;
+}
+
+.color-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.color-btn.active {
+  border-color: var(--cyan-primary);
+  transform: scale(1.15);
+}
+
+.color-btn-navy { background: #0B132B; }
+.color-btn-dark { background: #060913; }
+.color-btn-light { background: #F4F7FA; }
+.color-btn-cyan { background: #00D4FF; }
+
+.logo-display-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.logo-card {
+  background: #0B132B;
+  border-radius: 18px;
+  padding: 50px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  position: relative;
+  transition: var(--transition-smooth);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.logo-card-title {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 11px;
+  color: var(--slate-gray);
+  letter-spacing: 0.1em;
+}
+
+.logo-card-action {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--slate-light);
+  padding: 6px 12px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-fast);
+  backdrop-filter: blur(4px);
+}
+
+.logo-card-action:hover {
+  background: var(--cyan-primary);
+  color: var(--navy-dark);
+  border-color: var(--cyan-primary);
+  box-shadow: var(--glow-cyan);
+}
+
+.logo-card-action svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.logo-mark-svg {
+  width: 80px;
+  height: 80px;
+}
+
+.logo-card-wordmark {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  color: var(--white);
+  line-height: 1;
+}
+
+.logo-card-wordmark-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1;
+}
+
+.logo-card-sub {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--slate-light);
+  margin-top: 4px;
+}
+
+/* ═══ 02 - COLOR PALETTE ═══ */
+.color-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.swatch-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.swatch-card::after {
+  content: 'اضغط للنسخ';
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-family: 'Cairo', sans-serif;
+  color: var(--cyan-primary);
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: var(--transition-fast);
+}
+
+.swatch-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--cyan-primary);
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.1);
+}
+
+.swatch-card:hover::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.swatch-preview {
+  height: 120px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.swatch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.swatch-lbl {
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.swatch-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--slate-light);
+}
+
+.tints-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.tint-box {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.tint-box:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyan-primary);
+}
+
+.tint-color {
+  height: 40px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.tint-hex {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--slate-light);
+}
+
+.usage-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.usage-card {
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.usage-title {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cyan-primary);
+  margin-bottom: 8px;
+}
+
+.usage-detail {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  color: var(--silver);
+}
+
+/* ═══ 03 - TYPOGRAPHY ═══ */
+.type-container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 30px;
+}
+
+.type-showcase {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.type-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 25px;
+}
+
+.type-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.type-title-meta {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--slate-gray);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+
+.font-demo-display {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+}
+
+.font-demo-display-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.font-demo-body-en {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--slate-light);
+  line-height: 1.8;
+}
+
+.font-demo-body-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--slate-light);
+  line-height: 1.9;
+}
+
+/* Sandbox Typography Tester */
+.sandbox-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 30px;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.sandbox-header {
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sandbox-header svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--cyan-primary);
+  fill: none;
+  stroke-width: 2;
+}
+
+.sandbox-textarea {
+  background: rgba(6, 9, 19, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 20px;
+  color: var(--white);
+  font-size: 20px;
+  min-height: 180px;
+  resize: vertical;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.sandbox-textarea:focus {
+  border-color: var(--cyan-primary);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.15);
+}
+
+.sandbox-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-lbl-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--slate-light);
+}
+
+.control-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.control-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  cursor: pointer;
+  box-shadow: var(--glow-cyan);
+  transition: var(--transition-fast);
+}
+
+.control-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.font-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.font-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.font-card-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cyan-primary);
+}
+
+.font-card-desc {
+  font-size: 10px;
+  color: var(--slate-gray);
+  margin-top: 4px;
+  letter-spacing: 0.1em;
+}
+
+/* ═══ 04 - VISUAL SYSTEM ═══ */
+.motif-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.motif-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.motif-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--cyan-primary);
+}
+
+.motif-display {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.motif-card-title {
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 24px;
+}
+
+.motif-card-desc {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  color: var(--slate-light);
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* Ripple motif animation */
+.ripple-visual {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ripple-circle {
+  position: absolute;
+  border: 1.5px solid var(--cyan-primary);
+  border-radius: 50%;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  transform: scale(0.1);
+}
+
+.ripple-visual:hover .ripple-circle {
+  animation: pulse-ring-visual 3s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+.ripple-visual:hover .rc2 { animation-delay: 0.6s; }
+.ripple-visual:hover .rc3 { animation-delay: 1.2s; }
+.ripple-visual:hover .rc4 { animation-delay: 1.8s; }
+
+.ripple-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--cyan-primary);
+  border-radius: 50%;
+  box-shadow: var(--glow-cyan);
+}
+
+/* Grid magnetic field motif */
+.grid-mesh-visual {
+  width: 180px;
+  height: 150px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 12px;
+  justify-content: center;
+  align-content: center;
+}
+
+.grid-dot {
+  width: 6px;
+  height: 6px;
+  background: rgba(0, 212, 255, 0.15);
+  border-radius: 50%;
+  transition: var(--transition-fast);
+}
+
+.grid-mesh-visual:hover .grid-dot {
+  background: rgba(0, 212, 255, 0.3);
+}
+
+/* Wave dynamic simulation */
+.wave-svg {
+  width: 180px;
+  height: 80px;
+}
+
+.wave-path {
+  stroke: var(--cyan-primary);
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 4;
+}
+
+.motif-footer-note {
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px dashed rgba(0, 212, 255, 0.15);
+  border-radius: 16px;
+  padding: 20px 30px;
+  margin-top: 25px;
+  text-align: center;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  color: var(--slate-light);
+}
+
+/* ═══ 05 - COLLATERALS ═══ */
+.collateral-tabs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.tab-btn {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  color: var(--slate-light);
+  padding: 12px 24px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  backdrop-filter: blur(12px);
+}
+
+.tab-btn.active,
+.tab-btn:hover {
+  background: rgba(0, 212, 255, 0.08);
+  border-color: var(--cyan-primary);
+  color: var(--cyan-primary);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Business Card 3D Flip */
+.bc-mockup-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.bc-card-3d {
+  width: 450px;
+  height: 260px;
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.bc-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.bc-card-3d:hover .bc-card-inner {
+  transform: rotateY(180deg);
+}
+
+.bc-side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.bc-side-front {
+  background: linear-gradient(135deg, #0B132B 0%, #152244 100%);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  color: var(--white);
+  overflow: hidden;
+}
+
+.bc-side-back {
+  background: var(--white);
+  color: var(--navy-deep);
+  transform: rotateY(180deg);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Business Card Details */
+.bc-front-bg {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  opacity: 0.15;
+}
+
+.bc-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.2em;
+}
+
+.bc-header-back {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.bc-logo-text-back {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--navy-deep);
+}
+
+.bc-logo-sub-back {
+  font-size: 9px;
+  color: var(--slate-gray);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.bc-person-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bc-name-en {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.bc-name-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.bc-role {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--cyan-primary);
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.bc-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+}
+
+.bc-contact-row {
+  display: flex;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  gap: 10px;
+}
+
+.bc-contact-label {
+  font-size: 8px;
+  color: var(--cyan-primary);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  min-width: 40px;
+}
+
+.bc-quote-back {
+  font-family: 'Cairo', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--navy-deep);
+  margin-top: 20px;
+}
+
+.bc-quote-back em {
+  font-style: normal;
+  color: #008eb3;
+}
+
+.bc-web-back {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--slate-gray);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding-top: 10px;
+}
+
+/* Letterhead Mockup */
+.letterhead-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+
+.letterhead-paper {
+  background: #0B132B;
+  border: 1px solid var(--border-glow);
+  width: 580px;
+  min-height: 750px;
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.lh-top-bar {
+  background: #060e22;
+  padding: 35px 45px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lh-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lh-logo-desc {
+  font-size: 10px;
+  color: var(--slate-light);
+  margin-top: 2px;
+}
+
+.lh-corp-info {
+  display: flex;
+  gap: 30px;
+  text-align: right;
+}
+
+.lh-corp-col {
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lh-corp-col span {
+  color: var(--slate-light);
+}
+
+.lh-corp-col strong {
+  color: var(--white);
+  font-weight: 500;
+}
+
+.lh-content {
+  padding: 45px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.lh-recipient {
+  display: flex;
+  flex-direction: column;
+}
+
+.lh-meta-title {
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--cyan-primary);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.lh-client-name {
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.lh-client-co {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  color: var(--slate-light);
+}
+
+.lh-subject-box {
+  background: rgba(0, 212, 255, 0.03);
+  border-right: 3px solid var(--cyan-primary);
+  border-radius: 0 8px 8px 0;
+  padding: 15px 25px;
+}
+
+.lh-subject-txt {
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.lh-editable-text {
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.75);
+  min-height: 200px;
+  outline: none;
+  border: 1px dashed transparent;
+  border-radius: 8px;
+  padding: 10px;
+  transition: var(--transition-fast);
+}
+
+.lh-editable-text:focus {
+  background: rgba(255, 255, 255, 0.01);
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.lh-footer-bar {
+  padding: 25px 45px;
+  border-top: 1px solid rgba(0, 212, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.lh-sign {
+  color: var(--slate-light);
+}
+
+.lh-web {
+  color: var(--cyan-primary);
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+/* Email Signature */
+.signature-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.sig-preview-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 30px 40px;
+  width: 580px;
+  color: var(--navy-deep);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  position: relative;
+}
+
+.sig-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.sig-logo-word {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--navy-deep);
+}
+
+.sig-logo-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 11px;
+  color: var(--slate-gray);
+  margin-top: -4px;
+}
+
+.sig-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.sig-name-en {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy-deep);
+}
+
+.sig-name-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  color: var(--slate-gray);
+}
+
+.sig-role {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #00a5cc;
+  font-weight: 600;
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.sig-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sig-detail-row {
+  display: flex;
+  font-size: 12px;
+  color: rgba(11, 19, 43, 0.7);
+  gap: 8px;
+}
+
+.sig-detail-lbl {
+  font-weight: 700;
+  color: var(--navy-deep);
+  min-width: 25px;
+}
+
+.sig-slogan {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--slate-gray);
+  margin-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 8px;
+}
+
+.sig-actions {
+  display: flex;
+  gap: 15px;
+}
+
+/* ═══ 06 - BRAND VOICE ═══ */
+.voice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.voice-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 20px;
+  padding: 40px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.voice-card.dim {
+  background: rgba(11, 19, 43, 0.2);
+}
+
+.voice-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--cyan-primary);
+}
+
+.voice-tagline-ar {
+  font-family: 'Cairo', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.6;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.voice-tagline-en {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.voice-meta-lbl {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan-primary);
+}
+
+.pills-container {
+  background: var(--navy-card);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 30px;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pills-header {
+  font-family: 'Cairo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--silver);
+}
+
+.pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.brand-pill {
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  color: var(--cyan-primary);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.brand-pill:hover,
+.brand-pill.active {
+  background: var(--cyan-primary);
+  color: var(--navy-dark);
+  box-shadow: var(--glow-cyan);
+  transform: scale(1.05);
+}
+
+.brand-pill-ar {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--slate-light);
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.brand-pill-ar:hover,
+.brand-pill-ar.active {
+  background: var(--white);
+  color: var(--navy-dark);
+  border-color: var(--white);
+  transform: scale(1.05);
+}
+
+.pill-explanation-box {
+  background: rgba(6, 9, 19, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  color: var(--slate-light);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+/* ═══ FOOTER ═══ */
+footer {
+  background: rgba(6, 9, 19, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 60px;
+  text-align: center;
+  z-index: 10;
+  position: relative;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.footer-logo-text {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+}
+
+.footer-logo-text span {
+  color: var(--cyan-primary);
+}
+
+.footer-copyright {
+  font-size: 11px;
+  color: var(--slate-gray);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ═══ BUTTON & INTERACTIVE ELEMENTS ═══ */
+.btn-primary {
+  background: var(--cyan-primary);
+  color: var(--navy-dark);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+  box-shadow: var(--glow-cyan);
+}
+
+.btn-primary:hover {
+  background: var(--white);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: rgba(11, 19, 43, 0.9);
+  border: 1px solid var(--cyan-primary);
+  box-shadow: var(--glow-cyan);
+  backdrop-filter: blur(10px);
+  color: var(--white);
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transform: translateX(-150%);
+  animation: slideInToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: var(--transition-smooth);
+}
+
+.toast-success-icon {
+  width: 16px;
+  height: 16px;
+  stroke: var(--cyan-primary);
+  fill: none;
+  stroke-width: 2.5;
+}
+
+/* ═══ RESPONSIVE DESIGN ═══ */
+/* Mobile Header & Toggle styles */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(6, 9, 19, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  z-index: 999;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.mobile-logo .sidebar-logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--white);
+}
+
+.mobile-logo .sidebar-logo-text span {
+  color: var(--cyan-primary);
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.menu-toggle:hover {
+  color: var(--cyan-primary);
+}
+
+.menu-toggle svg line {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+.menu-toggle.active .line-top {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.menu-toggle.active .line-mid {
+  opacity: 0;
+}
+
+.menu-toggle.active .line-bot {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 6, 12, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Scrollable Tabs Wrapper */
+.collateral-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.collateral-tabs::-webkit-scrollbar {
+  display: none; /* Safari/Chrome */
+}
+
+.tab-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1100px) {
+  .sidebar {
+    width: 80px;
+    padding: 30px 15px;
+    align-items: center;
+  }
+  .sidebar-logo-text,
+  .nav-item a span,
+  .sidebar-footer {
+    display: none;
+  }
+  .sidebar-logo {
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .main-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+  .type-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  section {
+    padding: 80px 40px;
+  }
+  .logo-display-grid {
+    grid-template-columns: 1fr;
+  }
+  .swatches-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tints-strip {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .usage-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .motif-grid {
+    grid-template-columns: 1fr;
+  }
+  .voice-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-title {
+    font-size: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-header {
+    display: flex; /* Activate mobile header */
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    transform: translateX(-100%); /* Slide out completely (left side) */
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none;
+    background: rgba(6, 9, 19, 0.95);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .sidebar.active {
+    transform: translateX(0); /* Slide in drawer menu */
+    box-shadow: 20px 0 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Force display of text in the drawer sidebar */
+  .sidebar-logo-text,
+  .nav-item a span,
+  .sidebar-footer {
+    display: inline-block !important;
+  }
+
+  .sidebar-logo {
+    justify-content: flex-start !important;
+    margin-bottom: 50px !important;
+  }
+
+  .nav-item a {
+    font-size: 14px;
+    padding: 14px 20px;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding-top: 70px; /* offset for top bar */
+  }
+}
+
+@media (max-width: 650px) {
+  /* Fluid mockups on mobile */
+  .bc-card-3d {
+    width: 100%;
+    max-width: 380px;
+    height: 220px;
+  }
+  .bc-side {
+    padding: 24px;
+  }
+  .bc-name-en {
+    font-size: 16px;
+  }
+  .bc-name-ar {
+    font-size: 13px;
+  }
+  .bc-quote-back {
+    font-size: 16px;
+  }
+  .letterhead-paper {
+    width: 100%;
+    min-height: 600px;
+  }
+  .lh-top-bar, .lh-content, .lh-footer-bar {
+    padding: 24px;
+  }
+  .sig-preview-card {
+    width: 100%;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    text-align: center;
+  }
+  .sig-left {
+    border-left: none !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    padding-left: 0 !important;
+    padding-bottom: 15px !important;
+    width: 100%;
+    align-items: center;
+  }
+  .sig-right {
+    width: 100%;
+    align-items: center;
+  }
+  .sig-details {
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: 60px 20px;
+  }
+  
+  .hero-title {
+    font-size: 45px;
+  }
+  .hero-subtitle-ar {
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  .hero-subtitle-en {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+  
+  .logo-container {
+    padding: 20px 15px;
+  }
+  .logo-card {
+    padding: 30px 15px;
+    min-height: 220px;
+  }
+  .logo-card-wordmark {
+    font-size: 24px;
+  }
+  .logo-card-wordmark-ar {
+    font-size: 30px;
+  }
+  
+  .swatches-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .tints-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .usage-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .font-demo-display {
+    font-size: 32px;
+  }
+  .font-demo-display-ar {
+    font-size: 26px;
+  }
+  .type-showcase {
+    padding: 24px;
+  }
+  .sandbox-card {
+    padding: 20px;
+  }
+  
+  .motif-card {
+    padding: 24px;
+    min-height: 280px;
+  }
+  
+  .pills-container {
+    padding: 20px 15px;
+  }
+  .pills-row {
+    justify-content: center;
+    gap: 8px;
+  }
+  .brand-pill, .brand-pill-ar {
+    padding: 6px 14px;
+    font-size: 11px;
+  }
+  
+  .bc-card-3d {
+    max-width: 100%;
+    height: 210px;
+  }
+  .bc-side {
+    padding: 15px;
+  }
+  .bc-contacts {
+    padding-top: 8px;
+  }
+  .bc-contact-row {
+    font-size: 10px;
+  }
+  
+  .lh-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .lh-corp-info {
+    text-align: right;
+    width: 100%;
+    justify-content: flex-start;
+    gap: 15px;
+  }
+  .lh-footer-bar {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  footer {
+    padding: 40px 20px;
+  }
+}
+
+/* ═══ PRINT TO PDF STYLES ═══ */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm 15mm;
+  }
+  
+  .sidebar,
+  #particle-canvas,
+  #toast-container,
+  .logo-toolbar,
+  .logo-card-action,
+  .sandbox-controls,
+  .font-cards,
+  .collateral-tabs,
+  .sig-actions,
+  .pills-container strong,
+  .pills-row,
+  .hero-scroll-btn,
+  .hero-scroll-btn span {
+    display: none !important;
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  section {
+    padding: 30px 0 !important;
+    min-height: auto !important;
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+  
+  #hero {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  body, html, section, .logo-card, .swatch-card, .type-showcase, .sandbox-card, .motif-card, .bc-side-front, .bc-side-back, .letterhead-paper, .sig-preview-card, .voice-card, .pills-container {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .logo-display-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+  }
+  
+  .swatches-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px !important;
+  }
+  
+  .usage-row {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px !important;
+  }
+  
+  .motif-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 15px !important;
+  }
+  
+  .voice-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+  }
+  
+  .tab-content {
+    display: block !important;
+    opacity: 1 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 50px !important;
+    padding-top: 20px !important;
+  }
+
+  .bc-mockup-wrap {
+    padding: 10px 0 !important;
+  }
+  
+  .hero-background-rings, .bc-front-bg {
+    opacity: 0.05 !important;
+  }
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes rotate-ring {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px var(--cyan-primary); }
+  50% { transform: scale(1.5); opacity: 0.6; box-shadow: 0 0 25px var(--cyan-primary); }
+  100% { transform: scale(1); opacity: 1; box-shadow: 0 0 10px var(--cyan-primary); }
+}
+
+@keyframes bounce-arrow {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  60% { transform: translateY(-4px); }
+}
+
+@keyframes pulse-ring-visual {
+  0% { transform: scale(0.1); opacity: 0; }
+  10% { opacity: 0.7; }
+  80% { opacity: 0.3; }
+  100% { transform: scale(1.1); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInToast {
+  from { transform: translateX(-150%); }
+  to { transform: translateX(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <a href="#" class="mobile-logo">
+    <svg class="sidebar-logo-mark" viewBox="0 0 52 52" fill="none" width="28" height="28">
+      <circle cx="26" cy="26" r="4" fill="#00D4FF"/>
+      <circle cx="26" cy="26" r="10" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="26" cy="26" r="18" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+    </svg>
+    <span class="sidebar-logo-text">ATH<span>A</span>R</span>
+  </a>
+  <button class="menu-toggle" id="menu-toggle-btn" aria-label="Open Menu">
+    <svg viewBox="0 0 24 24" width="24" height="24">
+      <line class="line-top" x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+      <line class="line-mid" x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+      <line class="line-bot" x1="4" y1="18" x2="20" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+    </svg>
+  </button>
+</div>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay-el"></div>
+
+<!-- Canvas Background -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- Toast Notification Container -->
+<div id="toast-container"></div>
+
+<div class="app-container">
+
+  <!-- ═══════════════════════════════════
+       SIDEBAR NAVIGATION
+  ══════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div>
+      <a href="#" class="sidebar-logo">
+        <svg class="sidebar-logo-mark" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="4" fill="#00D4FF"/>
+          <circle cx="26" cy="26" r="10" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="26" cy="26" r="18" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+        </svg>
+        <span class="sidebar-logo-text">ATH<span>A</span>R</span>
+      </a>
+      
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item active" data-section="hero">
+            <a href="#hero">
+              <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              <span>البداية</span>
+            </a>
+          </li>
+          <li class="nav-item" data-section="logo-system">
+            <a href="#logo-system">
+              <svg viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>شعار العلامة</span>
+            </a>
+          </li>
+          <li class="nav-item" data-section="colors">
+            <a href="#colors">
+              <svg viewBox="0 0 24 24"><path d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+              <span>لوحة الألوان</span>
+            </a>
+          </li>
+          <li class="nav-item" data-section="typography">
+            <a href="#typography">
+              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+              <span>الخطوط الرسمية</span>
+            </a>
+          </li>
+          <li class="nav-item" data-section="visuals">
+            <a href="#visuals">
+              <svg viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span>العناصر المرئية</span>
+            </a>
+          </li>
+          <li class="nav-item" data-section="collaterals">
+            <a href="#collaterals">
+              <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>المطبوعات والنماذج</span>
+            </a>
+          </li>
+          <li class="nav-item" data-section="brand-voice">
+            <a href="#brand-voice">
+              <svg viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+              <span>صوت العلامة</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <!-- Export to PDF Button -->
+      <button class="btn-primary" onclick="window.print()" style="width: 100%; justify-content: center; margin-top: 25px; gap: 10px;">
+        <svg viewBox="0 0 24 24" style="stroke: currentColor; fill: none; stroke-width: 2.5; width: 16px; height: 16px; transform: scaleX(-1);"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4"/></svg>
+        <span class="ar" style="font-size:12px;font-weight:700">تصدير كـ PDF</span>
+      </button>
+    </div>
+    
+    <div class="sidebar-footer">
+      ATHAR Digital Identity v2.0
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════ -->
+  <main class="main-content">
+
+    <!-- ═══ HERO SECTION ═══ -->
+    <section id="hero" class="hero-sec">
+      <div class="hero-background-rings">
+        <div class="hero-ring hr4"></div>
+        <div class="hero-ring hr3"></div>
+        <div class="hero-ring hr2"></div>
+        <div class="hero-ring hr1"></div>
+      </div>
+      <div class="hero-ripple"></div>
+      <div class="hero-logo-box">
+        <h1 class="hero-title">ATH<span>A</span>R</h1>
+        <p class="hero-subtitle-ar">أثر — وكالة رقمية رائدة</p>
+        <p class="hero-subtitle-en">Leave a Digital Impact</p>
+      </div>
+      <a href="#logo-system" class="hero-scroll-btn">
+        <span>استكشف الهوية</span>
+        <svg viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+      </a>
+    </section>
+
+    <!-- ═══ 01 - LOGO SYSTEM ═══ -->
+    <section id="logo-system">
+      <div class="sec-header">
+        <div class="sec-label">01 — نظام الشعار</div>
+        <h2 class="sec-title">البصمة البصرية الأساسية</h2>
+        <p class="sec-desc">يمثل شعار "أثر" المفهوم المحوري للوكالة: التأثير الرقمي الذي يمتد كالتموجات الدائرية المتناسقة انطلاقاً من نقطة ارتكاز ذكية.</p>
+      </div>
+
+      <div class="logo-container">
+        <div class="logo-toolbar">
+          <div class="toolbar-group">
+            <span class="toolbar-label">تغيير لون الخلفية للتجربة:</span>
+            <button class="color-btn color-btn-navy active" data-color="#0B132B" title="Midnight Navy"></button>
+            <button class="color-btn color-btn-dark" data-color="#060913" title="Dark Space"></button>
+            <button class="color-btn color-btn-cyan" data-color="#00D4FF" title="Electric Cyan"></button>
+            <button class="color-btn color-btn-light" data-color="#F4F7FA" title="Pure Light"></button>
+          </div>
+          <div class="toolbar-group">
+            <span class="toolbar-label" style="font-size:11px;color:var(--slate-gray)">* تتوائم الشعارات تلقائياً مع الخلفية المحددة</span>
+          </div>
+        </div>
+
+        <div class="logo-display-grid">
+          <!-- Logo Mark Only -->
+          <div class="logo-card" id="logo-card-1">
+            <span class="logo-card-title">شعار الأيقونة المجرّد (Icon Only)</span>
+            <div class="logo-wrap">
+              <svg class="logo-mark-svg" id="svg-logo-1" viewBox="0 0 52 52" fill="none">
+                <circle cx="26" cy="26" r="4" fill="currentColor" class="svg-color-accent"/>
+                <circle cx="26" cy="26" r="10" stroke="currentColor" stroke-width="1.2" opacity="0.6" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="18" stroke="currentColor" stroke-width="0.8" opacity="0.35" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="25" stroke="currentColor" stroke-width="0.5" opacity="0.18" class="svg-color-primary"/>
+              </svg>
+            </div>
+            <button class="logo-card-action" onclick="copySvgCode('svg-logo-1')">
+              <svg viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+              <span>نسخ كود SVG</span>
+            </button>
+          </div>
+
+          <!-- English Wordmark -->
+          <div class="logo-card" id="logo-card-2">
+            <span class="logo-card-title">شعار النص اللاتيني (English Wordmark)</span>
+            <div class="logo-wrap">
+              <svg width="45" height="45" viewBox="0 0 52 52" fill="none" style="margin-bottom:8px">
+                <circle cx="26" cy="26" r="3.5" fill="currentColor" class="svg-color-accent"/>
+                <circle cx="26" cy="26" r="9" stroke="currentColor" stroke-width="1.2" opacity="0.6" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="16" stroke="currentColor" stroke-width="0.8" opacity="0.35" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="23" stroke="currentColor" stroke-width="0.5" opacity="0.18" class="svg-color-primary"/>
+              </svg>
+              <div class="logo-card-wordmark" id="wordmark-en">ATHAR</div>
+              <div class="logo-card-sub" id="wordmark-sub-en">DIGITAL AGENCY</div>
+            </div>
+            <button class="logo-card-action" onclick="copyText('wordmark-en')">
+              <svg viewBox="0 0 24 24"><path d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+              <span>نسخ النص</span>
+            </button>
+          </div>
+
+          <!-- Arabic Wordmark -->
+          <div class="logo-card" id="logo-card-3">
+            <span class="logo-card-title">شعار النص العربي الكلاسيكي (Arabic Wordmark)</span>
+            <div class="logo-wrap">
+              <svg width="45" height="45" viewBox="0 0 52 52" fill="none" style="margin-bottom:8px">
+                <circle cx="26" cy="26" r="3.5" fill="currentColor" class="svg-color-accent"/>
+                <circle cx="26" cy="26" r="9" stroke="currentColor" stroke-width="1.2" opacity="0.6" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="16" stroke="currentColor" stroke-width="0.8" opacity="0.35" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="23" stroke="currentColor" stroke-width="0.5" opacity="0.18" class="svg-color-primary"/>
+              </svg>
+              <div class="logo-card-wordmark-ar" id="wordmark-ar">أثر</div>
+              <div class="logo-card-sub ar" id="wordmark-sub-ar" style="letter-spacing:0.08em;font-size:11px">وكالة رقمية</div>
+            </div>
+            <button class="logo-card-action" onclick="copyText('wordmark-ar')">
+              <svg viewBox="0 0 24 24"><path d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
+              <span>نسخ النص</span>
+            </button>
+          </div>
+
+          <!-- Combo Primary -->
+          <div class="logo-card" id="logo-card-4">
+            <span class="logo-card-title">شعار الهوية المدمج (Combined Identity)</span>
+            <div class="logo-wrap">
+              <svg width="50" height="50" viewBox="0 0 52 52" fill="none" style="margin-bottom:5px">
+                <circle cx="26" cy="26" r="4" fill="currentColor" class="svg-color-accent"/>
+                <circle cx="26" cy="26" r="10" stroke="currentColor" stroke-width="1.2" opacity="0.5" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="18" stroke="currentColor" stroke-width="0.7" opacity="0.28" class="svg-color-primary"/>
+                <circle cx="26" cy="26" r="25" stroke="currentColor" stroke-width="0.5" opacity="0.14" class="svg-color-primary"/>
+              </svg>
+              <div style="display:flex;align-items:baseline;gap:15px;margin-top:5px">
+                <div class="logo-card-wordmark" style="font-size:24px">ATHAR</div>
+                <div class="logo-card-wordmark-ar" style="font-size:26px">أثر</div>
+              </div>
+              <div class="logo-card-sub ar" style="letter-spacing:0.12em;font-size:10px;margin-top:2px">نصنع أثراً رقمياً</div>
+            </div>
+            <button class="logo-card-action" onclick="showNotification('تم نسخ الشعار المدمج!')">
+              <svg viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span>عرض التفاصيل</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 02 - COLOR PALETTE ═══ -->
+    <section id="colors">
+      <div class="sec-header">
+        <div class="sec-label">02 — لوحة الألوان الرسمية</div>
+        <h2 class="sec-title">التناغم اللوني والصبغات</h2>
+        <p class="sec-desc">تعتمد ألوان "أثر" على التباين العالي بين أزرق الفضاء اللانهائي والسيان الكهربائي المضيء، لتعكس الرؤية التكنولوجية والذكاء الرقمي.</p>
+      </div>
+
+      <div class="color-container">
+        <!-- Main Swatches -->
+        <div class="swatches-grid">
+          <!-- Midnight Navy -->
+          <div class="swatch-card" onclick="copyColorCode('#0B132B')">
+            <div class="swatch-preview" style="background:#0B132B"></div>
+            <div class="swatch-info">
+              <span class="swatch-lbl"> Midnight Navy (الرئيسي الداكن)</span>
+              <span class="swatch-code">#0B132B</span>
+              <span class="swatch-code" style="font-size:11px;opacity:0.6">RGB: 11, 19, 43</span>
+            </div>
+          </div>
+
+          <!-- Electric Cyan -->
+          <div class="swatch-card" onclick="copyColorCode('#00D4FF')">
+            <div class="swatch-preview" style="background:#00D4FF"></div>
+            <div class="swatch-info">
+              <span class="swatch-lbl">Electric Cyan (المضيء الأساسي)</span>
+              <span class="swatch-code">#00D4FF</span>
+              <span class="swatch-code" style="font-size:11px;opacity:0.6">RGB: 0, 212, 255</span>
+            </div>
+          </div>
+
+          <!-- Pure White -->
+          <div class="swatch-card" onclick="copyColorCode('#FFFFFF')">
+            <div class="swatch-preview" style="background:#FFFFFF;border:1px solid rgba(255,255,255,0.1)"></div>
+            <div class="swatch-info">
+              <span class="swatch-lbl">Pure White (خلفيات المساحة البيضاء)</span>
+              <span class="swatch-code">#FFFFFF</span>
+              <span class="swatch-code" style="font-size:11px;opacity:0.6">RGB: 255, 255, 255</span>
+            </div>
+          </div>
+
+          <!-- Silver Gray -->
+          <div class="swatch-card" onclick="copyColorCode('#D9D9D9')">
+            <div class="swatch-preview" style="background:#D9D9D9"></div>
+            <div class="swatch-info">
+              <span class="swatch-lbl">Silver Gray (العناصر الثانوية)</span>
+              <span class="swatch-code">#D9D9D9</span>
+              <span class="swatch-code" style="font-size:11px;opacity:0.6">RGB: 217, 217, 217</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tints & Shades -->
+        <div style="margin-top:10px">
+          <h4 class="ar" style="font-size:14px;font-weight:700;margin-bottom:15px;color:var(--slate-light)">تدرجات وظلال مساعدة للواجهات:</h4>
+          <div class="tints-strip">
+            <div class="tint-box" onclick="copyColorCode('#0F1C3F')">
+              <div class="tint-color" style="background:#0F1C3F"></div>
+              <span class="tint-hex">#0F1C3F</span>
+            </div>
+            <div class="tint-box" onclick="copyColorCode('#1A2A50')">
+              <div class="tint-color" style="background:#1A2A50"></div>
+              <span class="tint-hex">#1A2A50</span>
+            </div>
+            <div class="tint-box" onclick="copyColorCode('#00B8DC')">
+              <div class="tint-color" style="background:#00B8DC"></div>
+              <span class="tint-hex">#00B8DC</span>
+            </div>
+            <div class="tint-box" onclick="copyColorCode('#80EAFF')">
+              <div class="tint-color" style="background:#80EAFF"></div>
+              <span class="tint-hex">#80EAFF</span>
+            </div>
+            <div class="tint-box" onclick="copyColorCode('#E8F9FF')">
+              <div class="tint-color" style="background:#E8F9FF"></div>
+              <span class="tint-hex">#E8F9FF</span>
+            </div>
+            <div class="tint-box" onclick="copyColorCode('#F4F7FA')">
+              <div class="tint-color" style="background:#F4F7FA;border:1px solid rgba(255,255,255,0.1)"></div>
+              <span class="tint-hex">#F4F7FA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Color Usage Guide -->
+        <div style="margin-top:10px">
+          <h4 class="ar" style="font-size:14px;font-weight:700;margin-bottom:15px;color:var(--slate-light)">نسب توزيع الألوان المقترحة (60-30-10 Rule):</h4>
+          <div class="usage-row">
+            <div class="usage-card">
+              <div class="usage-title">اللون المهيمن (60%)</div>
+              <div class="usage-detail">Midnight Navy للحفاظ على طابع الفخامة التكنولوجية في المساحات الكبيرة.</div>
+            </div>
+            <div class="usage-card">
+              <div class="usage-title">اللون الهيكلي (30%)</div>
+              <div class="usage-detail">الأبيض والرمادي الفضي لهيكلة النصوص وقراءة المحتوى بوضوح وتوازن.</div>
+            </div>
+            <div class="usage-card">
+              <div class="usage-title">اللون المضيء (10%)</div>
+              <div class="usage-detail">Electric Cyan يُستخدم بدقة بالغة لأزرار الدعوة للإجراء والهايلايت التفاعلي.</div>
+            </div>
+            <div class="usage-card">
+              <div class="usage-title">الخلفيات البديلة</div>
+              <div class="usage-detail">اللون الأبيض الناصع (#FFFFFF) يُستخدم لنسخ الطباعة والوثائق الرسمية للمؤسسة.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 03 - TYPOGRAPHY ═══ -->
+    <section id="typography">
+      <div class="sec-header">
+        <div class="sec-label">03 — خطوط العلامة</div>
+        <h2 class="sec-title">الخطوط التيبوغرافية الرسمية</h2>
+        <p class="sec-desc">يمزج النظام الطباعي لـ "أثر" بين خط Cairo العصري للنصوص العربية وخط Inter الهندسي الفائق للنصوص والبيانات اللاتينية.</p>
+      </div>
+
+      <div class="type-container">
+        <!-- Showcase column -->
+        <div class="type-showcase">
+          <!-- Display Style -->
+          <div class="type-row">
+            <div class="type-title-meta">
+              <span>Display EN — Inter 800</span>
+              <span>حجم كبير / عناوين رئيسية</span>
+            </div>
+            <h3 class="font-demo-display">ATHAR Digital</h3>
+          </div>
+
+          <!-- Arabic Title Style -->
+          <div class="type-row">
+            <div class="type-title-meta">
+              <span>العناوين — Cairo 700 (Bold)</span>
+              <span>عناوين الأقسام والمواضيع</span>
+            </div>
+            <h3 class="font-demo-display-ar">حيث تبدأ بصمتك الرقمية الفاخرة</h3>
+          </div>
+
+          <!-- Body English -->
+          <div class="type-row">
+            <div class="type-title-meta">
+              <span>Body Text EN — Inter 300 (Light)</span>
+              <span>الفقرات باللغة الإنجليزية</span>
+            </div>
+            <p class="font-demo-body-en">We don't just design websites — we craft interactive digital experiences that create measurable impact for your business growth.</p>
+          </div>
+
+          <!-- Body Arabic -->
+          <div class="type-row">
+            <div class="type-title-meta">
+              <span>النص والفقرات — Cairo 400 (Regular)</span>
+              <span>الفقرات التفصيلية والشروحات</span>
+            </div>
+            <p class="font-demo-body-ar">لا نصمم مجرد مواقع اعتيادية، بل نصنع تجارب رقمية تفاعلية ومبتكرة تترك أثراً حقيقياً وملموساً يسهم في بناء ونمو أعمالك وتوسّع علامتك التجارية.</p>
+          </div>
+        </div>
+
+        <!-- Sandbox Tester column -->
+        <div class="sandbox-card">
+          <div class="sandbox-header">
+            <svg viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            <span>لوحة فحص وتجربة الخطوط التفاعلية (Sandbox)</span>
+          </div>
+
+          <textarea class="sandbox-textarea" id="sandbox-input" placeholder="اكتب هنا لتجربة الخطوط...">أثر — نصنع أثراً رقمياً حقيقياً يصنع الفرق.
+ATHAR Digital Agency — Leave your digital impact.</textarea>
+
+          <div class="sandbox-controls">
+            <!-- Font Size -->
+            <div class="control-item">
+              <div class="control-lbl-row">
+                <span>حجم الخط:</span>
+                <span id="size-val">22px</span>
+              </div>
+              <input type="range" min="16" max="72" value="22" class="control-slider" id="slider-size">
+            </div>
+
+            <!-- Line Height -->
+            <div class="control-item">
+              <div class="control-lbl-row">
+                <span>ارتفاع السطر:</span>
+                <span id="lh-val">1.6</span>
+              </div>
+              <input type="range" min="10" max="25" value="16" class="control-slider" id="slider-lh">
+            </div>
+          </div>
+
+          <div class="font-cards">
+            <div class="font-card">
+              <div class="font-card-name" style="font-family:'Cairo', sans-serif">Cairo</div>
+              <div class="font-card-desc">للغة العربية بالكامل</div>
+            </div>
+            <div class="font-card">
+              <div class="font-card-name" style="font-family:'Inter', sans-serif">Inter</div>
+              <div class="font-card-desc">للإنجليزي والأرقام والأكواد</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 04 - VISUAL SYSTEM ═══ -->
+    <section id="visuals">
+      <div class="sec-header">
+        <div class="sec-label">04 — النظام البصري التكميلي</div>
+        <h2 class="sec-title">الزخارف والأنساق المرئية المبتكرة</h2>
+        <p class="sec-desc">مجموعة من العناصر الرسومية المترابطة المستوحاة من تفاعل الموجات الرقمية وحركات الانتشار والتأثير والشبكات.</p>
+      </div>
+
+      <div class="motif-grid">
+        <!-- Ripple Motif -->
+        <div class="motif-card">
+          <div class="motif-display">
+            <div class="ripple-visual">
+              <div class="ripple-circle rc1"></div>
+              <div class="ripple-circle rc2"></div>
+              <div class="ripple-circle rc3"></div>
+              <div class="ripple-circle rc4"></div>
+              <div class="ripple-dot"></div>
+            </div>
+          </div>
+          <h3 class="motif-card-title">تموج الأثر (Ripple Impact)</h3>
+          <p class="motif-card-desc">دوائر متمركزة ترمز إلى انتشار تأثير الوكالة في الفضاء الرقمي عند تمرير مؤشر الفأرة.</p>
+        </div>
+
+        <!-- Magnetic Grid Motif -->
+        <div class="motif-card" id="magnetic-mesh-card">
+          <div class="motif-display">
+            <div class="grid-mesh-visual" id="magnetic-mesh">
+              <!-- Grid dots generated by JS -->
+            </div>
+          </div>
+          <h3 class="motif-card-title">الشبكة الرقمية (Digital Grid)</h3>
+          <p class="motif-card-desc">شبكة من النقاط ترمز للذكاء البرمجي والترابط التقني، وتتفاعل ديناميكياً مع الحركة.</p>
+        </div>
+
+        <!-- Dynamic Wave Motif -->
+        <div class="motif-card">
+          <div class="motif-display">
+            <svg class="wave-svg" viewBox="0 0 200 100">
+              <path class="wave-path" id="dynamic-wave-path" d="M 0,50 Q 25,25 50,50 T 100,50 T 150,50 T 200,50" />
+              <path stroke="rgba(0, 212, 255, 0.15)" stroke-width="1" fill="none" d="M 0,50 Q 25,15 50,50 T 100,50 T 150,50 T 200,50" />
+            </svg>
+          </div>
+          <h3 class="motif-card-title">موجة التأثير (Wave Modulation)</h3>
+          <p class="motif-card-desc">خطوط انسيابية متموجة ترمز للمرونة والتطوير المستمر الذي تقدمه الوكالة للعملاء.</p>
+        </div>
+      </div>
+
+      <div class="motif-footer-note">
+        <strong>فكرة النقطة المحورية الممتدة:</strong> تندمج الفكرة الفيزيائية لانتشار تموجات الماء عند سقوط حجر فيها، مع الإشارة الرقمية للتوجيه، لتشكيل هوية مرئية واحدة وثابتة في كافة التصاميم.
+      </div>
+    </section>
+
+    <!-- ═══ 05 - COLLATERALS ═══ -->
+    <section id="collaterals">
+      <div class="sec-header">
+        <div class="sec-label">05 — المطبوعات والمخرجات</div>
+        <h2 class="sec-title">معمل نماذج الهوية البصرية (Collateral Sandbox)</h2>
+        <p class="sec-desc">استعرض تطبيقات الهوية الواقعية مباشرة بشكل تفاعلي ثلاثي الأبعاد، وجرب المطبوعات الرسمية والتوقيع الإلكتروني للوكالة.</p>
+      </div>
+
+      <div class="collateral-tabs">
+        <button class="tab-btn active" onclick="switchTab('business-card-tab')">بطاقة العمل ثلاثية الأبعاد (Business Card)</button>
+        <button class="tab-btn" onclick="switchTab('letterhead-tab')">الخطاب الرسمي الموجه (Letterhead)</button>
+        <button class="tab-btn" onclick="switchTab('signature-tab')">التوقيع الإلكتروني (Email Signature)</button>
+      </div>
+
+      <!-- Tab: Business Card -->
+      <div id="business-card-tab" class="tab-content active">
+        <div class="sec-desc" style="margin-bottom:15px;font-size:14px">
+          💡 <strong>تفاعل:</strong> مرر الماوس فوق بطاقة العمل أدناه لرؤية دورانها ثلاثي الأبعاد واستعراض الوجه الخلفي ذو الخلفية الفاخرة المتباينة.
+        </div>
+        <div class="bc-mockup-wrap">
+          <div class="bc-card-3d">
+            <div class="bc-card-inner">
+              
+              <!-- Front Side -->
+              <div class="bc-side bc-side-front">
+                <!-- SVG Rings background -->
+                <svg class="bc-front-bg" width="180" height="180" viewBox="0 0 180 180" fill="none">
+                  <circle cx="90" cy="90" r="30" stroke="#00D4FF" stroke-width="1.5" opacity="0.4"/>
+                  <circle cx="90" cy="90" r="60" stroke="#00D4FF" stroke-width="1" opacity="0.25"/>
+                  <circle cx="90" cy="90" r="90" stroke="#00D4FF" stroke-width="0.5" opacity="0.12"/>
+                </svg>
+                
+                <div class="bc-header">
+                  <svg width="20" height="20" viewBox="0 0 52 52" fill="none">
+                    <circle cx="26" cy="26" r="4" fill="#00D4FF"/>
+                    <circle cx="26" cy="26" r="10" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+                    <circle cx="26" cy="26" r="18" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+                  </svg>
+                  <span>ATHAR</span>
+                </div>
+                
+                <div class="bc-person-info">
+                  <div class="bc-name-en">M. Hamza Al-Saman</div>
+                  <div class="bc-name-ar">م. حمزة السمان</div>
+                  <div class="bc-role">Founder &amp; Creative Director</div>
+                  
+                  <div class="bc-contacts">
+                    <div class="bc-contact-row">
+                      <span class="bc-contact-label">TEL</span>
+                      <span>+963 9xx xxx xxxx</span>
+                    </div>
+                    <div class="bc-contact-row">
+                      <span class="bc-contact-label">MAIL</span>
+                      <span>hamza@athar.studio</span>
+                    </div>
+                    <div class="bc-contact-row">
+                      <span class="bc-contact-label">WEB</span>
+                      <span>athar.studio</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Back Side -->
+              <div class="bc-side bc-side-back">
+                <div class="bc-header-back">
+                  <div>
+                    <div class="bc-logo-text-back">ATHAR</div>
+                    <div class="bc-logo-sub-back">Digital Agency</div>
+                  </div>
+                  <svg width="28" height="28" viewBox="0 0 52 52" fill="none">
+                    <circle cx="26" cy="26" r="4.5" fill="#0B132B"/>
+                    <circle cx="26" cy="26" r="10.5" stroke="#0B132B" stroke-width="1.5" opacity="0.4"/>
+                    <circle cx="26" cy="26" r="18.5" stroke="#0B132B" stroke-width="0.8" opacity="0.2"/>
+                  </svg>
+                </div>
+                
+                <div class="bc-quote-back">
+                  "نترك <em>أثراً</em> رقمياً يصنع الفرق"
+                </div>
+                
+                <div class="bc-web-back">
+                  www.athar.studio
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Letterhead -->
+      <div id="letterhead-tab" class="tab-content">
+        <div class="sec-desc" style="margin-bottom:15px;font-size:14px">
+          📝 <strong>تفاعل:</strong> يمكنك النقر داخل النص الظاهر بالخطاب أدناه والتعديل عليه لتجربة توافق الخطوط والمساحات في المطبوعات الرسمية للوكالة.
+        </div>
+        <div class="letterhead-wrap">
+          <div class="letterhead-paper">
+            <!-- Top brand header -->
+            <div class="lh-top-bar">
+              <div class="lh-brand">
+                <svg width="28" height="28" viewBox="0 0 52 52" fill="none">
+                  <circle cx="26" cy="26" r="4" fill="#00D4FF"/>
+                  <circle cx="26" cy="26" r="10" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+                  <circle cx="26" cy="26" r="18" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+                </svg>
+                <div>
+                  <div style="font-size: 16px; font-weight:800; letter-spacing: 0.15em; line-height:1">ATHAR</div>
+                  <div class="lh-logo-desc ar">أثر — وكالة رقمية</div>
+                </div>
+              </div>
+              
+              <div class="lh-corp-info">
+                <div class="lh-corp-col">
+                  <span>المدير الإبداعي</span>
+                  <strong>م. حمزة السمان</strong>
+                </div>
+                <div class="lh-corp-col">
+                  <span>البريد المعتمد</span>
+                  <strong>hamza@athar.studio</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Body Letter -->
+            <div class="lh-content">
+              <div class="lh-recipient">
+                <span class="lh-meta-title">إلى الجهة المستهدفة:</span>
+                <span class="lh-client-name">العميل الكريم / الشريك الاستراتيجي المحترم</span>
+                <span class="lh-client-co">الشركة الموقرة / قسم التطوير الرقمي</span>
+              </div>
+              
+              <div class="lh-subject-box">
+                <span class="lh-meta-title">الموضوع:</span>
+                <div class="lh-subject-txt">عرض خدمات التصميم الإبداعي والتطوير البرمجي لعام 2026</div>
+              </div>
+              
+              <!-- Editable text area -->
+              <div class="lh-editable-text" contenteditable="true">
+                السلام عليكم ورحمة الله وبركاته،
+                
+                يسعدنا في وكالة "أثر" أن نتقدم إليكم بهذا المقترح الفني لتطوير بنيتكم الرقمية وبناء هوية تفاعلية حديثة تتناسب مع رؤيتكم الطموحة. نقوم بصناعة واجهات مستخدم مخصصة بالكامل تضمن السرعة المطلقة والأمان الكامل مع تجربة مستخدم فريدة تترك أثراً حقيقياً في المبيعات والانتشار الرقمي.
+                
+                يمكنكم التعديل على هذا النص مباشرة لتجربة الطباعة الرسمية للعلامة...
+              </div>
+            </div>
+
+            <!-- Footer letters -->
+            <div class="lh-footer-bar">
+              <div class="lh-sign">م. حمزة السمان — المؤسس والمدير التنفيذي</div>
+              <div class="lh-web">www.athar.studio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Email Signature -->
+      <div id="signature-tab" class="tab-content">
+        <div class="sec-desc" style="margin-bottom:15px;font-size:14px">
+          📧 <strong>تفاعل:</strong> يمكنك نسخ التوقيع البريد الإلكتروني الفاخر مباشرة لتطبيقه في بريدك الإلكتروني (مثل Outlook أو Gmail).
+        </div>
+        <div class="signature-wrap">
+          <!-- The visual signature rendering (using tables for layout safety in email clients) -->
+          <div class="sig-preview-card" id="sig-card-element">
+            <div class="sig-left">
+              <svg width="40" height="40" viewBox="0 0 52 52" fill="none" style="margin-bottom:8px">
+                <circle cx="26" cy="26" r="4.5" fill="#0B132B"/>
+                <circle cx="26" cy="26" r="10.5" stroke="#0B132B" stroke-width="1.5" opacity="0.4"/>
+                <circle cx="26" cy="26" r="18.5" stroke="#0B132B" stroke-width="0.8" opacity="0.2"/>
+              </svg>
+              <div class="sig-logo-word">ATHAR</div>
+              <div class="sig-logo-ar">أثر — وكالة رقمية</div>
+            </div>
+            
+            <div class="sig-right">
+              <div class="sig-name-en">M. Hamza Al-Saman</div>
+              <div class="sig-name-ar">م. حمزة السمان</div>
+              <div class="sig-role">Founder &amp; Creative Director</div>
+              
+              <div class="sig-details">
+                <div class="sig-detail-row">
+                  <span class="sig-detail-lbl">T:</span>
+                  <span>+963 9xx xxx xxxx</span>
+                </div>
+                <div class="sig-detail-row">
+                  <span class="sig-detail-lbl">E:</span>
+                  <span style="color:#00a5cc;text-decoration:none">hamza@athar.studio</span>
+                </div>
+                <div class="sig-detail-row">
+                  <span class="sig-detail-lbl">W:</span>
+                  <span style="color:#00a5cc;text-decoration:none">www.athar.studio</span>
+                </div>
+              </div>
+              <div class="sig-slogan">
+                "نترك أثراً رقمياً يصنع الفرق"
+              </div>
+            </div>
+          </div>
+          
+          <div class="sig-actions">
+            <button class="btn-primary" onclick="copySignatureRichText()">
+              <svg viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+              <span>نسخ التوقيع الملون للبريد</span>
+            </button>
+            <button class="btn-secondary" onclick="copySignatureHtml()">
+              <svg viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+              <span>نسخ كود HTML للتوقيع</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ 06 - BRAND VOICE ═══ -->
+    <section id="brand-voice">
+      <div class="sec-header">
+        <div class="sec-label">06 — نبرة الصوت والمصطلحات</div>
+        <h2 class="sec-title">صوت وسلوك العلامة التجارية</h2>
+        <p class="sec-desc">كيف تتحدث "أثر" إلى العالم؟ نبرة تدمج بين الثقة التكنولوجية العميقة، والبساطة الشديدة والتركيز المطلق على تحقيق النتائج.</p>
+      </div>
+
+      <div class="voice-grid">
+        <!-- Main Slogan -->
+        <div class="voice-card">
+          <div class="voice-tagline-ar">"لا نصمم مواقع إلكترونية فقط، بل نصنع أثراً رقمياً حقيقياً."</div>
+          <span class="voice-meta-lbl">الشعار الرئيسي المعتمد (Primary Slogan)</span>
+        </div>
+
+        <!-- English Slogan -->
+        <div class="voice-card">
+          <div class="voice-tagline-en">"We don't just design websites. We leave a digital impact."</div>
+          <span class="voice-meta-lbl">الشعار اللاتيني الرئيسي</span>
+        </div>
+
+        <!-- Alternative Slogan -->
+        <div class="voice-card dim">
+          <div class="voice-tagline-ar" style="font-size:20px;opacity:0.7">"حيث تبدأ بصمتك الرقمية الاستثنائية."</div>
+          <span class="voice-meta-lbl">الشعار البديل لوسائل التواصل</span>
+        </div>
+
+        <!-- Alternative English Slogan -->
+        <div class="voice-card dim">
+          <div class="voice-tagline-en" style="font-size:18px;opacity:0.7">"Built to leave an impact that lasts."</div>
+          <span class="voice-meta-lbl">الشعار اللاتيني البديل</span>
+        </div>
+      </div>
+
+      <!-- Interactive Pills -->
+      <div class="pills-container">
+        <div class="pills-header">
+          🎯 <strong>اضغط على أي من سمات العلامة لمعرفة فلسفتها وكيفية التعبير عنها:</strong>
+        </div>
+        <div class="pills-row">
+          <span class="brand-pill active" data-desc="Confident (واثق): نتحدث بلغة مبنية على المعرفة والخبرة العملية والبيانات الثابتة، لا نتردد ولا نبالغ، بل نعرض القوة الفنية بكل ثقة واحترافية.">Confident</span>
+          <span class="brand-pill" data-desc="Minimal (مبسط): نكره التعقيد والحشو البصري واللفظي. تصاميمنا نظيفة، رسائلنا مباشرة، ونعتمد مبدأ 'الأقل هو الأكثر' في كل واجهة أو فكرة.">Minimal</span>
+          <span class="brand-pill" data-desc="Result-Driven (يركز على النتائج): كل قرار برمي أو تصميمي نأخذه يهدف لخدمة غاية محددة وقياس نمو أعمال العميل، لسنا مجرد فنانين بل شركاء نجاح وتوسع رقمي.">Result-Driven</span>
+          <span class="brand-pill" data-desc="Precise (دقيق ومحترف): نهتم بالبكسل الواحد، والسرعة بالملي ثانية. نلتزم بأدق المعايير العالمية في التكويد والتصميم والاتصال المهني.">Precise</span>
+          <span class="brand-pill" data-desc="Trustworthy (موثوق): نعتمد الوضوح التام مع العملاء في جداول العمل، التكاليف، والإمكانيات التقنية المتاحة لبناء جسور ثقة متينة ودائمة.">Trustworthy</span>
+          
+          <span class="brand-pill-ar" data-desc="ذكي: نبتكر حلولاً متطورة باستخدام تقنيات حديثة واختصارات ذكية تسرع من عمل المستخدمين وتوفر عليهم الجهد.">ذكي</span>
+          <span class="brand-pill-ar" data-desc="هادئ: واجهاتنا وتفاعلاتنا البصرية لا تزعج العين؛ نستخدم تباينات مريحة وحركات انسيابية ناعمة جداً.">هادئ</span>
+          <span class="brand-pill-ar" data-desc="واثق: نوجه العميل نحو الحل البرمجي الأفضل بناءً على دراسات تفصيلية لمتطلبات مشروعه وجمهوره المستهدف.">واثق</span>
+          <span class="brand-pill-ar" data-desc="محترف: التزام بالوقت، جودة الكود، وهيكلية معمارية قابلة للتوسع وتتحمل الأحمال العالية.">محترف</span>
+        </div>
+        <div class="pill-explanation-box" id="explanation-box">
+          Confident (واثق): نتحدث بلغة مبنية على المعرفة والخبرة العملية والبيانات الثابتة، لا نتردد ولا نبالغ، بل نعرض القوة الفنية بكل ثقة واحترافية.
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">
+    <svg width="32" height="32" viewBox="0 0 52 52" fill="none">
+      <circle cx="26" cy="26" r="4" fill="#00D4FF"/>
+      <circle cx="26" cy="26" r="10" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="26" cy="26" r="18" stroke="#00D4FF" stroke-width="0.8" opacity="0.35"/>
+    </svg>
+    <div class="footer-logo-text">ATH<span>A</span>R</div>
+  </div>
+  <p class="footer-copyright">ATHAR Digital Agency — Brand Identity System © 2026</p>
+</footer>
+
+<!-- JavaScript functionality -->
+<script>
+/* ═══ INTERACTIVE PARTICLE CANVAS BACKGROUND ═══ */
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 1.5 + 0.5;
+    this.speedX = Math.random() * 0.4 - 0.2;
+    this.speedY = Math.random() * 0.4 - 0.2;
+    this.alpha = Math.random() * 0.5 + 0.2;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = '#00D4FF';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function initParticles() {
+  particles = [];
+  const count = Math.min(100, Math.floor((canvas.width * canvas.height) / 15000));
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle());
+  }
+}
+initParticles();
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  // Draw light connection lines
+  ctx.strokeStyle = 'rgba(0, 212, 255, 0.03)';
+  ctx.lineWidth = 0.8;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ═══ MOBILE SIDEBAR DRAWER TOGGLE ═══ */
+const sidebar = document.querySelector('.sidebar');
+const menuToggle = document.getElementById('menu-toggle-btn');
+const sidebarOverlay = document.getElementById('sidebar-overlay-el');
+const navLinksMobile = document.querySelectorAll('.nav-item a');
+
+function toggleSidebar() {
+  sidebar.classList.toggle('active');
+  menuToggle.classList.toggle('active');
+  sidebarOverlay.classList.toggle('active');
+  playSynthesisBeep(800, 0.05); // Play audio feedback on toggle
+}
+
+if (menuToggle && sidebarOverlay) {
+  menuToggle.addEventListener('click', toggleSidebar);
+  sidebarOverlay.addEventListener('click', toggleSidebar);
+}
+
+navLinksMobile.forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+      toggleSidebar();
+    }
+  });
+});
+
+/* ═══ SCROLLSPY SYSTEM ═══ */
+const sections = document.querySelectorAll('section');
+const navItems = document.querySelectorAll('.nav-item');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(sec => {
+    const sectionTop = sec.offsetTop;
+    const sectionHeight = sec.clientHeight;
+    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+      current = sec.getAttribute('id');
+    }
+  });
+
+  navItems.forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('data-section') === current) {
+      item.classList.add('active');
+    }
+  });
+});
+
+/* ═══ LOGO CANVAS TOOLBAR BACKDROP CHANGER ═══ */
+const colorButtons = document.querySelectorAll('.color-btn');
+const logoCards = document.querySelectorAll('.logo-card');
+
+colorButtons.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    colorButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const selectedColor = btn.getAttribute('data-color');
+    
+    logoCards.forEach(card => {
+      card.style.background = selectedColor;
+      
+      // Adapt styling based on backdrop brightness
+      if (selectedColor === '#F4F7FA') { // Light mode
+        card.style.color = '#0B132B';
+        card.querySelector('.logo-card-title').style.color = '#64748B';
+        const primarySVGs = card.querySelectorAll('.svg-color-primary');
+        primarySVGs.forEach(el => {
+          el.style.color = '#0B132B';
+          el.style.opacity = el.classList.contains('logo-mark-svg') ? '1' : el.style.opacity;
+        });
+        const accentSVGs = card.querySelectorAll('.svg-color-accent');
+        accentSVGs.forEach(el => el.style.color = '#0B132B');
+        
+        // Text elements
+        const wmEn = card.querySelector('#wordmark-en');
+        if (wmEn) wmEn.style.color = '#0B132B';
+        const wmAr = card.querySelector('#wordmark-ar');
+        if (wmAr) wmAr.style.color = '#0B132B';
+        
+      } else if (selectedColor === '#00D4FF') { // Cyan mode
+        card.style.color = '#0B132B';
+        card.querySelector('.logo-card-title').style.color = 'rgba(11, 19, 43, 0.6)';
+        const primarySVGs = card.querySelectorAll('.svg-color-primary');
+        primarySVGs.forEach(el => el.style.color = '#0B132B');
+        const accentSVGs = card.querySelectorAll('.svg-color-accent');
+        accentSVGs.forEach(el => el.style.color = '#0B132B');
+        
+        const wmEn = card.querySelector('#wordmark-en');
+        if (wmEn) wmEn.style.color = '#0B132B';
+        const wmAr = card.querySelector('#wordmark-ar');
+        if (wmAr) wmAr.style.color = '#0B132B';
+        
+      } else { // Dark / Navy mode
+        card.style.color = '#FFFFFF';
+        card.querySelector('.logo-card-title').style.color = '#64748B';
+        const primarySVGs = card.querySelectorAll('.svg-color-primary');
+        primarySVGs.forEach(el => el.style.color = '#FFFFFF');
+        const accentSVGs = card.querySelectorAll('.svg-color-accent');
+        accentSVGs.forEach(el => el.style.color = '#00D4FF');
+        
+        const wmEn = card.querySelector('#wordmark-en');
+        if (wmEn) wmEn.style.color = '#FFFFFF';
+        const wmAr = card.querySelector('#wordmark-ar');
+        if (wmAr) wmAr.style.color = '#FFFFFF';
+      }
+    });
+    
+    showNotification(`تم تغيير خلفية العرض إلى اللون ${btn.title}`);
+  });
+});
+
+/* ═══ TOAST NOTIFICATION UTILITY ═══ */
+function showNotification(message) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  
+  toast.innerHTML = `
+    <svg class="toast-success-icon" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+    <span>${message}</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  // Play subtle synthesis click audio
+  playSynthesisBeep(880, 0.08);
+
+  setTimeout(() => {
+    toast.style.animation = 'slideInToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards';
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
+}
+
+/* ═══ CLIPBOARD COPY UTILITIES ═══ */
+function copyColorCode(colorHex) {
+  navigator.clipboard.writeText(colorHex).then(() => {
+    showNotification(`تم نسخ رمز اللون ${colorHex} إلى الحافظة!`);
+  });
+}
+
+function copyText(elementId) {
+  const text = document.getElementById(elementId).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    showNotification(`تم نسخ النص: "${text}"`);
+  });
+}
+
+function copySvgCode(svgId) {
+  const svgEl = document.getElementById(svgId);
+  const code = svgEl.outerHTML;
+  navigator.clipboard.writeText(code).then(() => {
+    showNotification('تم نسخ كود الـ SVG بنجاح!');
+  });
+}
+
+/* ═══ SANDBOX TYPOGRAPHY CONTROLLER ═══ */
+const sandboxInput = document.getElementById('sandbox-input');
+const sliderSize = document.getElementById('slider-size');
+const sliderLh = document.getElementById('slider-lh');
+const sizeVal = document.getElementById('size-val');
+const lhVal = document.getElementById('lh-val');
+
+sliderSize.addEventListener('input', () => {
+  const size = sliderSize.value + 'px';
+  sandboxInput.style.fontSize = size;
+  sizeVal.innerText = size;
+});
+
+sliderLh.addEventListener('input', () => {
+  const height = sliderLh.value / 10;
+  sandboxInput.style.lineHeight = height;
+  lhVal.innerText = height;
+});
+
+/* ═══ COLLATERAL TAB SWITCHER ═══ */
+function switchTab(tabId) {
+  const tabs = document.querySelectorAll('.tab-content');
+  const buttons = document.querySelectorAll('.tab-btn');
+  
+  tabs.forEach(t => t.classList.remove('active'));
+  buttons.forEach(b => b.classList.remove('active'));
+  
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+  
+  playSynthesisBeep(600, 0.05);
+}
+
+/* ═══ EMAIL SIGNATURE EXPORTERS ═══ */
+function copySignatureRichText() {
+  const cardElement = document.getElementById('sig-card-element');
+  
+  // Use modern Clipboard Item to copy formatted styling
+  const range = document.createRange();
+  range.selectNode(cardElement);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+  
+  try {
+    document.execCommand('copy');
+    showNotification('تم نسخ التوقيع كـ Rich Text! يمكنك لصقه مباشرة في Gmail/Outlook.');
+  } catch (err) {
+    showNotification('حدث خطأ أثناء نسخ التوقيع.');
+  }
+  window.getSelection().removeAllRanges();
+}
+
+function copySignatureHtml() {
+  const htmlCode = `
+<table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; direction: rtl; text-align: right; border-collapse: collapse;">
+  <tr>
+    <td style="padding-left: 20px; border-left: 1px solid #e2e8f0; vertical-align: middle; text-align: center;">
+      <div style="font-size: 18px; font-weight: 800; letter-spacing: 0.2em; color: #0B132B;">ATHAR</div>
+      <div style="font-size: 11px; color: #8899AA; margin-top: 2px;">أثر — وكالة رقمية</div>
+    </td>
+    <td style="padding-right: 20px; vertical-align: middle;">
+      <div style="font-size: 16px; font-weight: 700; color: #0B132B;">م. حمزة السمان</div>
+      <div style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #00a5cc; font-weight: 600; margin-top: 2px;">Founder & Creative Director</div>
+      <div style="font-size: 12px; color: #445566; margin-top: 8px; line-height: 1.5;">
+        <strong>T:</strong> +963 9xx xxx xxxx<br>
+        <strong>E:</strong> hamza@athar.studio<br>
+        <strong>W:</strong> www.athar.studio
+      </div>
+    </td>
+  </tr>
+</table>
+  `.trim();
+  
+  navigator.clipboard.writeText(htmlCode).then(() => {
+    showNotification('تم نسخ كود الـ HTML للتوقيع! الصقه في خيارات التوقيع المتقدمة.');
+  });
+}
+
+/* ═══ BRAND VOICE INTERACTIVE PILLS ═══ */
+const brandPills = document.querySelectorAll('.brand-pill, .brand-pill-ar');
+const explanationBox = document.getElementById('explanation-box');
+
+brandPills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    brandPills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    explanationBox.innerText = pill.getAttribute('data-desc');
+    playSynthesisBeep(700, 0.06);
+  });
+});
+
+/* ═══ MAGNETIC DOT GRID SIMULATION ═══ */
+const meshContainer = document.getElementById('magnetic-mesh');
+const gridDotsCount = 30; // 6 columns x 5 rows
+
+for (let i = 0; i < gridDotsCount; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'grid-dot';
+  meshContainer.appendChild(dot);
+}
+
+const meshDots = document.querySelectorAll('.grid-dot');
+meshContainer.addEventListener('mousemove', (e) => {
+  const rect = meshContainer.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  meshDots.forEach(dot => {
+    const dotRect = dot.getBoundingClientRect();
+    const dotX = (dotRect.left + dotRect.width / 2) - rect.left;
+    const dotY = (dotRect.top + dotRect.height / 2) - rect.top;
+    
+    const dist = Math.hypot(mouseX - dotX, mouseY - dotY);
+    
+    if (dist < 60) {
+      const scale = 1 + (60 - dist) / 50;
+      dot.style.transform = `scale(${scale})`;
+      dot.style.background = '#00D4FF';
+      dot.style.boxShadow = '0 0 10px rgba(0, 212, 255, 0.8)';
+    } else {
+      dot.style.transform = 'scale(1)';
+      dot.style.background = 'rgba(0, 212, 255, 0.15)';
+      dot.style.boxShadow = 'none';
+    }
+  });
+});
+
+meshContainer.addEventListener('mouseleave', () => {
+  meshDots.forEach(dot => {
+    dot.style.transform = 'scale(1)';
+    dot.style.background = 'rgba(0, 212, 255, 0.15)';
+    dot.style.boxShadow = 'none';
+  });
+});
+
+/* ═══ WAVE SVG ANIMATION SCRIPT ═══ */
+const wavePath = document.getElementById('dynamic-wave-path');
+let waveCount = 0;
+
+function animateWave() {
+  waveCount += 0.05;
+  let d = 'M 0,50';
+  for (let x = 0; x <= 200; x += 5) {
+    const y = 50 + Math.sin(x * 0.08 + waveCount) * 12;
+    d += ` L ${x},${y}`;
+  }
+  wavePath.setAttribute('d', d);
+  requestAnimationFrame(animateWave);
+}
+animateWave();
+
+/* ═══ WEB AUDIO SYNTHESIS FOR MICRO-FEEDBACKS ═══ */
+let audioCtx = null;
+function playSynthesisBeep(freq, duration) {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    
+    gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e) {
+    // Audio Context blocked or not supported
+  }
+}
+</script>
+</body>
+</html>
