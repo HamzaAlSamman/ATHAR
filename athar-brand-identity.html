@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATHAR | أثر — Brand Identity</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0B132B;
+  --cyan:#00D4FF;
+  --white:#FFFFFF;
+  --silver:#D9D9D9;
+  --gray:#8899AA;
+  --light:#F4F7FA;
+  --dark:#060a14;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--dark);
+  font-family:'Inter',sans-serif;
+  color:#fff;
+  overflow-x:hidden;
+}
+.ar{font-family:'Cairo',sans-serif}
+
+/* ═══ SECTION LABEL ═══ */
+.section-label{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.45em;
+  color:var(--cyan);
+  text-transform:uppercase;
+  margin-bottom:36px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.section-label::before{
+  content:'';display:block;
+  width:28px;height:1px;
+  background:var(--cyan);flex-shrink:0;
+}
+.section{padding:80px 60px;max-width:960px;margin:0 auto}
+.divider{height:1px;background:rgba(255,255,255,0.04);margin:0 60px}
+
+/* ═══════════════════════════════
+   01 — HERO
+═══════════════════════════════ */
+.hero{
+  position:relative;
+  height:100vh;min-height:700px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(0,212,255,0.07);
+  pointer-events:none;top:50%;left:50%;
+}
+.r1{width:220px;height:220px;transform:translate(-50%,-50%);border-color:rgba(0,212,255,0.12)}
+.r2{width:420px;height:420px;transform:translate(-50%,-50%)}
+.r3{width:640px;height:640px;transform:translate(-50%,-50%);border-color:rgba(0,212,255,0.05)}
+.r4{width:900px;height:900px;transform:translate(-50%,-50%);border-color:rgba(0,212,255,0.03)}
+.r5{width:1200px;height:1200px;transform:translate(-50%,-50%);border-color:rgba(0,212,255,0.015)}
+.center-dot{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:7px;height:7px;
+  background:var(--cyan);border-radius:50%;
+}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-word{
+  font-size:88px;font-weight:800;
+  letter-spacing:0.2em;color:#fff;line-height:1;
+}
+.hero-word .a{color:var(--cyan)}
+.hero-ar{
+  font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:400;
+  letter-spacing:0.25em;color:rgba(255,255,255,0.3);
+  margin-top:14px;
+}
+.hero-tag{
+  font-size:12px;font-weight:300;
+  letter-spacing:0.3em;color:rgba(0,212,255,0.6);
+  margin-top:8px;text-transform:uppercase;
+}
+@keyframes pulse-ring{
+  0%{opacity:0.8;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.35)}
+}
+.r1{animation:pulse-ring 3.5s ease-out infinite}
+.r2{animation:pulse-ring 3.5s ease-out infinite 0.45s}
+.r3{animation:pulse-ring 3.5s ease-out infinite 0.9s}
+
+/* ═══════════════════════════════
+   02 — LOGO SYSTEM
+═══════════════════════════════ */
+.logo-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3px;
+}
+.logo-tile{
+  padding:54px 44px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:18px;min-height:240px;
+}
+.lt-dark{background:#0B132B}
+.lt-light{background:#F4F7FA}
+.lt-black{background:#06090f}
+.lt-cyan{background:#00D4FF}
+.logo-mark svg{width:52px;height:52px}
+.wordmark{
+  font-family:'Inter',sans-serif;
+  font-size:26px;font-weight:800;
+  letter-spacing:0.22em;line-height:1;
+}
+.wordmark-ar{
+  font-family:'Cairo',sans-serif;
+  font-size:24px;font-weight:700;
+}
+.tile-sub{
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+}
+
+/* ═══════════════════════════════
+   03 — COLORS
+═══════════════════════════════ */
+.color-strip{display:flex;gap:3px;margin-bottom:3px}
+.swatch{
+  flex:1;padding:32px 22px 20px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.swatch-name{font-size:11px;font-weight:500;letter-spacing:0.06em;margin-bottom:4px}
+.swatch-hex{font-size:10px;font-family:'Inter',monospace;opacity:0.55;letter-spacing:0.06em}
+.tint-strip{display:flex;gap:3px}
+.tint{flex:1;padding:18px 16px;
+  font-size:10px;font-family:'Inter',monospace;letter-spacing:0.05em}
+.usage-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:3px
+}
+.usage-tile{padding:22px 20px;text-align:center}
+.usage-title{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:6px}
+.usage-desc{font-size:11px;font-weight:500;line-height:1.5}
+
+/* ═══════════════════════════════
+   04 — TYPOGRAPHY
+═══════════════════════════════ */
+.type-block{
+  background:#0B132B;padding:54px;
+}
+.type-row{
+  padding:24px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.type-row:last-child{border-bottom:none}
+.type-meta{
+  font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:10px;
+}
+.type-display{
+  font-size:48px;font-weight:800;
+  letter-spacing:0.12em;line-height:1;color:#fff;
+}
+.type-display-ar{
+  font-family:'Cairo',sans-serif;
+  font-size:40px;font-weight:700;
+  line-height:1.2;color:#fff;
+}
+.type-body-en{
+  font-size:15px;line-height:1.85;
+  color:rgba(255,255,255,0.5);font-weight:300;
+}
+.type-body-ar{
+  font-family:'Cairo',sans-serif;
+  font-size:16px;line-height:1.9;
+  color:rgba(255,255,255,0.5);font-weight:400;
+}
+.font-pair{
+  display:flex;gap:3px;margin-top:28px;
+}
+.font-pill{
+  flex:1;background:#0a1628;
+  padding:22px 28px;text-align:center;
+}
+.font-name{font-size:20px;font-weight:700;color:var(--cyan);margin-bottom:6px}
+.font-use{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gray)}
+
+/* ═══════════════════════════════
+   05 — VISUAL SYSTEM
+═══════════════════════════════ */
+.motif-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;
+}
+.motif-tile{
+  background:#0B132B;
+  padding:44px;min-height:190px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.motif-label{
+  position:absolute;bottom:16px;left:20px;
+  font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gray);
+}
+.motif-note{
+  margin-top:3px;background:#0a1022;
+  padding:26px 32px;
+  font-size:13px;font-family:'Cairo',sans-serif;
+  color:rgba(255,255,255,0.4);line-height:1.8;text-align:center;
+}
+
+/* ═══════════════════════════════
+   06 — COLLATERAL
+═══════════════════════════════ */
+.collateral-wrap{display:flex;flex-direction:column;gap:24px}
+
+/* Business cards */
+.bc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+/* Front */
+.bc-front{
+  background:#0B132B;
+  border:1px solid rgba(0,212,255,0.16);
+  border-radius:20px;
+  padding:38px 38px 34px;
+  min-height:240px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.bc-front-ring{
+  position:absolute;pointer-events:none;
+}
+.bc-logo-row{
+  display:flex;align-items:center;gap:11px;
+  font-family:'Inter',sans-serif;
+  font-size:14px;font-weight:800;
+  letter-spacing:0.22em;color:#fff;
+}
+.bc-person{margin-top:auto}
+.bc-name-en{
+  font-size:16px;font-weight:700;color:#fff;
+  letter-spacing:0.06em;line-height:1.1;
+}
+.bc-name-ar{
+  font-family:'Cairo',sans-serif;
+  font-size:13px;font-weight:600;
+  color:rgba(255,255,255,0.4);
+  margin-top:3px;direction:rtl;text-align:left;
+}
+.bc-role{
+  font-size:9px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--cyan);margin-top:9px;
+}
+.bc-contacts{margin-top:18px;display:flex;flex-direction:column;gap:5px}
+.bc-line{
+  font-size:11px;color:rgba(255,255,255,0.35);
+  display:flex;align-items:center;gap:7px;
+}
+.bc-line-lbl{
+  font-size:8px;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(0,212,255,0.55);min-width:30px;
+}
+
+/* Back */
+.bc-back{
+  background:#fff;
+  border-radius:20px;
+  padding:38px;min-height:240px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.bc-back-wm{position:absolute;bottom:-36px;left:-36px;opacity:0.05}
+.bc-back-top{display:flex;justify-content:space-between;align-items:flex-start}
+.bc-back-logo{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:800;
+  letter-spacing:0.22em;color:#0B132B;
+}
+.bc-back-sub{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#8899AA;margin-top:3px}
+.bc-tagline{
+  font-family:'Cairo',sans-serif;font-size:18px;font-weight:700;
+  color:#0B132B;line-height:1.65;direction:rtl;text-align:right;
+}
+.bc-tagline em{color:#007A99;font-style:normal}
+.bc-web{
+  font-size:11px;letter-spacing:0.15em;color:#8899AA;
+  border-top:1px solid rgba(11,19,43,0.07);
+  padding-top:14px;margin-top:14px;
+}
+
+/* Letterhead */
+.lh{
+  background:#0B132B;border-radius:18px;
+  border:1px solid rgba(0,212,255,0.1);
+  overflow:hidden;
+}
+.lh-head{
+  background:#060e22;padding:30px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid rgba(0,212,255,0.07);
+}
+.lh-logo{display:flex;align-items:center;gap:14px}
+.lh-logo-word{
+  font-family:'Inter',sans-serif;font-size:19px;font-weight:800;
+  letter-spacing:0.22em;color:#fff;
+}
+.lh-logo-ar{
+  font-family:'Cairo',sans-serif;font-size:11px;font-weight:400;
+  color:rgba(255,255,255,0.28);letter-spacing:0.04em;margin-top:2px;
+}
+.lh-info{display:flex;gap:32px}
+.lh-info-col{font-size:11px;text-align:right;display:flex;flex-direction:column;gap:3px}
+.lh-info-col span{color:rgba(255,255,255,0.3)}
+.lh-info-col strong{color:rgba(255,255,255,0.6);font-weight:500}
+.lh-body{padding:40px;display:flex;flex-direction:column;gap:26px}
+.lh-lbl{font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:#445566;margin-bottom:7px}
+.lh-to-name{font-size:15px;font-weight:600;color:#fff;margin-bottom:2px}
+.lh-to-co{font-size:12px;color:#556677}
+.lh-subject{
+  background:rgba(0,212,255,0.05);
+  border-right:2px solid var(--cyan);
+  border-radius:0 6px 6px 0;
+  padding:14px 20px;
+}
+.lh-subject-text{
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;
+  color:#fff;direction:rtl;text-align:right;
+}
+.lh-ruled{display:flex;flex-direction:column;gap:9px;opacity:0.08}
+.lh-ruled div{height:1px;background:#fff;border-radius:1px}
+.lh-foot{
+  padding:20px 40px;border-top:1px solid rgba(0,212,255,0.06);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.lh-foot-name{font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:0.05em}
+.lh-foot-web{font-size:11px;color:var(--cyan);letter-spacing:0.12em}
+
+/* Email signature */
+.sig{
+  background:#f7f9fc;border:1px solid rgba(11,19,43,0.08);
+  border-radius:18px;padding:36px 40px;
+  display:flex;gap:32px;align-items:center;
+}
+.sig-divider{width:1px;background:rgba(11,19,43,0.1);align-self:stretch}
+.sig-logo-block{display:flex;flex-direction:column;align-items:center;gap:10px}
+.sig-logo-word{
+  font-family:'Inter',sans-serif;font-size:18px;font-weight:800;
+  letter-spacing:0.22em;color:#0B132B;
+}
+.sig-logo-ar{font-family:'Cairo',sans-serif;font-size:11px;color:#8899AA}
+.sig-info{display:flex;flex-direction:column;gap:6px}
+.sig-name{font-size:16px;font-weight:700;color:#0B132B;letter-spacing:0.05em}
+.sig-name-ar{font-family:'Cairo',sans-serif;font-size:13px;color:#556677;margin-top:1px}
+.sig-role{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#00A0BF;margin-top:4px}
+.sig-contacts{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.sig-contact{font-size:12px;color:#445566;display:flex;gap:8px}
+.sig-contact-lbl{font-weight:600;color:#0B132B;min-width:32px}
+.sig-tag{
+  font-family:'Cairo',sans-serif;font-size:13px;
+  color:#8899AA;margin-top:14px;padding-top:12px;
+  border-top:1px solid rgba(11,19,43,0.07);
+  font-style:italic;
+}
+
+/* ═══════════════════════════════
+   07 — VOICE
+═══════════════════════════════ */
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.voice-tile{background:#0B132B;padding:38px}
+.voice-tile.dim{background:#07101f}
+.voice-q-ar{
+  font-family:'Cairo',sans-serif;font-size:20px;font-weight:700;
+  color:#fff;line-height:1.7;margin-bottom:14px;
+}
+.voice-q-en{
+  font-family:'Inter',sans-serif;font-size:18px;font-weight:600;
+  color:#fff;line-height:1.6;margin-bottom:14px;
+}
+.voice-tag{font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--cyan)}
+.brand-pills{
+  margin-top:3px;background:#0a1022;
+  padding:28px 32px;
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.pill{
+  border:1px solid rgba(0,212,255,0.2);
+  background:rgba(0,212,255,0.06);
+  color:var(--cyan);font-size:11px;
+  padding:8px 18px;letter-spacing:0.15em;text-transform:uppercase;
+}
+.pill-ar{
+  font-family:'Cairo',sans-serif;font-size:12px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.03);
+  color:rgba(255,255,255,0.3);
+  padding:8px 18px;letter-spacing:0.05em;
+}
+
+/* ═══ FOOTER ═══ */
+.footer{
+  text-align:center;padding:60px;
+  font-size:11px;letter-spacing:0.25em;
+  text-transform:uppercase;color:rgba(255,255,255,0.1);
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+  <div class="ring r5"></div>
+  <div class="ring r4"></div>
+  <div class="ring r3"></div>
+  <div class="ring r2"></div>
+  <div class="ring r1"></div>
+  <div class="center-dot"></div>
+  <div class="hero-content">
+    <div class="hero-word">ATH<span class="a">A</span>R</div>
+    <div class="hero-ar">أثر — وكالة رقمية</div>
+    <div class="hero-tag">Leave a Digital Impact</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     01 — LOGO SYSTEM
+══════════════════════════════════════ -->
+<section>
+  <div class="section">
+    <div class="section-label">01 — Logo System</div>
+  </div>
+  <div style="max-width:960px;margin:0 auto;padding:0 60px">
+    <div class="logo-grid">
+      <!-- Dark primary -->
+      <div class="logo-tile lt-dark">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="4" fill="#00D4FF"/>
+          <circle cx="26" cy="26" r="10" stroke="#00D4FF" stroke-width="1" opacity="0.5"/>
+          <circle cx="26" cy="26" r="18" stroke="#00D4FF" stroke-width="0.7" opacity="0.28"/>
+          <circle cx="26" cy="26" r="25" stroke="#00D4FF" stroke-width="0.5" opacity="0.14"/>
+        </svg>
+        <div class="wordmark" style="color:#fff">ATHAR</div>
+        <div class="tile-sub ar" style="color:rgba(255,255,255,0.3);letter-spacing:0.12em">نصنع أثراً رقمياً</div>
+      </div>
+      <!-- Light -->
+      <div class="logo-tile lt-light">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="4" fill="#0B132B"/>
+          <circle cx="26" cy="26" r="10" stroke="#0B132B" stroke-width="1" opacity="0.35"/>
+          <circle cx="26" cy="26" r="18" stroke="#0B132B" stroke-width="0.7" opacity="0.2"/>
+          <circle cx="26" cy="26" r="25" stroke="#0B132B" stroke-width="0.5" opacity="0.1"/>
+        </svg>
+        <div class="wordmark" style="color:#0B132B">ATHAR</div>
+        <div class="tile-sub ar" style="color:#8899AA;letter-spacing:0.12em">نصنع أثراً رقمياً</div>
+      </div>
+      <!-- Cyan -->
+      <div class="logo-tile lt-cyan">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="4" fill="#0B132B"/>
+          <circle cx="26" cy="26" r="10" stroke="#0B132B" stroke-width="1" opacity="0.3"/>
+          <circle cx="26" cy="26" r="18" stroke="#0B132B" stroke-width="0.7" opacity="0.18"/>
+          <circle cx="26" cy="26" r="25" stroke="#0B132B" stroke-width="0.5" opacity="0.1"/>
+        </svg>
+        <div class="wordmark" style="color:#0B132B">ATHAR</div>
+        <div class="tile-sub ar" style="color:rgba(11,19,43,0.45);letter-spacing:0.12em">نصنع أثراً رقمياً</div>
+      </div>
+      <!-- Black / Arabic -->
+      <div class="logo-tile lt-black">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="4" fill="#fff" opacity="0.85"/>
+          <circle cx="26" cy="26" r="10" stroke="#fff" stroke-width="1" opacity="0.28"/>
+          <circle cx="26" cy="26" r="18" stroke="#fff" stroke-width="0.7" opacity="0.14"/>
+          <circle cx="26" cy="26" r="25" stroke="#fff" stroke-width="0.5" opacity="0.07"/>
+        </svg>
+        <div class="wordmark-ar" style="color:#fff">أثر</div>
+        <div class="tile-sub" style="color:rgba(255,255,255,0.28);letter-spacing:0.28em">DIGITAL AGENCY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="margin-top:80px"></div>
+
+<!-- ═══════════════════════════════════
+     02 — COLOR PALETTE
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">02 — Color Palette</div>
+  <div style="display:flex;flex-direction:column;gap:3px">
+    <!-- Main -->
+    <div class="color-strip">
+      <div class="swatch" style="background:#0B132B;flex:2.5">
+        <div class="swatch-name" style="color:#fff">Midnight Navy</div>
+        <div class="swatch-hex" style="color:#fff">#0B132B</div>
+      </div>
+      <div class="swatch" style="background:#00D4FF">
+        <div class="swatch-name" style="color:#0B132B">Electric Cyan</div>
+        <div class="swatch-hex" style="color:#0B132B">#00D4FF</div>
+      </div>
+      <div class="swatch" style="background:#FFFFFF;border:1px solid rgba(11,19,43,0.1)">
+        <div class="swatch-name" style="color:#0B132B">Pure White</div>
+        <div class="swatch-hex" style="color:#0B132B">#FFFFFF</div>
+      </div>
+      <div class="swatch" style="background:#D9D9D9">
+        <div class="swatch-name" style="color:#0B132B">Silver Gray</div>
+        <div class="swatch-hex" style="color:#0B132B">#D9D9D9</div>
+      </div>
+    </div>
+    <!-- Tints -->
+    <div class="tint-strip">
+      <div class="tint" style="background:#0F1C3F;color:rgba(255,255,255,0.35)">#0F1C3F</div>
+      <div class="tint" style="background:#1a2a50;color:rgba(255,255,255,0.35)">#1A2A50</div>
+      <div class="tint" style="background:#00B8DC;color:rgba(11,19,43,0.55)">#00B8DC</div>
+      <div class="tint" style="background:#80EAFF;color:rgba(11,19,43,0.55)">#80EAFF</div>
+      <div class="tint" style="background:#E8F9FF;color:rgba(11,19,43,0.45)">#E8F9FF</div>
+      <div class="tint" style="background:#F4F7FA;border:1px solid rgba(11,19,43,0.07);color:rgba(11,19,43,0.35)">#F4F7FA</div>
+    </div>
+    <!-- Usage -->
+    <div class="usage-strip">
+      <div class="usage-tile" style="background:#0B132B;text-align:center">
+        <div class="usage-title" style="color:rgba(255,255,255,0.3)">Primary</div>
+        <div class="usage-desc" style="color:#fff">Backgrounds · Text</div>
+      </div>
+      <div class="usage-tile" style="background:#00D4FF;text-align:center">
+        <div class="usage-title" style="color:rgba(11,19,43,0.45)">Accent</div>
+        <div class="usage-desc" style="color:#0B132B">CTAs · Highlights</div>
+      </div>
+      <div class="usage-tile" style="background:#F4F7FA;text-align:center;border:1px solid rgba(11,19,43,0.07)">
+        <div class="usage-title" style="color:rgba(11,19,43,0.35)">Light</div>
+        <div class="usage-desc" style="color:#0B132B">Surfaces · Cards</div>
+      </div>
+      <div class="usage-tile" style="background:#D9D9D9;text-align:center">
+        <div class="usage-title" style="color:rgba(11,19,43,0.35)">Neutral</div>
+        <div class="usage-desc" style="color:#0B132B">Borders · Dividers</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     03 — TYPOGRAPHY
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">03 — Typography</div>
+  <div class="type-block">
+    <div class="type-row">
+      <div class="type-meta">Display — Inter 800</div>
+      <div class="type-display">ATHAR Digital</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta ar" style="font-family:'Cairo',sans-serif">العنوان — Cairo 700</div>
+      <div class="type-display-ar">حيث تبدأ بصمتك الرقمية</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">Body EN — Inter 300</div>
+      <div class="type-body-en">We don't just design websites — we craft digital experiences that create measurable impact for your business.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta ar" style="font-family:'Cairo',sans-serif">النص — Cairo 400</div>
+      <div class="type-body-ar">لا نصمم مواقع فحسب، بل نصنع تجارب رقمية تترك أثراً حقيقياً في نمو أعمالك وتوسّع علامتك التجارية.</div>
+    </div>
+    <div class="font-pair">
+      <div class="font-pill">
+        <div class="font-name" style="font-family:'Inter',sans-serif">Inter</div>
+        <div class="font-use">English · Numbers</div>
+      </div>
+      <div class="font-pill">
+        <div class="font-name" style="font-family:'Cairo',sans-serif">Cairo</div>
+        <div class="font-use">Arabic</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     04 — VISUAL SYSTEM
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">04 — Visual System</div>
+  <div class="motif-grid">
+    <div class="motif-tile">
+      <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="6" fill="#00D4FF"/>
+        <circle cx="50" cy="50" r="16" stroke="#00D4FF" stroke-width="1" opacity="0.5"/>
+        <circle cx="50" cy="50" r="28" stroke="#00D4FF" stroke-width="0.8" opacity="0.3"/>
+        <circle cx="50" cy="50" r="43" stroke="#00D4FF" stroke-width="0.6" opacity="0.15"/>
+      </svg>
+      <div class="motif-label">Ripple — التأثير</div>
+    </div>
+    <div class="motif-tile">
+      <svg width="100" height="100" viewBox="0 0 100 100" fill="none" opacity="0.4">
+        <circle cx="10" cy="10" r="1.5" fill="#00D4FF"/><circle cx="30" cy="10" r="1.5" fill="#00D4FF"/>
+        <circle cx="50" cy="10" r="1.5" fill="#00D4FF"/><circle cx="70" cy="10" r="1.5" fill="#00D4FF"/>
+        <circle cx="90" cy="10" r="1.5" fill="#00D4FF"/><circle cx="10" cy="30" r="1.5" fill="#00D4FF"/>
+        <circle cx="30" cy="30" r="2.8" fill="#00D4FF" opacity="0.8"/><circle cx="50" cy="30" r="1.5" fill="#00D4FF"/>
+        <circle cx="70" cy="30" r="1.5" fill="#00D4FF"/><circle cx="90" cy="30" r="1.5" fill="#00D4FF"/>
+        <circle cx="10" cy="50" r="1.5" fill="#00D4FF"/><circle cx="30" cy="50" r="1.5" fill="#00D4FF"/>
+        <circle cx="50" cy="50" r="5" fill="#00D4FF" opacity="1"/><circle cx="70" cy="50" r="1.5" fill="#00D4FF"/>
+        <circle cx="90" cy="50" r="1.5" fill="#00D4FF"/><circle cx="10" cy="70" r="1.5" fill="#00D4FF"/>
+        <circle cx="30" cy="70" r="1.5" fill="#00D4FF"/><circle cx="50" cy="70" r="1.5" fill="#00D4FF"/>
+        <circle cx="70" cy="70" r="2.8" fill="#00D4FF" opacity="0.8"/><circle cx="90" cy="70" r="1.5" fill="#00D4FF"/>
+        <circle cx="10" cy="90" r="1.5" fill="#00D4FF"/><circle cx="30" cy="90" r="1.5" fill="#00D4FF"/>
+        <circle cx="50" cy="90" r="1.5" fill="#00D4FF"/><circle cx="70" cy="90" r="1.5" fill="#00D4FF"/>
+        <circle cx="90" cy="90" r="1.5" fill="#00D4FF"/>
+      </svg>
+      <div class="motif-label">Grid — الشبكة</div>
+    </div>
+    <div class="motif-tile">
+      <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+        <path d="M0 18 Q25 8 50 18 Q75 28 100 18" stroke="#00D4FF" stroke-width="0.7" opacity="0.18" fill="none"/>
+        <path d="M0 33 Q25 23 50 33 Q75 43 100 33" stroke="#00D4FF" stroke-width="0.7" opacity="0.32" fill="none"/>
+        <path d="M0 50 Q25 40 50 50 Q75 60 100 50" stroke="#00D4FF" stroke-width="1.2" opacity="0.65" fill="none"/>
+        <path d="M0 67 Q25 57 50 67 Q75 77 100 67" stroke="#00D4FF" stroke-width="0.7" opacity="0.32" fill="none"/>
+        <path d="M0 82 Q25 72 50 82 Q75 92 100 82" stroke="#00D4FF" stroke-width="0.7" opacity="0.18" fill="none"/>
+      </svg>
+      <div class="motif-label">Wave — الموجة</div>
+    </div>
+  </div>
+  <div class="motif-note">
+    فكرة النقطة التي تتمدد — مثل أثر حجر في الماء — تُوحّد كل تطبيقات الهوية البصرية
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     05 — COLLATERAL
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">05 — Collateral</div>
+  <div class="collateral-wrap">
+
+    <!-- Business Cards -->
+    <div class="bc-grid">
+      <!-- Front -->
+      <div class="bc-front">
+        <!-- decorative rings top-right -->
+        <svg class="bc-front-ring" style="top:-50px;right:-50px;opacity:0.07" width="180" height="180" viewBox="0 0 180 180" fill="none">
+          <circle cx="90" cy="90" r="30" stroke="#00D4FF" stroke-width="1.5"/>
+          <circle cx="90" cy="90" r="60" stroke="#00D4FF" stroke-width="1"/>
+          <circle cx="90" cy="90" r="89" stroke="#00D4FF" stroke-width="0.7"/>
+        </svg>
+        <div class="bc-logo-row">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="2.2" fill="#00D4FF"/>
+            <circle cx="8" cy="8" r="5" stroke="#00D4FF" stroke-width="0.7" opacity="0.45"/>
+            <circle cx="8" cy="8" r="7.5" stroke="#00D4FF" stroke-width="0.5" opacity="0.2"/>
+          </svg>
+          ATHAR
+        </div>
+        <div class="bc-person">
+          <div class="bc-name-en">M. Hamza Al-Saman</div>
+          <div class="bc-name-ar">م. حمزة السمان</div>
+          <div class="bc-role">Founder &amp; Creative Director</div>
+          <div class="bc-contacts">
+            <div class="bc-line"><span class="bc-line-lbl">TEL</span>+963 9xx xxx xxxx</div>
+            <div class="bc-line"><span class="bc-line-lbl">MAIL</span>hamza@athar.studio</div>
+            <div class="bc-line"><span class="bc-line-lbl">WEB</span>athar.studio</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back -->
+      <div class="bc-back">
+        <div class="bc-back-wm">
+          <svg width="210" height="210" viewBox="0 0 210 210" fill="none">
+            <circle cx="105" cy="105" r="14" fill="#0B132B"/>
+            <circle cx="105" cy="105" r="42" stroke="#0B132B" stroke-width="2"/>
+            <circle cx="105" cy="105" r="75" stroke="#0B132B" stroke-width="1.5"/>
+            <circle cx="105" cy="105" r="104" stroke="#0B132B" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="bc-back-top">
+          <div>
+            <div class="bc-back-logo">ATHAR</div>
+            <div class="bc-back-sub">Digital Agency</div>
+          </div>
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="3.2" fill="#0B132B" opacity="0.65"/>
+            <circle cx="15" cy="15" r="7.5" stroke="#0B132B" stroke-width="0.7" opacity="0.28"/>
+            <circle cx="15" cy="15" r="14" stroke="#0B132B" stroke-width="0.5" opacity="0.14"/>
+          </svg>
+        </div>
+        <div>
+          <div class="bc-tagline">"نترك <em>أثراً</em> رقمياً<br>يصنع الفرق"</div>
+          <div class="bc-web">athar.studio</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Letterhead -->
+    <div class="lh">
+      <div class="lh-head">
+        <div class="lh-logo">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="3.2" fill="#00D4FF"/>
+            <circle cx="15" cy="15" r="7.5" stroke="#00D4FF" stroke-width="0.7" opacity="0.45"/>
+            <circle cx="15" cy="15" r="14" stroke="#00D4FF" stroke-width="0.5" opacity="0.2"/>
+          </svg>
+          <div>
+            <div class="lh-logo-word">ATHAR</div>
+            <div class="lh-logo-ar">وكالة رقمية</div>
+          </div>
+        </div>
+        <div class="lh-info">
+          <div class="lh-info-col">
+            <span>م. حمزة السمان</span>
+            <strong>M. Hamza Al-Saman</strong>
+          </div>
+          <div class="lh-info-col">
+            <span>+963 9xx xxx xxxx</span>
+            <strong>hamza@athar.studio</strong>
+          </div>
+        </div>
+      </div>
+      <div class="lh-body">
+        <div>
+          <div class="lh-lbl">إلى</div>
+          <div class="lh-to-name">العميل الكريم</div>
+          <div class="lh-to-co">الشركة / الجهة</div>
+        </div>
+        <div class="lh-subject">
+          <div class="lh-lbl">الموضوع</div>
+          <div class="lh-subject-text">عرض سعر — تصميم وتطوير الموقع الإلكتروني</div>
+        </div>
+        <div class="lh-ruled">
+          <div style="width:100%"></div>
+          <div style="width:100%"></div>
+          <div style="width:100%"></div>
+          <div style="width:75%"></div>
+        </div>
+      </div>
+      <div class="lh-foot">
+        <div class="lh-foot-name">م. حمزة السمان — مؤسس أثر</div>
+        <div class="lh-foot-web">athar.studio</div>
+      </div>
+    </div>
+
+    <!-- Email Signature -->
+    <div class="sig">
+      <div class="sig-logo-block">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="4.5" fill="#0B132B"/>
+          <circle cx="20" cy="20" r="10" stroke="#0B132B" stroke-width="0.8" opacity="0.3"/>
+          <circle cx="20" cy="20" r="18" stroke="#0B132B" stroke-width="0.6" opacity="0.14"/>
+        </svg>
+        <div class="sig-logo-word">ATHAR</div>
+        <div class="sig-logo-ar">أثر — وكالة رقمية</div>
+      </div>
+      <div class="sig-divider"></div>
+      <div class="sig-info">
+        <div>
+          <div class="sig-name">M. Hamza Al-Saman</div>
+          <div class="sig-name-ar">م. حمزة السمان</div>
+          <div class="sig-role">Founder &amp; Creative Director</div>
+        </div>
+        <div class="sig-contacts">
+          <div class="sig-contact"><span class="sig-contact-lbl">T</span>+963 9xx xxx xxxx</div>
+          <div class="sig-contact"><span class="sig-contact-lbl">E</span>hamza@athar.studio</div>
+          <div class="sig-contact"><span class="sig-contact-lbl">W</span>athar.studio</div>
+        </div>
+        <div class="sig-tag">"نترك أثراً رقمياً يصنع الفرق"</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════
+     06 — BRAND VOICE
+══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">06 — Brand Voice</div>
+  <div class="voice-grid">
+    <div class="voice-tile">
+      <div class="voice-q-ar">"لا نصمم مواقع فقط،<br>بل نصنع أثراً رقمياً."</div>
+      <div class="voice-tag">الشعار الرئيسي</div>
+    </div>
+    <div class="voice-tile">
+      <div class="voice-q-en">"Leave a<br>Digital Impact."</div>
+      <div class="voice-tag">Primary Tagline</div>
+    </div>
+    <div class="voice-tile dim">
+      <div class="voice-q-ar" style="font-size:17px;color:rgba(255,255,255,0.55)">"حيث تبدأ<br>بصمتك الرقمية"</div>
+      <div class="voice-tag">الشعار البديل</div>
+    </div>
+    <div class="voice-tile dim">
+      <div class="voice-q-en" style="font-size:16px;color:rgba(255,255,255,0.55)">"Built to Leave<br>an Impact"</div>
+      <div class="voice-tag">Secondary Tagline</div>
+    </div>
+  </div>
+  <div class="brand-pills">
+    <span class="pill">Confident</span>
+    <span class="pill">Minimal</span>
+    <span class="pill">Result-Driven</span>
+    <span class="pill">Precise</span>
+    <span class="pill">Trustworthy</span>
+    <span class="pill-ar">ذكي · هادئ · واثق · محترف</span>
+  </div>
+</section>
+
+<div class="footer">ATHAR Digital Agency — Brand Identity System © 2025</div>
+
+</body>
+</html>
