@@ -1,0 +1,236 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: rgba(244, 246, 247, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(28, 40, 51, 0.08);
+  transition: all var(--transition-normal);
+}
+
+.scrolled {
+  background-color: rgba(244, 246, 247, 0.95);
+  box-shadow: 0 4px 30px var(--color-shadow);
+}
+
+.navbar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.logoImage {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform var(--transition-fast);
+}
+
+.logoImage:hover {
+  transform: scale(1.03);
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 32px;
+}
+
+.navLink {
+  font-weight: 500;
+  color: var(--color-ink-light);
+  position: relative;
+  padding: 6px 0;
+  font-size: 15px;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-mint);
+  transition: width var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--color-ink);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.langToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(28, 40, 51, 0.1);
+  background-color: var(--color-white);
+  color: var(--color-ink-light);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.langToggle:hover {
+  border-color: var(--color-mint);
+  color: var(--color-mint);
+  background-color: rgba(46, 204, 113, 0.05);
+}
+
+.consultBtn {
+  background-color: var(--color-mint);
+  color: var(--color-white);
+  padding: 10px 20px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(46, 204, 113, 0.2);
+}
+
+.consultBtn:hover {
+  background-color: var(--color-mint-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+}
+
+.menuToggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.menuToggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-ink);
+  transition: all var(--transition-fast);
+}
+
+.menuOpen span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menuOpen span:nth-child(2) {
+  opacity: 0;
+}
+
+.menuOpen span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.mobileMenu {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .navLinks {
+    display: none;
+  }
+  
+  .actions {
+    display: none;
+  }
+  
+  .menuToggle {
+    display: flex;
+  }
+  
+  .mobileMenu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 10px 20px rgba(28, 40, 51, 0.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all var(--transition-normal);
+    z-index: 999;
+  }
+  
+  .mobileMenuOpen {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .mobileLinks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .mobileLink {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--color-ink-light);
+    display: block;
+    padding: 8px 0;
+  }
+  
+  .mobileLink:hover {
+    color: var(--color-mint);
+  }
+  
+  .mobileActions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    border-top: 1px solid var(--color-border);
+    padding-top: 16px;
+  }
+  
+  .mobileActions .langToggle {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .mobileActions .consultBtn {
+    justify-content: center;
+    width: 100%;
+  }
+}

@@ -1,0 +1,348 @@
+.aboutPage {
+  background-color: var(--color-ice);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+/* Page Hero */
+.heroSection {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-ink) 0%, var(--color-ink-light) 100%);
+  padding: 100px 0 80px;
+  text-align: center;
+  color: var(--color-white);
+  overflow: hidden;
+  border-bottom: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.glowOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.08) 0%, rgba(28, 40, 51, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tagline {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-mint);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .tagline {
+  letter-spacing: 0;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+:global([dir="rtl"]) .title {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: rgba(244, 246, 247, 0.8);
+  line-height: 1.6;
+}
+
+/* Core Philosophy & Story */
+.storySection {
+  padding: 80px 0;
+}
+
+.storyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.storyImageContainer {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  padding: 40px;
+  box-shadow: 0 10px 30px var(--color-shadow);
+  overflow: hidden;
+}
+
+/* Visual code/wireframe decoration inside card */
+.storyWireframe {
+  font-family: monospace;
+  font-size: 13px;
+  color: var(--color-ink-light);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wireBlock {
+  background-color: var(--color-ice);
+  height: 40px;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+.wireCode {
+  color: var(--color-mint);
+  padding: 12px;
+  background-color: var(--color-ink);
+  border-radius: var(--border-radius-sm);
+}
+
+.storyContent h2 {
+  font-size: 2rem;
+  color: var(--color-ink);
+  margin-bottom: 24px;
+}
+
+:global([dir="rtl"]) .storyContent h2 {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+.storyContent p {
+  font-size: 1.05rem;
+  color: var(--color-ink-muted);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+/* Pillars of Software Excellence */
+.pillarsSection {
+  padding: 80px 0;
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sectionHeader h2 {
+  font-size: 2.25rem;
+  color: var(--color-ink);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .sectionHeader h2 {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+.sectionHeader p {
+  font-size: 1.1rem;
+  color: var(--color-ink-muted);
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.pillarCard {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 40px 30px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px var(--color-shadow);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+:global([dir="rtl"]) .pillarCard {
+  text-align: right;
+  align-items: flex-start;
+}
+
+.pillarCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-mint);
+  box-shadow: 0 15px 35px rgba(46, 204, 113, 0.08);
+}
+
+.pillarBadge {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-mint);
+  background-color: rgba(46, 204, 113, 0.06);
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pillarTitle {
+  font-size: 1.35rem;
+  color: var(--color-ink);
+  margin-bottom: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+:global([dir="rtl"]) .pillarTitle {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+.pillarText {
+  font-size: 0.98rem;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+  flex-grow: 1;
+}
+
+.cardIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 4px;
+  background-color: var(--color-mint);
+  transition: width var(--transition-normal);
+}
+
+.pillarCard:hover .cardIndicator {
+  width: 100%;
+}
+
+/* Make sure in RTL it animates from right to left */
+:global([dir="rtl"]) .cardIndicator {
+  left: auto;
+  right: 0;
+}
+
+/* Team Roles Cards */
+.teamSection {
+  padding: 80px 0;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.teamCard {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  box-shadow: 0 5px 20px var(--color-shadow);
+  transition: all var(--transition-normal);
+  text-align: center;
+}
+
+.teamCard:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-mint);
+  box-shadow: 0 15px 35px rgba(46, 204, 113, 0.08);
+}
+
+.roleIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--border-radius-md);
+  background-color: rgba(46, 204, 113, 0.08);
+  color: var(--color-mint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 auto 20px auto;
+}
+
+.roleTitle {
+  font-size: 1.25rem;
+  color: var(--color-ink);
+  margin-bottom: 8px;
+}
+
+:global([dir="rtl"]) .roleTitle {
+  font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+.roleSpec {
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
+  display: block;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.roleDesc {
+  font-size: 0.95rem;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .storyGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .teamGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .pillarsGrid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 80px 0 60px;
+  }
+  
+  .storySection,
+  .timelineSection,
+  .teamSection {
+    padding: 60px 0;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}

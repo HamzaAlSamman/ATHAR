@@ -1,0 +1,159 @@
+.quoteSection {
+  position: relative;
+  background: var(--color-ink);
+  padding: 120px 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(46, 204, 113, 0.1);
+  border-bottom: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+/* Subtle glowing background light in the center */
+.glowOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.08) 0%, rgba(28, 40, 51, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.quoteWrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.quoteCard {
+  position: relative;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.quoteSymbolStart,
+.quoteSymbolEnd {
+  font-family: 'Plus Jakarta Sans', Georgia, serif;
+  font-size: 8rem;
+  line-height: 1;
+  color: var(--color-mint);
+  opacity: 0.12;
+  position: absolute;
+  pointer-events: none;
+}
+
+.quoteSymbolStart {
+  top: -40px;
+}
+
+:global([dir="rtl"]) .quoteSymbolStart {
+  right: 20px;
+}
+
+:global([dir="ltr"]) .quoteSymbolStart {
+  left: 20px;
+}
+
+.quoteSymbolEnd {
+  bottom: 0px;
+}
+
+:global([dir="rtl"]) .quoteSymbolEnd {
+  left: 20px;
+}
+
+:global([dir="ltr"]) .quoteSymbolEnd {
+  right: 20px;
+}
+
+.blockquote {
+  font-size: 2.25rem;
+  line-height: 1.8;
+  font-weight: 500;
+  color: var(--color-ice);
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 3;
+}
+
+:global([dir="rtl"]) .blockquote {
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+}
+
+:global([dir="ltr"]) .blockquote {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+}
+
+.authorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 3;
+}
+
+.divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-mint), transparent);
+}
+
+.author {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-mint);
+  font-style: normal;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+:global([dir="rtl"]) .author {
+  font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0;
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .quoteSection {
+    padding: 100px 0;
+  }
+  
+  .blockquote {
+    font-size: 1.85rem;
+  }
+  
+  .quoteSymbolStart,
+  .quoteSymbolEnd {
+    font-size: 6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .quoteSection {
+    padding: 80px 0;
+  }
+  
+  .blockquote {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+  }
+  
+  .quoteSymbolStart,
+  .quoteSymbolEnd {
+    font-size: 4.5rem;
+  }
+  
+  .quoteSymbolStart {
+    top: -20px;
+  }
+  
+  .quoteSymbolEnd {
+    bottom: 10px;
+  }
+}

@@ -1,0 +1,144 @@
+.trust {
+  padding: 80px 0;
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.trustGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-ink);
+  position: relative;
+  padding-bottom: 12px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: var(--color-mint);
+  border-radius: var(--border-radius-sm);
+}
+
+[dir="rtl"] .title::after {
+  right: 0;
+  left: auto;
+}
+
+.desc {
+  font-size: 15px;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+}
+
+.certifiedCard {
+  background-color: var(--color-ice);
+  border-inline-start: 4px solid var(--color-mint);
+  padding: 24px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.certTitle {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.certText {
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--color-ice);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  box-shadow: 0 4px 20px var(--color-shadow);
+}
+
+.registryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 16px;
+}
+
+.registryRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.regLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.regVal {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink-light);
+  background-color: var(--color-white);
+  padding: 6px 12px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.platformBadge {
+  font-weight: 700;
+  color: var(--color-mint);
+  background-color: rgba(46, 204, 113, 0.08);
+  border: 1px solid var(--color-mint);
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: var(--border-radius-sm);
+}
+
+@media (max-width: 991px) {
+  .trustGrid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  
+  .rightCol {
+    padding: 24px;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+}

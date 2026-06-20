@@ -1,0 +1,268 @@
+.calculator {
+  padding: 100px 0;
+  background-color: var(--color-white);
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-size: 36px;
+  color: var(--color-ink);
+  position: relative;
+  display: inline-block;
+  align-self: center;
+  padding-bottom: 12px;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--color-mint);
+  border-radius: var(--border-radius-sm);
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+}
+
+.calcGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.optionsForm {
+  background-color: var(--color-ice);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.groupLabel {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.radioGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.radioOption {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+
+.radioOption input {
+  accent-color: var(--color-mint);
+  width: 18px;
+  height: 18px;
+}
+
+.radioOptionActive {
+  border-color: var(--color-mint);
+  background-color: rgba(46, 204, 113, 0.05);
+}
+
+.sliderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--color-mint);
+  height: 6px;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-border);
+  cursor: pointer;
+}
+
+.sliderValues {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink-light);
+}
+
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.checkboxOption {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.checkboxOption input {
+  accent-color: var(--color-mint);
+  width: 18px;
+  height: 18px;
+}
+
+.checkboxOptionActive {
+  border-color: var(--color-mint);
+  background-color: rgba(46, 204, 113, 0.05);
+}
+
+/* عمود النتيجة */
+.resultCard {
+  background-color: var(--color-ink);
+  color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  position: sticky;
+  top: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 20px 40px rgba(28, 40, 51, 0.15);
+}
+
+.resultTitle {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 16px;
+}
+
+.resultRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resultLabel {
+  font-size: 13px;
+  color: rgba(244, 246, 247, 0.6);
+  font-weight: 500;
+}
+
+.priceVal {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--color-mint);
+  font-family: var(--font-ibm-plex), sans-serif;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.priceCurrency {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-ice);
+}
+
+.timeVal {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-white);
+  font-family: var(--font-ibm-plex), sans-serif;
+}
+
+.resultCta {
+  background-color: var(--color-mint);
+  color: var(--color-white);
+  padding: 16px;
+  border-radius: var(--border-radius-md);
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(46, 204, 113, 0.3);
+}
+
+.resultCta:hover {
+  background-color: var(--color-mint-hover);
+  transform: translateY(-2px);
+}
+
+.note {
+  font-size: 12px;
+  color: rgba(244, 246, 247, 0.5);
+  line-height: 1.6;
+}
+
+@media (max-width: 991px) {
+  .calcGrid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .resultCard {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .radioGroup, .checkboxGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .optionsForm {
+    padding: 24px;
+  }
+  
+  .resultCard {
+    padding: 24px;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+}

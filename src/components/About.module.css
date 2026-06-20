@@ -1,0 +1,249 @@
+.about {
+  padding: 100px 0;
+  background-color: var(--color-ice);
+  overflow: hidden;
+}
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.textSide {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tagline {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: var(--border-radius-sm);
+  background-color: rgba(46, 204, 113, 0.1);
+  color: var(--color-mint);
+  font-size: 13px;
+  font-weight: 600;
+  border-inline-start: 3px solid var(--color-mint);
+}
+
+.title {
+  font-size: 36px;
+  color: var(--color-ink);
+  line-height: 1.3;
+}
+
+.storyDesc {
+  font-size: 16px;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+}
+
+.valuesWrapper {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.valueTitle {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-ink);
+  margin-bottom: 30px;
+  position: relative;
+  display: inline-block;
+}
+
+.valueTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: var(--color-mint);
+}
+
+[dir="rtl"] .valueTitle::after {
+  right: 0;
+  left: auto;
+}
+
+.valuesList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.valueCard {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all var(--transition-fast);
+}
+
+.valueCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(46, 204, 113, 0.2);
+  box-shadow: 0 4px 20px var(--color-shadow);
+}
+
+.valueIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(46, 204, 113, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--color-mint);
+  flex-shrink: 0;
+}
+
+.valueInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.valName {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-ink);
+}
+
+.valDesc {
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+/* الجانب البصري - تمثيل كودي أو رسم توضيحي بالـ CSS */
+.visualSide {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.wireframeIllustrator {
+  width: 100%;
+  max-width: 460px;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+  padding: 30px;
+  box-shadow: 0 20px 45px rgba(28, 40, 51, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wireHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--color-border);
+  padding-bottom: 16px;
+}
+
+.wireLogo {
+  width: 80px;
+  height: 16px;
+  background-color: var(--color-border);
+  border-radius: var(--border-radius-sm);
+}
+
+.wireNav {
+  display: flex;
+  gap: 12px;
+}
+
+.wireNavItem {
+  width: 40px;
+  height: 8px;
+  background-color: var(--color-border);
+  border-radius: var(--border-radius-sm);
+}
+
+.wireGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.wireBox {
+  height: 100px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-border);
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.wireCodeBox {
+  background-color: var(--color-ice);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--color-ink-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wirePulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-mint);
+  box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+  }
+}
+
+@media (max-width: 991px) {
+  .aboutGrid {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+  
+  .visualSide {
+    order: -1;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+}

@@ -1,0 +1,231 @@
+.portfolio {
+  padding: 100px 0;
+  background-color: var(--color-ice);
+}
+
+.sectionHeader {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-size: 36px;
+  color: var(--color-ink);
+  position: relative;
+  display: inline-block;
+  align-self: center;
+  padding-bottom: 12px;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--color-mint);
+  border-radius: var(--border-radius-sm);
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+}
+
+.filterTabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 10px 24px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: 14px;
+  background-color: var(--color-white);
+  color: var(--color-ink-light);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.tab:hover {
+  border-color: var(--color-mint);
+  color: var(--color-mint);
+}
+
+.activeTab {
+  background-color: var(--color-mint);
+  color: var(--color-white);
+  border-color: var(--color-mint);
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+}
+
+.activeTab:hover {
+  color: var(--color-white);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px var(--color-shadow);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(28, 40, 51, 0.08);
+}
+
+.cardVisual {
+  height: 180px;
+  background-color: var(--color-ink);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  position: relative;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.cardTag {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: var(--color-mint);
+  color: var(--color-white);
+  padding: 4px 10px;
+  border-radius: var(--border-radius-sm);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+[dir="rtl"] .cardTag {
+  right: auto;
+  left: 16px;
+}
+
+.cardBody {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.cardTitle {
+  font-family: var(--font-ibm-plex), sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.cardDesc {
+  font-size: 14px;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+.detailsBtn {
+  margin-top: auto;
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-mint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  transition: gap var(--transition-fast);
+}
+
+.detailsBtn:hover {
+  gap: 10px;
+  color: var(--color-mint-hover);
+}
+
+/* لوحة دراسة الحالة التفاعلية */
+.caseStudyPanel {
+  background-color: var(--color-ice);
+  border-top: 1px solid var(--color-border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 13px;
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.caseTitle {
+  font-weight: 700;
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.caseText {
+  color: var(--color-ink-light);
+  line-height: 1.6;
+}
+
+.caseResult {
+  background-color: rgba(46, 204, 113, 0.08);
+  border-inline-start: 3px solid var(--color-mint);
+  padding: 12px;
+  border-radius: var(--border-radius-sm);
+  color: var(--color-ink-light);
+  font-weight: 500;
+}
+
+@media (max-width: 991px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+}
