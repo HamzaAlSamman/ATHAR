@@ -29,7 +29,7 @@ npm run build && npm start   # نسخة الإنتاج
 ```
 src/
 ├── app/                # المسارات (App Router)
-│   ├── api/            # contact · chat · pagespeed · admin
+│   ├── api/            # contact · chat · audit · admin
 │   ├── blog/[slug]/    # صفحات المقالات التفصيلية
 │   ├── portfolio/[slug]/ # دراسات الحالة التفصيلية
 │   ├── admin/          # لوحة تحكم الطلبات

@@ -1,573 +1,371 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
+import { auditUi, fillText, findingText } from '@/locales/audit';
+import type {
+  AuditCategory,
+  AuditErrorCode,
+  AuditFailure,
+  AuditReport,
+  Finding,
+  FindingStatus,
+} from '@/lib/audit/types';
 import styles from './TechLab.module.css';
 
-type ToolId = 'speed' | 'mobile' | 'security';
+type Phase = 'idle' | 'scanning' | 'done' | 'error';
 
-export default function TechLab() {
-  const { t, lang } = useLanguage();
-  const [activeTool, setActiveTool] = useState<ToolId | null>(null);
-  
-  const [url, setUrl] = useState('');
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanStep, setScanStep] = useState(0);
-  const [showResults, setShowResults] = useState(false);
-  const [scores, setScores] = useState({ metric1: 0, metric2: 0, metric3: 0, metric4: 0 });
+const CATEGORY_ORDER: AuditCategory[] = ['performance', 'security', 'seo'];
+const STATUS_ORDER: Record<FindingStatus, number> = { fail: 0, warn: 1, pass: 2 };
+const RING_LENGTH = 2 * Math.PI * 42;
 
-  // Reset audit state when switching tools
-  const handleSelectTool = (toolId: ToolId) => {
-    setActiveTool(toolId);
-    setUrl('');
-    setIsScanning(false);
-    setScanStep(0);
-    setShowResults(false);
-  };
+function toneFor(score: number): 'good' | 'mid' | 'bad' {
+  if (score >= 80) return 'good';
+  if (score >= 50) return 'mid';
+  return 'bad';
+}
 
-  const handleBackToGrid = () => {
-    setActiveTool(null);
-    setUrl('');
-    setIsScanning(false);
-    setScanStep(0);
-    setShowResults(false);
-  };
+/** يحذف البروتوكول والشرطة الأخيرة ليُعرض الرابط نظيفاً في حقل الإدخال ورابط المشاركة. */
+function cleanTarget(value: string): string {
+  return value.trim().replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+}
 
-  // Status steps for the terminal scanning animation
-  const getScanSteps = () => {
-    if (activeTool === 'speed') {
-      return [
-        t('techLab.speedTester.status1'),
-        t('techLab.speedTester.status2'),
-        t('techLab.speedTester.status3'),
-        t('techLab.speedTester.status4')
-      ];
-    } else if (activeTool === 'mobile') {
-      return [
-        t('techLab.mobileAuditor.status1'),
-        t('techLab.mobileAuditor.status2'),
-        t('techLab.mobileAuditor.status3'),
-        t('techLab.mobileAuditor.status4')
-      ];
+function ScoreRing({ score, label }: { score: number; label: string }) {
+  const tone = toneFor(score);
+  return (
+    <div className={styles.scoreCard}>
+      <div className={styles.ring}>
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="42" className={styles.ringTrack} />
+          <circle
+            cx="50"
+            cy="50"
+            r="42"
+            className={`${styles.ringValue} ${styles[tone]}`}
+            strokeDasharray={RING_LENGTH}
+            strokeDashoffset={RING_LENGTH * (1 - score / 100)}
+          />
+        </svg>
+        <span className={styles.ringNumber}>{score}</span>
+      </div>
+      <span className={styles.scoreLabel}>{label}</span>
+    </div>
+  );
+}
+
+export default function TechLab({ initialUrl = '' }: { initialUrl?: string }) {
+  const { lang } = useLanguage();
+  const router = useRouter();
+  const ui = auditUi[lang];
+
+  const startTarget = cleanTarget(initialUrl);
+  const [url, setUrl] = useState(startTarget);
+  const [phase, setPhase] = useState<Phase>(startTarget ? 'scanning' : 'idle');
+  const [stage, setStage] = useState(0);
+  const [report, setReport] = useState<AuditReport | null>(null);
+  const [errorCode, setErrorCode] = useState<AuditErrorCode | null>(null);
+  const [copied, setCopied] = useState(false);
+  const requestRef = useRef<AbortController | null>(null);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+
+  const showResult = useCallback((target: string, data: AuditReport | AuditFailure | null) => {
+    if (data === null) return; // طلب أُلغي لأن فحصاً أحدث بدأ
+    if (data.ok) {
+      setReport(data);
+      setPhase('done');
+      // الرابط في شريط العنوان يصير رابط التقرير نفسه، جاهزاً للنسخ والمشاركة.
+      window.history.replaceState(null, '', `/tech-lab?url=${encodeURIComponent(target)}`);
     } else {
-      return [
-        t('techLab.securityChecker.status1'),
-        t('techLab.securityChecker.status2'),
-        t('techLab.securityChecker.status3'),
-        t('techLab.securityChecker.status4')
-      ];
+      setErrorCode(data.error);
+      setPhase('error');
     }
-  };
+  }, []);
 
-  const steps = getScanSteps();
+  const scan = useCallback(
+    (target: string) => {
+      requestRef.current?.abort();
+      const controller = new AbortController();
+      requestRef.current = controller;
+      fetch(`/api/audit?url=${encodeURIComponent(target)}`, { signal: controller.signal })
+        .then((res) => res.json() as Promise<AuditReport | AuditFailure>)
+        .catch((err: unknown): AuditFailure | null =>
+          err instanceof DOMException && err.name === 'AbortError' ? null : { ok: false, error: 'server_error' }
+        )
+        .then((data) => showResult(target, data));
+    },
+    [showResult]
+  );
 
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  // رابط تقرير مشارَك (‎/tech-lab?url=...‎) يبدأ الفحص فور فتح الصفحة.
+  useEffect(() => {
+    if (startTarget) scan(startTarget);
+    return () => requestRef.current?.abort();
+  }, [startTarget, scan]);
 
-  // تشغيل الفحص من معالج الحدث مباشرة: نعرض خطوات الكونسول تباعاً ثم ننهي الفحص.
-  const handleStartScan = async (e: React.FormEvent) => {
+  // مراحل الكونسول تتقدم أثناء انتظار الرد الحقيقي، وتتوقف عند آخر مرحلة حتى يصل.
+  useEffect(() => {
+    if (phase !== 'scanning') return;
+    const timer = setInterval(() => {
+      setStage((current) => Math.min(current + 1, auditUi.ar.stages.length - 1));
+    }, 1400);
+    return () => clearInterval(timer);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase === 'done') resultsRef.current?.focus({ preventScroll: true });
+  }, [phase]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!url.trim()) return;
-    setShowResults(false);
-    setScanStep(0);
-    setIsScanning(true);
-
-    for (let i = 1; i < steps.length; i++) {
-      await sleep(1200);
-      setScanStep(i);
-    }
-    await sleep(800);
-    await finishScan();
+    const target = cleanTarget(url);
+    if (!target || phase === 'scanning') return;
+    setUrl(target);
+    setReport(null);
+    setErrorCode(null);
+    setStage(0);
+    setPhase('scanning');
+    scan(target);
   };
 
-  // إنهاء الفحص: لأداة السرعة نجلب نتائج حقيقية من /api/audit (فحص فعلي بدون مفتاح)، وإلا نعود للمحاكاة.
-  async function finishScan() {
-    if (activeTool === 'speed') {
-      try {
-        const res = await fetch(`/api/audit?url=${encodeURIComponent(url.trim())}`);
-        if (res.ok) {
-          const data = await res.json();
-          const s = data?.scores;
-          if (data?.ok && s) {
-            setScores({
-              metric1: s.performance ?? 0,
-              metric2: s.seo ?? 0,
-              metric3: s.accessibility ?? 0,
-              metric4: s.bestPractices ?? 0,
-            });
-            setIsScanning(false);
-            setShowResults(true);
-            return;
-          }
-        }
-      } catch {
-        /* fall back to simulation below */
-      }
-    }
-    calculateScores();
-    setIsScanning(false);
-    setShowResults(true);
-  }
+  const shareLink = () =>
+    `${window.location.origin}/tech-lab?url=${encodeURIComponent(cleanTarget(url))}`;
 
-  function calculateScores() {
-    const lowercaseUrl = url.toLowerCase();
-    
-    // Easter Egg: if URL contains 'athar' or is 'google.com', give perfect score
-    if (lowercaseUrl.includes('athar') || lowercaseUrl.includes('google')) {
-      setScores({ metric1: 100, metric2: 100, metric3: 100, metric4: 100 });
-      return;
-    }
-
-    // Hash URL for deterministic scores
-    let hash = 0;
-    for (let i = 0; i < lowercaseUrl.length; i++) {
-      hash = lowercaseUrl.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    
-    const metric1 = 45 + (Math.abs(hash) % 21); // 45 to 65
-    const metric2 = 58 + (Math.abs(hash >> 1) % 23); // 58 to 80
-    const metric3 = 50 + (Math.abs(hash >> 2) % 21); // 50 to 70
-    const metric4 = 60 + (Math.abs(hash >> 3) % 21); // 60 to 80
-
-    setScores({ metric1, metric2, metric3, metric4 });
-  }
-
-  const handleCTAClick = () => {
-    // حفظ بيانات الفحص محلياً ثم التوجّه لصفحة التواصل لتعبئة النموذج تلقائياً.
-    const queryPrefill = {
-      tool: activeTool,
-      url: url
-    };
-    localStorage.setItem('athar_prefill', JSON.stringify(queryPrefill));
-    window.location.href = '/contact';
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return 'var(--color-mint)';
-    if (score >= 50) return 'var(--color-coral)';
-    return '#E74C3C'; // Red
-  };
-
-  // Get localized labels for the scores depending on the active tool
-  const getMetricLabels = () => {
-    if (activeTool === 'speed') {
-      return [
-        t('techLab.speedTester.performance'),
-        t('techLab.speedTester.seo'),
-        t('techLab.speedTester.ux'),
-        t('techLab.speedTester.bestPractices')
-      ];
-    } else if (activeTool === 'mobile') {
-      return [
-        t('techLab.mobileAuditor.responsive'),
-        t('techLab.mobileAuditor.fontScale'),
-        t('techLab.mobileAuditor.touchTarget'),
-        t('techLab.mobileAuditor.layoutLoad')
-      ];
-    } else {
-      return [
-        t('techLab.securityChecker.sslStatus'),
-        t('techLab.securityChecker.httpHeaders'),
-        t('techLab.securityChecker.xssShield'),
-        t('techLab.securityChecker.databaseSec')
-      ];
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* الحافظة غير متاحة: الرابط ظاهر في شريط العنوان */
     }
   };
 
-  const metricLabels = getMetricLabels();
+  const handleFixRequest = () => {
+    if (!report) return;
+    const fails = report.findings.filter((f) => f.status === 'fail').length;
+    // نموذج التواصل يقرأ هذه القيمة ويملأ تفاصيل الطلب تلقائياً.
+    localStorage.setItem(
+      'athar_prefill',
+      JSON.stringify({ tool: 'audit', url: report.host, grade: report.grade, score: report.scores.overall, fails })
+    );
+    router.push('/contact');
+  };
+
+  const renderFinding = (finding: Finding) => {
+    const text = findingText[finding.id]?.[lang];
+    if (!text) return null;
+    return (
+      <li key={finding.id}>
+        <details className={`${styles.finding} ${styles[finding.status]}`}>
+          <summary className={styles.findingSummary}>
+            <span className={`${styles.chip} ${styles[finding.status]}`}>{ui.statusLabel[finding.status]}</span>
+            <span className={styles.findingTitle}>{fillText(text.issue, finding.data)}</span>
+            <span className={styles.chevron} aria-hidden="true" />
+          </summary>
+          <div className={styles.findingBody}>
+            <p>
+              <strong>{ui.why}</strong> {text.why}
+            </p>
+            <p>
+              <strong>{ui.fix}</strong> <span dir="auto">{text.fix}</span>
+            </p>
+          </div>
+        </details>
+      </li>
+    );
+  };
+
+  const fails = report?.findings.filter((f) => f.status === 'fail').length ?? 0;
+  const warns = report?.findings.filter((f) => f.status === 'warn').length ?? 0;
 
   return (
     <section id="tech-lab" className={styles.techLab}>
       <div className="container">
-        
-        {/* If no tool is active, display the Grid of Squares */}
-        {activeTool === null ? (
-          <>
-            <div className={styles.headerArea}>
-              <span className={styles.tagline}>{lang === 'ar' ? 'مختبر الابتكار' : 'Innovation Hub'}</span>
-              <h2 className={styles.title}>{t('techLab.title')}</h2>
-              <p className={styles.subtitle}>{t('techLab.subtitle')}</p>
+        <div className={styles.headerArea}>
+          <span className={styles.tagline}>{ui.tagline}</span>
+          <h1 className={styles.title}>{ui.title}</h1>
+          <p className={styles.subtitle}>{ui.subtitle}</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label htmlFor="audit-url" className={styles.srOnly}>
+            {ui.inputLabel}
+          </label>
+          <div className={styles.inputWrapper}>
+            <span className={styles.inputPrefix} aria-hidden="true">
+              https://
+            </span>
+            <input
+              id="audit-url"
+              type="text"
+              inputMode="url"
+              autoComplete="url"
+              autoCapitalize="none"
+              spellCheck={false}
+              dir="ltr"
+              placeholder={ui.placeholder}
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              disabled={phase === 'scanning'}
+              className={styles.input}
+              required
+            />
+          </div>
+          <button type="submit" disabled={phase === 'scanning' || !url.trim()} className={styles.submitBtn}>
+            {phase === 'scanning' ? ui.scanning : phase === 'done' ? ui.rescan : ui.start}
+          </button>
+        </form>
+
+        <ul className={styles.trustRow}>
+          {ui.trust.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
+        {phase === 'scanning' && (
+          <div className={styles.console} role="status" aria-live="polite">
+            <div className={styles.consoleHeader}>
+              <span className={styles.consoleDots} aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span className={styles.consoleTitle} dir="ltr">
+                {cleanTarget(url)}
+              </span>
+            </div>
+            <ol className={styles.consoleBody}>
+              {ui.stages.slice(0, stage + 1).map((line, index) => (
+                <li key={line} className={index === stage ? styles.consoleActive : styles.consoleDone}>
+                  {line}
+                </li>
+              ))}
+            </ol>
+            <div className={styles.progress} aria-hidden="true">
+              <span style={{ width: `${((stage + 1) / (ui.stages.length + 1)) * 100}%` }} />
+            </div>
+          </div>
+        )}
+
+        {phase === 'error' && errorCode && (
+          <div className={styles.errorBox} role="alert">
+            {ui.errors[errorCode]}
+          </div>
+        )}
+
+        {phase === 'done' && report && (
+          <div className={styles.report} ref={resultsRef} tabIndex={-1}>
+            <div className={styles.summaryCard}>
+              <div className={`${styles.gradeBadge} ${styles[toneFor(report.scores.overall)]}`}>
+                <span className={styles.gradeLetter}>{report.grade}</span>
+                <span className={styles.gradeCaption}>{ui.gradeLabel}</span>
+              </div>
+              <div className={styles.summaryText}>
+                <h2 className={styles.host} dir="ltr">
+                  {report.host}
+                </h2>
+                <p className={styles.overall}>
+                  {ui.overall}: <strong>{report.scores.overall}/100</strong>
+                </p>
+                <p className={styles.summaryLine}>
+                  {fails + warns === 0 ? ui.summaryClean : fillText(ui.summary, { fails, warns })}
+                </p>
+              </div>
+              <div className={styles.shareRow}>
+                <button type="button" onClick={handleCopy} className={styles.ghostBtn}>
+                  {copied ? ui.copied : ui.share}
+                </button>
+                <a
+                  className={styles.ghostBtn}
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `${fillText(ui.shareMessage, {
+                      host: report.host,
+                      grade: report.grade,
+                      score: report.scores.overall,
+                    })}\n${typeof window === 'undefined' ? '' : shareLink()}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {ui.whatsapp}
+                </a>
+              </div>
             </div>
 
-            <div className={styles.toolsGrid}>
-              {/* Box 1: Speed Tester */}
-              <div className={styles.toolCard} onClick={() => handleSelectTool('speed')}>
-                <div className={styles.toolIcon}>⚡</div>
-                <h3 className={styles.toolCardTitle}>{t('techLab.speedTester.title')}</h3>
-                <p className={styles.toolCardDesc}>{lang === 'ar' ? 'قياس سرعة استجابة الخادم والمقاييس الحيوية للصفحة.' : 'Audit page load speeds and backend latency metrics.'}</p>
-                <span className={styles.toolCardLink}>{lang === 'ar' ? 'تشغيل الأداة ←' : 'Launch Tool →'}</span>
-              </div>
-
-              {/* Box 2: Mobile Auditor */}
-              <div className={styles.toolCard} onClick={() => handleSelectTool('mobile')}>
-                <div className={styles.toolIcon}>📱</div>
-                <h3 className={styles.toolCardTitle}>{t('techLab.mobileAuditor.title')}</h3>
-                <p className={styles.toolCardDesc}>{lang === 'ar' ? 'فحص توافق الواجهات وسلاسة القراءة على الهواتف.' : 'Audit mobile responsive fluidity and typography spacing.'}</p>
-                <span className={styles.toolCardLink}>{lang === 'ar' ? 'تشغيل الأداة ←' : 'Launch Tool →'}</span>
-              </div>
-
-              {/* Box 3: Security Checker */}
-              <div className={styles.toolCard} onClick={() => handleSelectTool('security')}>
-                <div className={styles.toolIcon}>🔒</div>
-                <h3 className={styles.toolCardTitle}>{t('techLab.securityChecker.title')}</h3>
-                <p className={styles.toolCardDesc}>{lang === 'ar' ? 'فحص شهادات التشفير وجدران الحماية للبيانات.' : 'Audit SSL certifications, HTTP security, and database WAFs.'}</p>
-                <span className={styles.toolCardLink}>{lang === 'ar' ? 'تشغيل الأداة ←' : 'Launch Tool →'}</span>
-              </div>
+            <div className={styles.scoresGrid}>
+              {CATEGORY_ORDER.map((category) => (
+                <ScoreRing key={category} score={report.scores[category]} label={ui.categories[category]} />
+              ))}
             </div>
-          </>
-        ) : (
-          /* Tool Interface Mode */
-          <div className={styles.labCard}>
-            <div className={styles.cardBgPattern}></div>
 
-            <button onClick={handleBackToGrid} className={styles.backBtn}>
-              {lang === 'ar' ? '← العودة للمختبر' : '← Back to Lab'}
-            </button>
-
-            <h3 className={styles.toolTitle}>
-              {activeTool === 'speed' && t('techLab.speedTester.title')}
-              {activeTool === 'mobile' && t('techLab.mobileAuditor.title')}
-              {activeTool === 'security' && t('techLab.securityChecker.title')}
-            </h3>
-            
-            <p className={styles.toolDesc}>
-              {activeTool === 'speed' && t('techLab.speedTester.desc')}
-              {activeTool === 'mobile' && t('techLab.mobileAuditor.desc')}
-              {activeTool === 'security' && t('techLab.securityChecker.desc')}
-            </p>
-
-            <form onSubmit={handleStartScan} className={styles.form}>
-              <div className={styles.inputWrapper}>
-                <span className={styles.inputPrefix}>https://</span>
-                <input
-                  type="text"
-                  placeholder={
-                    activeTool === 'speed' ? t('techLab.speedTester.placeholder') :
-                    activeTool === 'mobile' ? t('techLab.mobileAuditor.placeholder') :
-                    t('techLab.securityChecker.placeholder')
-                  }
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  disabled={isScanning}
-                  className={styles.input}
-                  required
-                />
+            <dl className={styles.facts}>
+              <div>
+                <dt>{ui.facts.ttfb}</dt>
+                <dd>
+                  {report.facts.ttfbMs} {ui.facts.ms}
+                </dd>
               </div>
-              <button
-                type="submit"
-                disabled={isScanning || !url.trim()}
-                className={`${styles.submitBtn} ${isScanning ? styles.scanning : ''}`}
-              >
-                {isScanning ? (
-                  activeTool === 'speed' ? t('techLab.speedTester.btnScanning') :
-                  activeTool === 'mobile' ? t('techLab.mobileAuditor.btnScanning') :
-                  t('techLab.securityChecker.btnScanning')
-                ) : (
-                  activeTool === 'speed' ? t('techLab.speedTester.btnStart') :
-                  activeTool === 'mobile' ? t('techLab.mobileAuditor.btnStart') :
-                  t('techLab.securityChecker.btnStart')
-                )}
+              <div>
+                <dt>{ui.facts.size}</dt>
+                <dd>
+                  {report.facts.htmlKB} {ui.facts.kb}
+                </dd>
+              </div>
+              <div>
+                <dt>{ui.facts.cert}</dt>
+                <dd>
+                  {report.facts.certDaysLeft === null
+                    ? ui.facts.none
+                    : `${report.facts.certDaysLeft} ${ui.facts.days}`}
+                </dd>
+              </div>
+              <div>
+                <dt>{ui.facts.tls}</dt>
+                <dd dir="ltr">{report.facts.tlsProtocol ?? ui.facts.none}</dd>
+              </div>
+            </dl>
+
+            {CATEGORY_ORDER.map((category) => {
+              const items = report.findings
+                .filter((f) => f.category === category)
+                .sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || b.weight - a.weight);
+              const issues = items.filter((f) => f.status !== 'pass');
+              const passed = items.filter((f) => f.status === 'pass');
+              return (
+                <section key={category} className={styles.category}>
+                  <header className={styles.categoryHeader}>
+                    <h3>{ui.categories[category]}</h3>
+                    <span className={`${styles.categoryScore} ${styles[toneFor(report.scores[category])]}`}>
+                      {report.scores[category]}
+                    </span>
+                  </header>
+                  {issues.length > 0 && <ul className={styles.findings}>{issues.map(renderFinding)}</ul>}
+                  {passed.length > 0 && (
+                    <details className={styles.passedGroup}>
+                      <summary>{fillText(ui.passedCount, { count: passed.length })}</summary>
+                      <ul>
+                        {passed.map((f) => (
+                          <li key={f.id}>{fillText(findingText[f.id]?.[lang]?.pass ?? f.id, f.data)}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </section>
+              );
+            })}
+
+            <div className={styles.cta}>
+              <div>
+                <h3>{ui.ctaTitle}</h3>
+                <p>{ui.ctaDesc}</p>
+              </div>
+              <button type="button" onClick={handleFixRequest} className={styles.ctaBtn}>
+                {ui.ctaBtn}
               </button>
-            </form>
+            </div>
 
-            {/* Scanning Console Animation */}
-            {isScanning && (
-              <div className={styles.consoleWrapper}>
-                <div className={styles.consoleHeader}>
-                  <div className={styles.consoleDots}>
-                    <span></span><span></span><span></span>
-                  </div>
-                  <div className={styles.consoleTitle}>
-                    {activeTool === 'speed' && 'Performance Audit Console'}
-                    {activeTool === 'mobile' && 'UX & Responsiveness Console'}
-                    {activeTool === 'security' && 'Security Audit Console'}
-                  </div>
-                </div>
-                <div className={styles.consoleBody}>
-                  <div className={styles.consoleLine}>
-                    <span className={styles.consoleMint}>[INIT]</span> Auditor instance mounted...
-                  </div>
-                  <div className={styles.consoleLine}>
-                    <span className={styles.consoleMint}>[HTTP]</span> Auditing host &quot;{url}&quot;...
-                  </div>
-                  
-                  {scanStep >= 0 && (
-                    <div className={styles.consoleLine}>
-                      <span className={styles.consoleMint}>[STAGE 1]</span> {steps[0]}
-                    </div>
-                  )}
-                  {scanStep >= 1 && (
-                    <div className={styles.consoleLine}>
-                      <span className={styles.consoleMint}>[STAGE 2]</span> {steps[1]}
-                    </div>
-                  )}
-                  {scanStep >= 2 && (
-                    <div className={styles.consoleLine}>
-                      <span className={styles.consoleMint}>[STAGE 3]</span> {steps[2]}
-                    </div>
-                  )}
-                  {scanStep >= 3 && (
-                    <div className={styles.consoleLine}>
-                      <span className={styles.consoleMint}>[STAGE 4]</span> {steps[3]}
-                    </div>
-                  )}
-                  
-                  <div className={styles.loadingBarWrapper}>
-                    <div 
-                      className={styles.loadingBarProgress} 
-                      style={{ width: `${((scanStep + 1) / steps.length) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Audit Results Dashboard */}
-            {showResults && !isScanning && (
-              <div className={styles.resultsWrapper}>
-                <h4 className={styles.resultsHeader}>
-                  {activeTool === 'speed' && t('techLab.speedTester.resultsTitle')}
-                  {activeTool === 'mobile' && t('techLab.mobileAuditor.resultsTitle')}
-                  {activeTool === 'security' && t('techLab.securityChecker.resultsTitle')}
-                  &nbsp;({url})
-                </h4>
-                
-                <div className={styles.scoresGrid}>
-                  {/* Score 1 */}
-                  <div className={styles.scoreCard}>
-                    <div className={styles.circleOuter}>
-                      <svg className={styles.svgCircle}>
-                        <circle cx="50" cy="50" r="42" className={styles.circleBg} />
-                        <circle 
-                          cx="50" 
-                          cy="50" 
-                          r="42" 
-                          className={styles.circleValue}
-                          style={{
-                            strokeDashoffset: 264 - (264 * scores.metric1) / 100,
-                            stroke: getScoreColor(scores.metric1)
-                          }}
-                        />
-                      </svg>
-                      <div className={styles.scoreNumber} style={{ color: getScoreColor(scores.metric1) }}>
-                        {scores.metric1}
-                      </div>
-                    </div>
-                    <span className={styles.scoreLabel}>{metricLabels[0]}</span>
-                  </div>
-
-                  {/* Score 2 */}
-                  <div className={styles.scoreCard}>
-                    <div className={styles.circleOuter}>
-                      <svg className={styles.svgCircle}>
-                        <circle cx="50" cy="50" r="42" className={styles.circleBg} />
-                        <circle 
-                          cx="50" 
-                          cy="50" 
-                          r="42" 
-                          className={styles.circleValue}
-                          style={{
-                            strokeDashoffset: 264 - (264 * scores.metric2) / 100,
-                            stroke: getScoreColor(scores.metric2)
-                          }}
-                        />
-                      </svg>
-                      <div className={styles.scoreNumber} style={{ color: getScoreColor(scores.metric2) }}>
-                        {scores.metric2}
-                      </div>
-                    </div>
-                    <span className={styles.scoreLabel}>{metricLabels[1]}</span>
-                  </div>
-
-                  {/* Score 3 */}
-                  <div className={styles.scoreCard}>
-                    <div className={styles.circleOuter}>
-                      <svg className={styles.svgCircle}>
-                        <circle cx="50" cy="50" r="42" className={styles.circleBg} />
-                        <circle 
-                          cx="50" 
-                          cy="50" 
-                          r="42" 
-                          className={styles.circleValue}
-                          style={{
-                            strokeDashoffset: 264 - (264 * scores.metric3) / 100,
-                            stroke: getScoreColor(scores.metric3)
-                          }}
-                        />
-                      </svg>
-                      <div className={styles.scoreNumber} style={{ color: getScoreColor(scores.metric3) }}>
-                        {scores.metric3}
-                      </div>
-                    </div>
-                    <span className={styles.scoreLabel}>{metricLabels[2]}</span>
-                  </div>
-
-                  {/* Score 4 */}
-                  <div className={styles.scoreCard}>
-                    <div className={styles.circleOuter}>
-                      <svg className={styles.svgCircle}>
-                        <circle cx="50" cy="50" r="42" className={styles.circleBg} />
-                        <circle 
-                          cx="50" 
-                          cy="50" 
-                          r="42" 
-                          className={styles.circleValue}
-                          style={{
-                            strokeDashoffset: 264 - (264 * scores.metric4) / 100,
-                            stroke: getScoreColor(scores.metric4)
-                          }}
-                        />
-                      </svg>
-                      <div className={styles.scoreNumber} style={{ color: getScoreColor(scores.metric4) }}>
-                        {scores.metric4}
-                      </div>
-                    </div>
-                    <span className={styles.scoreLabel}>{metricLabels[3]}</span>
-                  </div>
-                </div>
-
-                {/* Recommendations Details */}
-                <div className={styles.auditDetails}>
-                  <div className={styles.warningList}>
-                    {activeTool === 'speed' && (
-                      <>
-                        {scores.metric1 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotRed}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'تأخر استجابة أول بكسل (LCP)' : 'Slow Largest Contentful Paint (LCP)'}</strong>
-                              <p>{lang === 'ar' ? 'تستغرق الصفحة أكثر من 3.8 ثوانٍ لتصبح مرئية بالكامل للزوار.' : 'Page taking more than 3.8 seconds to become fully visible.'}</p>
-                            </div>
-                          </div>
-                        )}
-                        {scores.metric3 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotRed}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'صور ضخمة غير مضغوطة' : 'Unoptimized Massive Images'}</strong>
-                              <p>{lang === 'ar' ? 'توجد ملفات صور غير مهيأة للجوال تستهلك بيانات الهاتف وبطاقات شبكة الزوار.' : 'Images not formatted for mobile, slowing page load speed.'}</p>
-                            </div>
-                          </div>
-                        )}
-                        {scores.metric4 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotYellow}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'أكواد برمجية ومكتبات جافاسكريبت زائدة' : 'Bloated Third-party Scripts'}</strong>
-                              <p>{lang === 'ar' ? 'تحميل مكتبات ضخمة غير مستخدمة يؤدي لتأخير تفاعل الصفحة عند اللمس.' : 'Large unused JS bundles block thread rendering.'}</p>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    {activeTool === 'mobile' && (
-                      <>
-                        {scores.metric1 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotRed}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'تداخل في العناصر التفاعلية' : 'Overlapping Tap Targets'}</strong>
-                              <p>{lang === 'ar' ? 'الأزرار والروابط متقاربة جداً مما يسبب صعوبة في الضغط عليها عبر الشاشات الصغيرة.' : 'Clickable elements are too close, resulting in touch friction.'}</p>
-                            </div>
-                          </div>
-                        )}
-                        {scores.metric2 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotRed}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'عدم ثبات التصميم أثناء التحميل (CLS)' : 'Layout Shift (CLS) Detected'}</strong>
-                              <p>{lang === 'ar' ? 'العناصر تتحرك بشكل غير مستقر عند تحميل الصفحة بالجوال، مما يزعج القارئ.' : 'Layout elements shift during initial loading, affecting UX.'}</p>
-                            </div>
-                          </div>
-                        )}
-                        {scores.metric3 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotYellow}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'أحجام خطوط صغيرة جداً' : 'Small Font Sizes'}</strong>
-                              <p>{lang === 'ar' ? 'بعض نصوص المتن تقل عن 14px مما يضطر الزائر لتكبير الشاشة يدوياً.' : 'Text elements scale below 14px, causing legibility issues.'}</p>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    {activeTool === 'security' && (
-                      <>
-                        {scores.metric2 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotRed}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'غياب هيدرز الحماية الأساسية' : 'Missing Security Headers'}</strong>
-                              <p>{lang === 'ar' ? 'موقعك لا يرسل هيدرز حماية مثل CSP أو X-Frame-Options لمنع الاختراق.' : 'Critical HTTP security headers are missing, exposing transactional interfaces.'}</p>
-                            </div>
-                          </div>
-                        )}
-                        {scores.metric3 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotRed}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'ثغرات XSS محتملة' : 'Potential Infiltration Points'}</strong>
-                              <p>{lang === 'ar' ? 'المدخلات غير معقمة بشكل كامل مما يترك احتمالية لحقن نصوص برمجية ضارة.' : 'Input parameters not sanitized, leaving pathways open for XSS.'}</p>
-                            </div>
-                          </div>
-                        )}
-                        {scores.metric4 < 90 && (
-                          <div className={styles.warningItem}>
-                            <span className={styles.warningDotYellow}></span>
-                            <div>
-                              <strong>{lang === 'ar' ? 'إصدارات برمجية قديمة' : 'Outdated Software Libraries'}</strong>
-                              <p>{lang === 'ar' ? 'بعض التبعيات والمكتبات المستخدمة بها ثغرات معروفة لم يتم تحديثها.' : 'Outdated libraries with known issues detected.'}</p>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-
-                  <div className={styles.recommendationBox}>
-                    <strong>
-                      {activeTool === 'speed' && t('techLab.speedTester.recommendation')}
-                      {activeTool === 'mobile' && t('techLab.mobileAuditor.recommendation')}
-                      {activeTool === 'security' && t('techLab.securityChecker.recommendation')}
-                    </strong>
-                    <p>
-                      {scores.metric1 === 100 
-                        ? (lang === 'ar' ? 'تهانينا! موقعك مبرمج بأعلى المعايير الهندسية ويعمل بأقصى كفاءة وحماية ممكنة. استمر في الحفاظ على هذا الأثر الرقمي الرائع.' : 'Congratulations! Your site is engineered to the highest standards, operating at absolute peak efficiency. Keep leaving this incredible digital imprint.')
-                        : (
-                          activeTool === 'speed' ? t('techLab.speedTester.recommendationText') :
-                          activeTool === 'mobile' ? t('techLab.mobileAuditor.recommendationText') :
-                          t('techLab.securityChecker.recommendationText')
-                        )}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Lead Gen Box */}
-                {scores.metric1 < 100 && (
-                  <div className={styles.ctaCard}>
-                    <h5 className={styles.ctaTitle}>
-                      {activeTool === 'speed' && t('techLab.speedTester.ctaTitle')}
-                      {activeTool === 'mobile' && t('techLab.mobileAuditor.ctaTitle')}
-                      {activeTool === 'security' && t('techLab.securityChecker.ctaTitle')}
-                    </h5>
-                    <p className={styles.ctaDesc}>
-                      {activeTool === 'speed' && t('techLab.speedTester.ctaDesc')}
-                      {activeTool === 'mobile' && t('techLab.mobileAuditor.ctaDesc')}
-                      {activeTool === 'security' && t('techLab.securityChecker.ctaDesc')}
-                    </p>
-                    <button 
-                      onClick={handleCTAClick}
-                      className={styles.ctaBtn}
-                    >
-                      {activeTool === 'speed' && t('techLab.speedTester.ctaBtn')}
-                      {activeTool === 'mobile' && t('techLab.mobileAuditor.ctaBtn')}
-                      {activeTool === 'security' && t('techLab.securityChecker.ctaBtn')}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+            <p className={styles.method}>{ui.method}</p>
           </div>
         )}
       </div>

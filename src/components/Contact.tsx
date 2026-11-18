@@ -39,16 +39,25 @@ export default function Contact() {
       if (storedPrefill) {
         const data = JSON.parse(storedPrefill);
         if (data.url) {
-          const toolName = data.tool === 'speed' ? 'فحص سرعة الأداء' : data.tool === 'mobile' ? 'فحص توافق الجوال' : 'فحص أمان وحماية الموقع';
-          const toolNameEn = data.tool === 'speed' ? 'Speed/Performance Audit' : data.tool === 'mobile' ? 'Mobile UX Audit' : 'Security/Shield Audit';
-          
+          const host = String(data.url).slice(0, 200);
+          const grade = typeof data.grade === 'string' ? data.grade.slice(0, 1) : '';
+          const score = Number.isFinite(data.score) ? Number(data.score) : null;
+          const fails = Number.isFinite(data.fails) ? Number(data.fails) : null;
+          const hasResult = Boolean(grade) && score !== null;
+          const resultAr = hasResult
+            ? ` (الدرجة ${grade}، ${score}/100${fails ? `، المشاكل المؤثرة: ${fails}` : ''})`
+            : '';
+          const resultEn = hasResult
+            ? ` (grade ${grade}, ${score}/100${fails ? `, ${fails} significant issues` : ''})`
+            : '';
+
           // تعبئة من نتائج المختبر التقني المحفوظة محلياً (تتم بعد الترطيب فقط).
           // eslint-disable-next-line react-hooks/set-state-in-effect -- قراءة تخزين العميل عند التحميل
           setProjectType('web');
           setDetails(
             lang === 'ar'
-              ? `أرغب في تحسين موقعي بناءً على نتائج ${toolName} للموقع: https://${data.url}`
-              : `I would like to optimize my website based on the results of the ${toolNameEn} for: https://${data.url}`
+              ? `أرغب في إصلاح مشاكل موقعي بناءً على تقرير فحص مختبر أثر${resultAr}: https://${host}`
+              : `I would like to fix my website based on the Athar Lab audit${resultEn}: https://${host}`
           );
         }
         localStorage.removeItem('athar_prefill');
