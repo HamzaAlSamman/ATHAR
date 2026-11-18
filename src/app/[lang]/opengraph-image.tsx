@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { siteConfig } from "@/lib/config";
 
-export const alt = "ATHR — Free website audit: speed, security & SEO";
+export const alt = "ATHR — Websites, business systems and mobile apps";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -31,28 +31,25 @@ export default function OpengraphImage() {
           <span>ATHR</span>
           <span style={{ color: "#2ECC71" }}>.</span>
         </div>
-        <div style={{ fontSize: 76, fontWeight: 800, marginTop: 36, lineHeight: 1.1, maxWidth: 960 }}>
-          Free website audit
+        <div style={{ fontSize: 76, fontWeight: 800, marginTop: 36, lineHeight: 1.1, maxWidth: 1000 }}>
+          We build your software
         </div>
-        <div style={{ fontSize: 40, marginTop: 20, opacity: 0.85 }}>Speed · Security · SEO — graded A to F</div>
-        <div style={{ display: "flex", marginTop: 56, gap: 20 }}>
-          {["A", "B", "C", "D", "F"].map((g, i) => (
+        <div style={{ fontSize: 38, marginTop: 20, opacity: 0.85 }}>Fixed price · The code is yours</div>
+        <div style={{ display: "flex", marginTop: 52, gap: 16 }}>
+          {["Websites", "Web apps", "Mobile apps", "AI automation"].map((label, i) => (
             <div
-              key={g}
+              key={label}
               style={{
-                width: 84,
-                height: 84,
-                borderRadius: 20,
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 44,
-                fontWeight: 800,
+                padding: "14px 24px",
+                borderRadius: 16,
+                fontSize: 30,
+                fontWeight: 700,
                 background: i === 0 ? "#2ECC71" : "rgba(255,255,255,0.08)",
-                color: i === 0 ? "#1C2833" : "rgba(255,255,255,0.55)",
+                color: i === 0 ? "#1C2833" : "rgba(255,255,255,0.8)",
               }}
             >
-              {g}
+              {label}
             </div>
           ))}
         </div>

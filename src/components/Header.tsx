@@ -15,7 +15,6 @@ const NAV_ITEMS = [
   { key: 'techLab', href: '/tech-lab' },
   { key: 'blog', href: '/blog' },
   { key: 'about', href: '/about' },
-  { key: 'contact', href: '/contact' },
 ] as const;
 
 export default function Header() {
@@ -70,7 +69,7 @@ export default function Header() {
           <button type="button" className={styles.langToggle} onClick={toggleLanguage} lang={lang === 'ar' ? 'en' : 'ar'}>
             {otherLang}
           </button>
-          <Link href={path('/tech-lab')} className={styles.consultBtn}>
+          <Link href={path('/contact')} className={styles.consultBtn}>
             {t('nav.cta')}
           </Link>
         </div>
@@ -118,7 +117,7 @@ export default function Header() {
             >
               {otherLang}
             </button>
-            <Link href={path('/tech-lab')} className={styles.consultBtn} onClick={close}>
+            <Link href={path('/contact')} className={styles.consultBtn} onClick={close}>
               {t('nav.cta')}
             </Link>
           </div>

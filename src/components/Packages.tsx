@@ -9,9 +9,9 @@ import styles from './Packages.module.css';
 
 const TEXT = {
   ar: {
-    eyebrow: 'أسعار ثابتة',
-    title: 'نصلح ما يظهره الفحص بسعر معلن',
-    subtitle: 'تعرف السعر قبل أن نبدأ. لا ساعات مفتوحة ولا مفاجآت في الفاتورة.',
+    eyebrow: 'لموقعك الحالي',
+    title: 'عندك موقع قائم؟ نحسّنه بسعر ثابت',
+    subtitle: 'افحص موقعك مجاناً في مختبرنا، ثم اختر ما يعالج نتيجتك.',
     days: 'التسليم خلال {days} أيام عمل',
     choose: 'اطلب هذه الباقة',
     featured: 'الأوفر',
@@ -20,9 +20,9 @@ const TEXT = {
     note: 'الأسعار لموقع واحد حتى 20 صفحة. المتاجر والمواقع الأكبر نعطيك سعرها الثابت بعد الفحص.',
   },
   en: {
-    eyebrow: 'Fixed prices',
-    title: 'We fix what the audit finds, at a published price',
-    subtitle: 'You know the price before we start. No open-ended hours, no surprise invoices.',
+    eyebrow: 'For your current site',
+    title: 'Already have a site? We improve it at a fixed price',
+    subtitle: 'Audit your site free in our lab, then pick what fixes your result.',
     days: 'Delivered in {days} business days',
     choose: 'Choose this package',
     featured: 'Best value',

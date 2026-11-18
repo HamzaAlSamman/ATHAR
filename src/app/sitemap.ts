@@ -13,9 +13,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const pages: { path: string; priority: number; freq: Freq }[] = [
     { path: "/", priority: 1, freq: "weekly" },
-    { path: "/tech-lab", priority: 0.95, freq: "monthly" },
+    { path: "/services", priority: 0.95, freq: "monthly" },
     { path: "/pricing", priority: 0.9, freq: "monthly" },
-    { path: "/services", priority: 0.8, freq: "monthly" },
+    { path: "/tech-lab", priority: 0.7, freq: "monthly" },
     { path: "/calculator", priority: 0.6, freq: "monthly" },
     { path: "/about", priority: 0.6, freq: "yearly" },
     { path: "/blog", priority: 0.7, freq: "weekly" },

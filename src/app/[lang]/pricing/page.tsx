@@ -9,8 +9,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/pricing">)
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   return pageMetadata(lang, "/pricing", {
-    ar: { title: "الأسعار | إصلاح السرعة والأمان والسيو وبناء المواقع - أثر", description: "أسعار ثابتة ومعلنة: إصلاح سرعة الموقع، تأمينه، تهيئة السيو، اشتراك الرعاية الشهري، وبناء مواقع ومتاجر جديدة." },
-    en: { title: "Pricing | Speed, security & SEO fixes and new websites - ATHR", description: "Fixed, published prices: speed fixes, security hardening, technical SEO, a monthly care plan, and new websites and stores." },
+    ar: { title: "الأسعار | برمجة المواقع والأنظمة والتطبيقات - أثر", description: "أسعار معلنة لبرمجة المواقع والمتاجر، وسعر ثابت مكتوب للأنظمة وتطبيقات الجوال، وباقات لتحسين المواقع القائمة." },
+    en: { title: "Pricing | Websites, systems and apps - ATHR", description: "Published prices for websites and stores, a written fixed price for systems and mobile apps, and packages to improve existing sites." },
   });
 }
 
@@ -20,8 +20,8 @@ export default async function Page({ params }: PageProps<"/[lang]/pricing">) {
     <>
       <Header />
       <main style={{ flex: "1 0 auto", paddingTop: "80px" }}>
-        <Packages />
         <Pricing />
+        <Packages />
       </main>
       <Footer />
     </>

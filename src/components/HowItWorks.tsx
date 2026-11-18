@@ -7,22 +7,24 @@ import styles from './HowItWorks.module.css';
 
 const TEXT = {
   ar: {
-    title: 'ثلاث خطوات من الفحص إلى موقع سليم',
+    title: 'كيف نشتغل',
     steps: [
-      { title: 'افحص موقعك', text: 'تقرير مجاني خلال ثوانٍ يرتب المشاكل حسب تأثيرها على زوارك ومبيعاتك.' },
-      { title: 'اختر الباقة', text: 'التقرير يقترح الباقة المناسبة لنتيجتك، بسعر ثابت ومدة تسليم محددة.' },
-      { title: 'نصلح ونثبت', text: 'ننفّذ الإصلاح ثم نعيد الفحص أمامك لترى الفرق بالأرقام.' },
+      { title: 'نفهم فكرتك', text: 'جلسة مجانية نسمع فيها ما تحتاجه ونقترح أبسط حل يحققه.' },
+      { title: 'سعر وخطة مكتوبة', text: 'نطاق العمل والسعر الثابت ومواعيد التسليم على ورقة قبل أي دفعة.' },
+      { title: 'نبرمج وتتابع', text: 'نسخة تجريبية تفتحها كل أسبوع وترى التقدم بنفسك.' },
+      { title: 'نطلق ونبقى معك', text: 'نشر، تدريب فريقك، ودعم بعد الإطلاق أو اشتراك رعاية شهري.' },
     ],
-    cta: 'ابدأ بالفحص المجاني',
+    cta: 'احجز الجلسة المجانية',
   },
   en: {
-    title: 'Three steps from audit to a healthy site',
+    title: 'How we work',
     steps: [
-      { title: 'Audit your site', text: 'A free report in seconds, ranking issues by their impact on visitors and sales.' },
-      { title: 'Pick a package', text: 'The report suggests the package for your result, with a fixed price and delivery date.' },
-      { title: 'We fix and prove it', text: 'We apply the fixes, then re-run the audit so you see the difference in numbers.' },
+      { title: 'We understand your idea', text: 'A free session to hear what you need and suggest the simplest solution that gets there.' },
+      { title: 'Written plan and price', text: 'Scope, fixed price and delivery dates in writing before any payment.' },
+      { title: 'We build, you follow', text: 'A test version you can open every week to see progress yourself.' },
+      { title: 'Launch and support', text: 'Deployment, team training, and support after launch or a monthly care plan.' },
     ],
-    cta: 'Start with the free audit',
+    cta: 'Book the free session',
   },
 } as const;
 
@@ -48,7 +50,7 @@ export default function HowItWorks() {
           ))}
         </ol>
         <div className={styles.ctaRow}>
-          <Link href={path('/tech-lab')} className={styles.cta}>
+          <Link href={path('/contact')} className={styles.cta}>
             {ui.cta}
           </Link>
         </div>

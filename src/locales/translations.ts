@@ -13,7 +13,7 @@ export const translations = {
       pricing: 'الأسعار',
       blog: 'المدونة',
       contact: 'تواصل معنا',
-      cta: 'افحص موقعك',
+      cta: 'اطلب عرض سعر',
     },
     hero: {
       tag: 'وكالة أثر الرقمية 2026',
@@ -108,8 +108,8 @@ export const translations = {
       ]
     },
     pricing: {
-      title: 'بناء موقع أو متجر جديد',
-      subtitle: 'ليس لديك موقع بعد، أو موقعك الحالي لا يستحق الإصلاح؟ نبنيه من جديد بسعر معلن ودفعة واحدة.',
+      title: 'أسعار واضحة قبل أن نبدأ',
+      subtitle: 'المواقع والمتاجر بسعر معلن. الأنظمة وتطبيقات الجوال والأتمتة بسعر ثابت نكتبه لك بعد جلسة تحديد النطاق.',
       basic: {
         title: 'الباقة التعريفية',
         desc: 'مثالية للمهنيين والمشاريع الناشئة الراغبة في تأسيس حضور رقمي أولي متميز.',
@@ -140,19 +140,19 @@ export const translations = {
         btn: 'طلب الباقة الاحترافية',
       },
       enterprise: {
-        title: 'باقة الأنظمة والبرمجيات الخاصة',
-        desc: 'حلول تقنية مطورة خصيصاً للشركات الكبرى التي تتطلب مرونة كاملة ومواصفات تقنية خاصة.',
-        price: 'تسعير مخصص',
-        currency: 'حسب نطاق العمل',
+        title: 'الأنظمة وتطبيقات الجوال',
+        desc: 'تطبيقات ويب وأنظمة إدارة، تطبيقات آيفون وأندرويد، وربط وأتمتة بالذكاء الاصطناعي.',
+        price: 'سعر ثابت',
+        currency: 'بعد جلسة تحديد النطاق',
         features: [
-          'بناء برمجي مخصص بالكامل باستخدام أحدث البيئات البرمجية (Custom Stack)',
-          'تصميم واجهات وتجربة مستخدم حصرية بالكامل (UI/UX)',
-          'تكامل تام مع قواعد البيانات المعقدة وأنظمة تخطيط الموارد (ERP)',
-          'اختبارات أمان متقدمة وحماية معززة ضد الثغرات',
-          'اتفاقية دعم فني مخصصة على مدار الساعة (24/7 SLA)',
-          'جلسة استشارية مجانية مع كبار المهندسين لتحديد نطاق العمل المعماري',
+          'جلسة مجانية لفهم الفكرة وتحديد أبسط حل',
+          'نطاق عمل وسعر ثابت ومواعيد تسليم مكتوبة قبل أي دفعة',
+          'نسخة تجريبية أسبوعية تتابع عليها التقدم',
+          'حسابات وصلاحيات وقاعدة بيانات بنسخ احتياطي',
+          'النشر على الخادم أو متاجر التطبيقات',
+          'الكود والتصاميم ملكك بالكامل بعد السداد',
         ],
-        btn: 'حجز جلسة استشارية',
+        btn: 'احجز جلسة تحديد النطاق',
       }
     },
     blog: {
@@ -181,7 +181,7 @@ export const translations = {
       success: 'وصلنا طلبك. نرد عليك خلال يوم عمل.',
     },
     footer: {
-      text: 'أثر (ATHR): نفحص المواقع مجاناً، ونصلح سرعتها وأمانها وظهورها في غوغل بسعر ثابت، ونبني مواقع ومتاجر جديدة.',
+      text: 'أثر (ATHR): شركة برمجة تبني المواقع والمتاجر، تطبيقات الويب وأنظمة الإدارة، تطبيقات الجوال، والأتمتة بالذكاء الاصطناعي.',
       company: 'الشركة',
       privacy: 'سياسة الخصوصية',
       terms: 'الشروط والأحكام',
@@ -199,7 +199,7 @@ export const translations = {
       pricing: 'Pricing',
       blog: 'Blog',
       contact: 'Contact',
-      cta: 'Audit your site',
+      cta: 'Get a quote',
     },
     hero: {
       tag: 'Athar Digital Agency 2026',
@@ -294,8 +294,8 @@ export const translations = {
       ]
     },
     pricing: {
-      title: 'Build a new website or store',
-      subtitle: 'No site yet, or the current one is not worth fixing? We build it fresh at a published, one-time price.',
+      title: 'Clear prices before we start',
+      subtitle: 'Websites and stores at a published price. Systems, mobile apps and automation at a fixed price we put in writing after a scoping session.',
       basic: {
         title: 'Startup Plan',
         desc: 'Ideal for individuals, small projects, and startups kickstarting their web presence.',
@@ -326,19 +326,19 @@ export const translations = {
         btn: 'Order Professional Plan',
       },
       enterprise: {
-        title: 'Enterprise Plan',
-        desc: 'Bespoke custom software and platforms requiring unlimited development freedom.',
-        price: 'Special Quote',
-        currency: 'Based on Scope',
+        title: 'Systems & mobile apps',
+        desc: 'Web apps and business systems, iPhone and Android apps, and integrations and AI automation.',
+        price: 'Fixed price',
+        currency: 'after a scoping session',
         features: [
-          'Built entirely from scratch on custom software stack',
-          'Bold, custom UI layouts tailored by design experts',
-          'Complex database syncing and internal ERP APIs',
-          'Advanced penetration testing and custom firewalls',
-          '24/7 priority SLA support & server monitoring',
-          'Free scoping session with senior developers',
+          'Free session to understand the idea and find the simplest solution',
+          'Written scope, fixed price and delivery dates before any payment',
+          'A weekly test version so you can follow progress',
+          'Accounts, permissions and a backed-up database',
+          'Deployment to servers or the app stores',
+          'Code and designs are fully yours once paid',
         ],
-        btn: 'Request Custom Session',
+        btn: 'Book a scoping session',
       }
     },
     blog: {
@@ -367,7 +367,7 @@ export const translations = {
       success: 'We received your request. We reply within one business day.',
     },
     footer: {
-      text: 'ATHR audits websites for free, fixes their speed, security and Google visibility at a fixed price, and builds new sites and stores.',
+      text: 'ATHR is a software studio building websites and stores, web apps and business systems, mobile apps, and AI automation.',
       company: 'Company',
       privacy: 'Privacy policy',
       terms: 'Terms of service',

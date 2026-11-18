@@ -30,7 +30,7 @@ export default function Pricing() {
     const details = lang === 'ar'
       ? `أرغب في الاستفسار عن باقة: ${planTitle}`
       : `I want to inquire about package: ${planTitle}`;
-    savePrefill({ requestType: planKey === 'basic' ? 'web' : planKey === 'pro' ? 'store' : 'other', details });
+    savePrefill({ requestType: planKey === 'enterprise' ? 'webapp' : 'web', details });
     router.push(path('/contact'));
   };
 

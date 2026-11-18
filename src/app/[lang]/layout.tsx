@@ -32,14 +32,14 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     metadataBase: new URL(siteConfig.url),
     ...pageMetadata(lang, "/", {
       ar: {
-        title: "أثر (ATHR) | افحص موقعك مجاناً ونصلح لك السرعة والأمان والسيو",
+        title: "أثر (ATHR) | برمجة مواقع، أنظمة، وتطبيقات جوال بسعر ثابت",
         description:
-          "فحص مجاني وحقيقي لسرعة موقعك وأمانه وظهوره في غوغل، ثم إصلاح بسعر ثابت. وكالة أثر لتصميم وتطوير المواقع والمتاجر الإلكترونية.",
+          "شركة برمجة تبني مواقع الشركات والمتاجر، تطبيقات الويب وأنظمة الإدارة، تطبيقات آيفون وأندرويد، والأتمتة بالذكاء الاصطناعي.",
       },
       en: {
-        title: "ATHR | Free website audit, then fixed-price speed, security & SEO fixes",
+        title: "ATHR | Websites, business systems and mobile apps at a fixed price",
         description:
-          "A free, real audit of your site's speed, security and Google visibility, followed by fixes at a fixed price. ATHR builds websites and online stores.",
+          "A software studio building websites and stores, web apps and business systems, iPhone and Android apps, and AI automation.",
       },
     }),
     applicationName: "ATHR",

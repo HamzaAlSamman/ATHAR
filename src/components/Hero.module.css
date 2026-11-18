@@ -54,57 +54,12 @@
   text-wrap: pretty;
 }
 
-/* نموذج الفحص */
-.auditForm {
-  display: flex;
-  gap: 10px;
-  max-width: 580px;
-}
-
-.inputWrap {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  direction: ltr;
-  background: var(--color-white);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  box-shadow: 0 6px 20px var(--color-shadow);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.inputWrap:focus-within {
-  border-color: var(--color-mint);
-  box-shadow: 0 0 0 4px rgba(var(--color-mint-rgb), 0.18);
-}
-
-.inputPrefix {
-  padding-inline-start: 16px;
-  color: var(--color-ink-muted);
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  font-size: 15px;
-  user-select: none;
-}
-
-.input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  padding: 17px 16px 17px 2px;
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  font-size: 16px;
-  text-align: left;
-}
-
-.input::placeholder {
-  color: #99a3a4;
-}
-
 .primaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  min-height: 58px;
+  min-height: 56px;
   padding: 0 26px;
   border-radius: var(--border-radius-md);
   background: var(--color-mint);
@@ -115,38 +70,54 @@
   transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
-.primaryCta:hover:not(:disabled) {
+.primaryCta:hover {
   background: #45d985;
 }
 
-.primaryCta:active:not(:disabled) {
+.primaryCta:active {
   transform: scale(0.98);
 }
 
-.primaryCta:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
 .primaryCta:focus-visible,
-.secondaryLink:focus-visible {
+.secondaryCta:focus-visible,
+.auditLink:focus-visible {
   outline: 3px solid var(--color-ink);
   outline-offset: 3px;
 }
 
-.secondaryLink {
-  display: inline-block;
-  margin-top: 16px;
-  font-weight: 600;
-  color: var(--color-ink-light);
-  text-decoration: underline;
-  text-decoration-color: rgba(var(--color-ink-rgb), 0.25);
-  text-underline-offset: 5px;
-  border-radius: var(--border-radius-sm);
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.secondaryLink:hover {
-  text-decoration-color: var(--color-mint);
+.secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 26px;
+  border-radius: var(--border-radius-md);
+  border: 1.5px solid rgba(var(--color-ink-rgb), 0.18);
+  background: var(--color-white);
+  font-weight: 700;
+  transition: border-color var(--transition-fast);
+}
+
+.secondaryCta:hover {
+  border-color: var(--color-ink);
+}
+
+.auditLink {
+  display: inline-block;
+  margin-top: 18px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-ink-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--color-mint-rgb), 0.7);
+  text-underline-offset: 5px;
+  border-radius: var(--border-radius-sm);
 }
 
 /* الحقائق */
@@ -181,137 +152,74 @@
   color: var(--color-ink-muted);
 }
 
-/* مثال التقرير */
+/* الصورة التوضيحية: لوحة نظام + تطبيق جوال */
 .visualSide {
+  position: relative;
   min-width: 0;
+  padding-bottom: 40px;
 }
 
-.sampleCard {
+.appWindow {
   background: var(--color-white);
   border: 1px solid var(--color-border);
-  border-radius: 20px;
-  padding: 24px;
+  border-radius: 18px;
   box-shadow: 0 30px 60px rgba(var(--color-ink-rgb), 0.1);
-  transform: rotate(-1.5deg);
+  overflow: hidden;
+  margin-inline-end: 70px;
 }
 
-:global([dir='rtl']) .sampleCard {
-  transform: rotate(1.5deg);
-}
-
-.sampleHead {
+.appBar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
+  gap: 6px;
+  padding: 12px 16px;
+  background: var(--color-ink);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 13px;
 }
 
-.sampleLabel {
-  color: var(--color-ink-muted);
+.appBar span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.appBar strong {
+  margin-inline-start: 10px;
   font-weight: 600;
 }
 
-.sampleHost {
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  color: var(--color-ink-light);
-  background: var(--color-ice);
-  padding: 4px 10px;
-  border-radius: 6px;
+.appBody {
+  padding: 20px;
+  display: grid;
+  gap: 18px;
 }
 
-.sampleSummary {
+.chart {
+  height: 120px;
   display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.sampleGrade {
-  flex-shrink: 0;
-  width: 88px;
-  height: 88px;
-  border-radius: 20px;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  background: #fbeae8;
-  color: #b83227;
-}
-
-.sampleGrade span {
-  font-family: var(--font-jakarta), system-ui, sans-serif;
-  font-size: 2.8rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.sampleGrade small {
-  font-size: 11.5px;
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-.sampleBars {
-  flex: 1;
-  display: grid;
-  gap: 12px;
-}
-
-.sampleBar {
-  display: grid;
-  grid-template-columns: 56px 1fr 28px;
-  align-items: center;
+  align-items: flex-end;
   gap: 10px;
-  font-size: 13.5px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.sampleBarName {
-  font-weight: 600;
+.chart i {
+  flex: 1;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, var(--color-mint), rgba(var(--color-mint-rgb), 0.35));
 }
 
-.sampleTrack {
-  height: 8px;
-  border-radius: 999px;
-  background: var(--color-ice);
-  overflow: hidden;
-}
-
-.sampleFill {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-}
-
-.sampleFill[data-tone='good'] {
-  background: var(--color-mint);
-}
-
-.sampleFill[data-tone='mid'] {
-  background: var(--color-coral);
-}
-
-.sampleFill[data-tone='bad'] {
-  background: #e74c3c;
-}
-
-.sampleScore {
-  font-family: var(--font-jakarta), system-ui, sans-serif;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  text-align: end;
-}
-
-.sampleIssues {
+.rows {
   list-style: none;
   display: grid;
   gap: 8px;
-  margin-top: 22px;
   font-size: 13.5px;
   font-weight: 600;
 }
 
-.sampleIssues li {
+.rows li {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -320,14 +228,65 @@
   border-radius: 10px;
 }
 
-.sampleChip {
+.rows b {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-mint);
   flex-shrink: 0;
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 2px 9px;
+}
+
+.phone {
+  position: absolute;
+  bottom: 0;
+  inset-inline-end: 0;
+  width: 150px;
+  height: 270px;
+  border-radius: 28px;
+  background: var(--color-ink);
+  padding: 12px;
+  box-shadow: 0 24px 50px rgba(var(--color-ink-rgb), 0.28);
+}
+
+.phoneNotch {
+  width: 50px;
+  height: 6px;
   border-radius: 999px;
-  background: #fbeae8;
-  color: #b83227;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 2px auto 18px;
+}
+
+.phoneCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-mint);
+  color: var(--color-ink);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 12px 10px;
+  border-radius: 14px;
+  line-height: 1.35;
+}
+
+.phoneDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  flex-shrink: 0;
+}
+
+.phoneLines {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.phoneLines i {
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 991px) {
@@ -352,8 +311,8 @@
     padding: 108px 0 56px;
   }
 
-  .auditForm {
-    flex-direction: column;
+  .ctas > * {
+    flex: 1 1 100%;
   }
 
   .statsRow {
@@ -364,18 +323,12 @@
     font-size: 1.35rem;
   }
 
-  .sampleCard,
-  :global([dir='rtl']) .sampleCard {
-    transform: none;
-    padding: 18px;
+  .appWindow {
+    margin-inline-end: 40px;
   }
 
-  .sampleGrade {
-    width: 72px;
-    height: 72px;
-  }
-
-  .sampleGrade span {
-    font-size: 2.3rem;
+  .phone {
+    width: 120px;
+    height: 220px;
   }
 }

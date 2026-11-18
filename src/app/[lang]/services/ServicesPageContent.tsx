@@ -1,182 +1,115 @@
 'use client';
 
 import React from 'react';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { useLanguage } from "@/context/LanguageContext";
-import { useRouter } from "next/navigation";
-import styles from "./services.module.css";
+import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { useLanguage } from '@/context/LanguageContext';
+import { services } from '@/content/services';
+import styles from './services.module.css';
+
+const TEXT = {
+  ar: {
+    tagline: 'خدمات البرمجة',
+    title: 'نبرمج ما يحتاجه شغلك، من الموقع إلى التطبيق',
+    subtitle: 'فريق واحد للتصميم والبرمجة والنشر. تعرف السعر قبل أن نبدأ، والكود ملكك بعد التسليم.',
+    examples: 'أمثلة على ما نبنيه',
+    includes: 'ماذا يشمل',
+    from: 'يبدأ من {price} دولار',
+    quote: 'سعر ثابت بعد جلسة تحديد النطاق',
+    request: 'اطلب عرض سعر',
+    ctaTitle: 'عندك فكرة ولا تعرف من أين تبدأ؟',
+    ctaDesc: 'احكِ لنا عنها في جلسة مجانية، ونرجع لك بأبسط حل يحققها وبسعر ثابت.',
+    ctaBtn: 'احجز الجلسة المجانية',
+  },
+  en: {
+    tagline: 'Software services',
+    title: 'We build what your business needs, from website to app',
+    subtitle: 'One team for design, development and launch. You know the price before we start, and the code is yours after delivery.',
+    examples: 'Examples of what we build',
+    includes: "What's included",
+    from: 'From ${price}',
+    quote: 'Fixed price after a scoping session',
+    request: 'Get a quote',
+    ctaTitle: 'Have an idea but not sure where to start?',
+    ctaDesc: 'Tell us about it in a free session, and we come back with the simplest solution and a fixed price.',
+    ctaBtn: 'Book the free session',
+  },
+} as const;
 
 export default function ServicesPageContent() {
-  const { t, lang, path } = useLanguage();
-  const router = useRouter();
-
-  const servicesDetails = [
-    {
-      id: 'web',
-      titleAr: 'تصميم وتطوير المواقع الفاخرة',
-      titleEn: 'Bespoke Premium Web Development',
-      descAr: 'نقوم ببرمجة وهندسة مواقع مخصصة للشركات والمنصات تعكس هيبتها التجارية وتوفر أداءً خارقاً يعتمد على البرمجة الخاصة الكاملة دون القوالب الجاهزة.',
-      descEn: 'We engineer bespoke digital platforms and corporate sites that elevate your brand reputation, featuring full-scale custom code with zero template dependency.',
-      tech: ['Next.js', 'React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Vercel'],
-      featuresAr: [
-        'تصميم واجهات وتجربة مستخدم حصرية من الصفر',
-        'برمجة خفيفة سريعة التحميل بأقل من 1.2 ثانية',
-        'أكواد نظيفة مهندسة لسهولة التوسع والتطوير مستقبلاً',
-        'ربط لوحات تحكم ديناميكية وسهلة التعديل والتحكم',
-        'تكامل كامل مع خدمات جوجل التحليلية وتتبع الأداء'
-      ],
-      featuresEn: [
-        '100% custom UI/UX design crafted from scratch',
-        'Lightweight, high-speed architectures with <1.2s loads',
-        'Clean code architectures optimized for future scalability',
-        'Intuitive, easy-to-use CMS control dashboards',
-        'Native analytics integration and pixel triggers'
-      ]
-    },
-    {
-      id: 'stores',
-      titleAr: 'تصميم وبرمجة المتاجر الإلكترونية',
-      titleEn: 'Conversion-Optimized E-commerce Stores',
-      descAr: 'متاجر ذكية مهيأة للبيع تضمن تجربة شراء سريعة خالية من الأخطاء لرفع معدلات التحويل وزيادة الأرباح، سواء كانت برمجة خاصة أو تخصيص منصات.',
-      descEn: 'High-conversion retail and wholesale web shops structured to secure purchases and elevate sales revenues across regional GCC markets.',
-      tech: ['Next.js', 'Shopify Liquid', 'Salla CSS', 'Zid APIs', 'Tailwind', 'Stripe'],
-      featuresAr: [
-        'ربط بوابات الدفع الإلكتروني (مدى، أبل باي، فيزا)',
-        'تحسين رحلة الشراء (CRO) لتقليل السلال المتروكة',
-        'ربط مؤتمت بالكامل مع شركات الشحن والتوصيل',
-        'نظام إدارة مخازن متطور يدعم التنبيهات الفورية',
-        'تصميم متجاوب بالكامل وسهل التصفح عبر الهواتف'
-      ],
-      featuresEn: [
-        'Instant integration of regional gateways (Mada, Apple Pay)',
-        'Checkout optimization (CRO) reducing cart abandonments',
-        'Automated logistics integration with shipping carriers',
-        'Advanced inventory sync and instant stock notifications',
-        'Seamless mobile layouts engineered for checkout speed'
-      ]
-    },
-    {
-      id: 'seo',
-      titleAr: 'تحسين محركات البحث وتصدر جوجل (SEO)',
-      titleEn: 'Advanced Technical SEO & Google Search Ranking',
-      descAr: 'نهيئ موقعك فنيّاً وتيبوغرافيّاً للزحف السريع والترتيب المتقدم في محركات البحث لجلب عملاء مهتمين بمنتجاتك وخدماتك مجاناً وبشكل عضوي.',
-      descEn: 'Optimize your technical site schemas and keywords to ensure rapid indexing and high organic placements on search result pages.',
-      tech: ['Schema JSON-LD', 'Google Search Console', 'Sitemaps XML', 'Robots.txt', 'Core Web Vitals'],
-      featuresAr: [
-        'تحليل شامل ومنافس للكلمات المفتاحية الأكثر ربحية',
-        'تهيئة الأكواد الفنية وهندسة العناوين والأوسمة الميتا',
-        'بناء خرائط الموقع وتوجيه عناكب جوجل الفوري',
-        'رفع كفاءة ومقاييس الويب الحيوية (Core Web Vitals)',
-        'تقارير أداء شهرية واضحة عن الكلمات المتصدرة'
-      ],
-      featuresEn: [
-        'Profitable keyword gap analysis and search intent research',
-        'Bespoke technical code tuning, structured data JSON-LD',
-        'Automated XML sitemaps generation and search crawls',
-        'Optimizing Core Web Vitals to clear search algorithm audits',
-        'Transparent monthly keyword performance reports'
-      ]
-    },
-    {
-      id: 'uiux',
-      titleAr: 'تصميم واجهات وتجربة المستخدم (UI/UX)',
-      titleEn: 'Premium UI/UX Artistry & Figma Prototyping',
-      descAr: 'نقوم بدراسة رحلة المستخدم وتصميم واجهات بصرية مدهشة تعكس فخامة علامتك التجارية وتضمن تصفحاً مريحاً يزيد من معدلات التفاعل والإغلاق.',
-      descEn: 'We research visual patterns and layout user pathways that showcase your premium branding and drive engagement metrics.',
-      tech: ['Figma', 'Interactive Prototypes', 'Design Systems', 'Wireframing', 'Typography Grid'],
-      featuresAr: [
-        'تخطيط هيكلي كامل لرحلة المستخدم (Wireframing)',
-        'تصميم واجهات مستخدم بصرية وتفاعلية فاخرة (UI)',
-        'اختبار سهولة وقابلية الاستخدام للمستهلك الفعلي',
-        'بناء لغة تصميم ونظام موحد للعلامة (Design System)',
-        'تسليم ملفات Figma كاملة ومهيأة للمطورين'
-      ],
-      featuresEn: [
-        'User journey wireframing and interactive flow map layout',
-        'Bold, high-fidelity visual interface designs (UI)',
-        'Rapid usability testing and consumer behavior checks',
-        'Component libraries and cohesive design systems',
-        'Developer-ready Figma blueprints and styling tokens'
-      ]
-    }
-  ];
+  const { lang, path } = useLanguage();
+  const ui = TEXT[lang];
 
   return (
     <div className={styles.servicesPage}>
       <Header />
 
-      <main style={{ flex: "1 0 auto", paddingTop: "80px" }}>
-        {/* Hero Section */}
+      <main style={{ flex: '1 0 auto', paddingTop: '80px' }}>
         <section className={styles.heroSection}>
           <div className={styles.glowOrb}></div>
           <div className={`container ${styles.heroContent}`}>
-            <span className={styles.tagline}>
-              {lang === 'ar' ? 'ماذا نصنع في أثر؟' : 'What We Craft at Athar'}
-            </span>
-            <h1 className={styles.title}>
-              {lang === 'ar' ? 'حلول رقمية مهندسة لنمو استثمارك' : 'Engineered Digital Solutions for Investment Growth'}
-            </h1>
-            <p className={styles.subtitle}>
-              {t('services.subtitle')}
-            </p>
+            <span className={styles.tagline}>{ui.tagline}</span>
+            <h1 className={styles.title}>{ui.title}</h1>
+            <p className={styles.subtitle}>{ui.subtitle}</p>
           </div>
         </section>
 
-        {/* Detailed Grid Section */}
         <section className={styles.gridSection}>
           <div className={`container ${styles.servicesGrid}`}>
-            {servicesDetails.map((service, idx) => (
-              <div key={idx} className={styles.serviceDetailCard}>
+            {services.map((service) => (
+              <article key={service.id} id={service.id} className={styles.serviceDetailCard}>
                 <div className={styles.serviceInfo}>
-                  <h2>{lang === 'ar' ? service.titleAr : service.titleEn}</h2>
-                  <p className={styles.serviceDesc}>
-                    {lang === 'ar' ? service.descAr : service.descEn}
-                  </p>
-                  
+                  <h2>{service.title[lang]}</h2>
+                  <p className={styles.serviceDesc}>{service.long[lang]}</p>
+                  <h3 className={styles.featuresTitle}>{ui.examples}</h3>
+                  <ul className={styles.featuresList}>
+                    {service.examples[lang].map((item) => (
+                      <li key={item} className={styles.featureItem}>
+                        <span className={styles.featureCheckDot}></span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                   <div className={styles.techBadgeRow}>
-                    {service.tech.map((t, i) => (
-                      <span key={i} className={styles.techBadge}>{t}</span>
+                    {service.tech.map((tech) => (
+                      <span key={tech} className={styles.techBadge} dir="ltr">
+                        {tech}
+                      </span>
                     ))}
                   </div>
                 </div>
 
                 <div className={styles.featuresWrapper}>
-                  <h3 className={styles.featuresTitle}>
-                    {lang === 'ar' ? 'ماذا تشمل الخدمة؟' : 'What is Included?'}
-                  </h3>
+                  <h3 className={styles.featuresTitle}>{ui.includes}</h3>
                   <ul className={styles.featuresList}>
-                    {(lang === 'ar' ? service.featuresAr : service.featuresEn).map((feat, i) => (
-                      <li key={i} className={styles.featureItem}>
+                    {service.includes[lang].map((item) => (
+                      <li key={item} className={styles.featureItem}>
                         <span className={styles.featureCheckDot}></span>
-                        <span>{feat}</span>
+                        <span>{item}</span>
                       </li>
                     ))}
                   </ul>
+                  <p className={styles.priceLine}>
+                    {service.from ? ui.from.replace('{price}', String(service.from)) : ui.quote}
+                  </p>
+                  <Link href={`${path('/contact')}?service=${service.id}`} className={styles.requestBtn}>
+                    {ui.request}
+                  </Link>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* Bottom CTA Banner */}
         <section className={styles.ctaSection}>
           <div className="container">
             <div className={styles.ctaCard}>
-              <h2 className={styles.ctaTitle}>
-                {lang === 'ar' ? 'هل أنت جاهز لبدء مشروعك معنا؟' : 'Ready to Launch Your Custom Project?'}
-              </h2>
-              <p className={styles.ctaDesc}>
-                {lang === 'ar' 
-                  ? 'سواء كنت تريد بناء موقعك التعريفي من الصفر أو إطلاق متجر إلكتروني بميزات معقدة، نحن هنا لمساعدتك على التفوق.'
-                  : 'Whether you need a custom corporate platform built from scratch or a scaling e-store, our team is equipped to deliver.'}
-              </p>
-              <button 
-                onClick={() => router.push(path('/contact'))}
-                className={styles.ctaBtn}
-              >
-                {t('hero.cta')}
-              </button>
+              <h2 className={styles.ctaTitle}>{ui.ctaTitle}</h2>
+              <p className={styles.ctaDesc}>{ui.ctaDesc}</p>
+              <Link href={path('/contact')} className={styles.ctaBtn}>
+                {ui.ctaBtn}
+              </Link>
             </div>
           </div>
         </section>

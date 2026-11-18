@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
-import Packages from "@/components/Packages";
 import Services from "@/components/Services";
+import HowItWorks from "@/components/HowItWorks";
 import Portfolio from "@/components/Portfolio";
-import Trust from "@/components/Trust";
 import Pricing from "@/components/Pricing";
+import LabShowcase from "@/components/LabShowcase";
+import Trust from "@/components/Trust";
 import Blog from "@/components/Blog";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -18,19 +18,19 @@ export async function generateMetadata({ params }: PageProps<"/[lang]">): Promis
   if (!isLocale(lang)) return {};
   return pageMetadata(lang, "/", {
     ar: {
-      title: "أثر (ATHR) | افحص موقعك مجاناً ونصلح لك السرعة والأمان والسيو",
+      title: "أثر (ATHR) | برمجة مواقع، أنظمة، وتطبيقات جوال بسعر ثابت",
       description:
-        "فحص مجاني وحقيقي لسرعة موقعك وأمانه وظهوره في غوغل، ثم إصلاح بسعر ثابت. وكالة أثر لتصميم وتطوير المواقع والمتاجر الإلكترونية.",
+        "شركة برمجة تبني مواقع الشركات والمتاجر، تطبيقات الويب وأنظمة الإدارة، تطبيقات آيفون وأندرويد، والأتمتة بالذكاء الاصطناعي. سعر ثابت قبل البدء والكود ملكك.",
     },
     en: {
-      title: "ATHR | Free website audit, then fixed-price speed, security & SEO fixes",
+      title: "ATHR | Websites, business systems and mobile apps at a fixed price",
       description:
-        "A free, real audit of your site's speed, security and Google visibility, followed by fixes at a fixed price. ATHR builds websites and online stores.",
+        "A software studio building company websites and stores, web apps and business systems, iPhone and Android apps, and AI automation. Fixed price up front, and the code is yours.",
     },
   });
 }
 
-// الترتيب يتبع رحلة البيع: افحص ← افهم الخطوات ← شاهد السعر ← ما نقدمه أيضاً ← تواصل.
+// الترتيب يتبع قرار الزبون: ماذا تبرمجون ← كيف تشتغلون ← كم السعر ← دليل على الجودة ← تواصل.
 export default async function Home({ params }: PageProps<"/[lang]">) {
   await params;
   return (
@@ -38,11 +38,11 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <Header />
       <main style={{ flex: "1 0 auto" }}>
         <Hero />
-        <HowItWorks />
-        <Packages />
         <Services />
+        <HowItWorks />
         {publishedProjects.length > 0 && <Portfolio />}
         <Pricing />
+        <LabShowcase />
         <Trust />
         <Blog />
         <Contact />

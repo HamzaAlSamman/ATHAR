@@ -266,3 +266,51 @@
     padding: 40px 20px;
   }
 }
+
+.serviceDetailCard {
+  scroll-margin-top: 100px;
+}
+
+.serviceInfo .featuresTitle {
+  margin-top: 20px;
+}
+
+.serviceInfo .featuresList {
+  margin-bottom: 20px;
+}
+
+.priceLine {
+  margin-top: 20px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.requestBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: var(--border-radius-md);
+  background: var(--color-mint);
+  color: var(--color-ink);
+  font-weight: 700;
+  transition: background-color var(--transition-fast);
+}
+
+.requestBtn:hover {
+  background: #45d985;
+}
+
+.requestBtn:focus-visible,
+.ctaBtn:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-ink);
+}

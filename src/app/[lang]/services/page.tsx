@@ -6,8 +6,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/services">
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   return pageMetadata(lang, "/services", {
-    ar: { title: "خدماتنا | تطوير المواقع والمتاجر والسيو - أثر", description: "تصميم وتطوير مواقع ومتاجر إلكترونية، تحسين السرعة والأمان، السيو التقني، وتصميم واجهات المستخدم." },
-    en: { title: "Services | Websites, stores and SEO - ATHR", description: "Website and online store development, speed and security improvements, technical SEO and UI/UX design." },
+    ar: { title: "خدمات البرمجة | مواقع، أنظمة، تطبيقات جوال، أتمتة - أثر", description: "نبرمج مواقع ومتاجر، تطبيقات ويب وأنظمة إدارة (حجوزات، CRM، مخزون)، تطبيقات آيفون وأندرويد، وربطاً وأتمتة بالذكاء الاصطناعي." },
+    en: { title: "Software services | Websites, systems, mobile apps, automation - ATHR", description: "We build websites and stores, web apps and business systems (bookings, CRM, inventory), iPhone and Android apps, and AI-powered integrations and automation." },
   });
 }
 

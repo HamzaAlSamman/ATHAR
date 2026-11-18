@@ -4,22 +4,22 @@ import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { siteConfig } from '@/lib/config';
 import { allPackages, formatPrice, getPackage } from '@/content/packages';
+import { getService, services } from '@/content/services';
 import { takePrefill } from '@/lib/prefill';
 import styles from './Contact.module.css';
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
-const BUILD_TYPES = ['web', 'store', 'other'] as const;
+// أنواع الطلب للمشاريع الجديدة: خدمات البرمجة + "شيء آخر". الأسماء القديمة (store) تُحوَّل لأقرب خدمة.
+const LEGACY_TYPES: Record<string, string> = { store: 'web' };
 
 const TEXT = {
   ar: {
     requestLabel: 'ماذا تحتاج؟',
-    web: 'بناء موقع جديد',
-    store: 'بناء متجر إلكتروني',
     other: 'شيء آخر',
-    fixGroup: 'إصلاح موقع حالي',
-    buildGroup: 'مشروع جديد',
-    detailsPlaceholder: 'رابط موقعك الحالي إن وُجد، وما الذي تريد تحقيقه.',
+    fixGroup: 'تحسين موقع حالي',
+    buildGroup: 'مشروع برمجة جديد',
+    detailsPlaceholder: 'احكِ لنا عن فكرتك: ماذا يجب أن يفعل النظام أو التطبيق، ومن سيستخدمه.',
     sending: 'جارٍ الإرسال...',
     required: 'اكتب اسمك ورقم جوالك حتى نتمكن من الرد عليك.',
     invalidPhone: 'رقم الجوال غير صحيح. اكتبه مع رمز الدولة، مثل +966 5x xxx xxxx',
@@ -31,12 +31,10 @@ const TEXT = {
   },
   en: {
     requestLabel: 'What do you need?',
-    web: 'A new website',
-    store: 'A new online store',
     other: 'Something else',
-    fixGroup: 'Fix an existing site',
-    buildGroup: 'New project',
-    detailsPlaceholder: 'Your current site link if you have one, and what you want to achieve.',
+    fixGroup: 'Improve an existing site',
+    buildGroup: 'New software project',
+    detailsPlaceholder: 'Tell us about your idea: what the system or app should do, and who will use it.',
     sending: 'Sending...',
     required: 'Enter your name and phone number so we can reply.',
     invalidPhone: 'That phone number looks wrong. Include the country code, e.g. +966 5x xxx xxxx',
@@ -67,12 +65,18 @@ export default function Contact() {
 
   // تعبئة النموذج من التقرير أو صفحة الأسعار أو الحاسبة (التخزين المحلي متاح بعد الترطيب فقط).
   useEffect(() => {
+    // رابط من صفحة الخدمات (?service=webapp) يختار الخدمة مباشرة.
+    const fromQuery = new URLSearchParams(window.location.search).get('service');
     const data = takePrefill();
+    /* eslint-disable react-hooks/set-state-in-effect -- قراءة الرابط وتخزين العميل مرة واحدة عند التحميل */
+    if (getService(fromQuery)) setRequest(fromQuery!);
     if (!data) return;
     const pkg = getPackage(data.packageId);
-    /* eslint-disable react-hooks/set-state-in-effect -- قراءة تخزين العميل مرة واحدة عند التحميل */
     if (pkg) setRequest(pkg.id);
-    else if (data.requestType && (BUILD_TYPES as readonly string[]).includes(data.requestType)) setRequest(data.requestType);
+    else if (data.requestType) {
+      const type = LEGACY_TYPES[data.requestType] ?? data.requestType;
+      setRequest(getService(type) || type === 'other' ? type : 'web');
+    }
     else if (data.audit) setRequest('complete');
 
     if (data.audit) {
@@ -94,7 +98,9 @@ export default function Contact() {
   const requestLabel = (value: string) => {
     const pkg = getPackage(value);
     if (pkg) return `${pkg.title[lang]} (${formatPrice(pkg, lang)})`;
-    return ui[value as (typeof BUILD_TYPES)[number]] ?? value;
+    const service = getService(value);
+    if (service) return service.title[lang];
+    return value === 'other' ? ui.other : value;
   };
 
   const validate = (): string | null => {
@@ -235,17 +241,18 @@ export default function Contact() {
                 onChange={(e) => setRequest(e.target.value)}
                 className={styles.select}
               >
+                <optgroup label={ui.buildGroup}>
+                  {services.map((service) => (
+                    <option key={service.id} value={service.id}>
+                      {service.title[lang]}
+                    </option>
+                  ))}
+                  <option value="other">{ui.other}</option>
+                </optgroup>
                 <optgroup label={ui.fixGroup}>
                   {allPackages.map((pkg) => (
                     <option key={pkg.id} value={pkg.id}>
                       {requestLabel(pkg.id)}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label={ui.buildGroup}>
-                  {BUILD_TYPES.map((type) => (
-                    <option key={type} value={type}>
-                      {ui[type]}
                     </option>
                   ))}
                 </optgroup>

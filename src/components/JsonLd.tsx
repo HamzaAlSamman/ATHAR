@@ -19,8 +19,8 @@ export default function JsonLd({ lang }: { lang: Locale }) {
         url: `${siteConfig.url}${localePath(lang)}`,
         logo: `${siteConfig.url}/logo.png`,
         description: ar
-          ? "وكالة تصميم وتطوير مواقع ومتاجر إلكترونية، مع فحص مجاني للسرعة والأمان والسيو وإصلاح بسعر ثابت."
-          : "Website and online store agency offering a free speed, security and SEO audit and fixed-price fixes.",
+          ? "شركة برمجة: مواقع ومتاجر، تطبيقات ويب وأنظمة إدارة، تطبيقات جوال، وأتمتة بالذكاء الاصطناعي."
+          : "Software studio: websites and stores, web apps and business systems, mobile apps, and AI automation.",
         email: siteConfig.contactEmail,
         ...(sameAs.length > 0 ? { sameAs } : {}),
       },
