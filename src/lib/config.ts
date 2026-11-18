@@ -18,7 +18,16 @@ export const siteConfig = {
     instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM || '#',
     facebook: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK || '#',
   },
+  // بيانات قانونية تُعرض فقط إن وُجدت فعلاً. لا نعرض أرقام سجلات أو توثيقات غير حقيقية.
+  legal: {
+    crNumber: process.env.NEXT_PUBLIC_CR_NUMBER || '',
+    maaroofUrl: process.env.NEXT_PUBLIC_MAAROOF_URL || '',
+  },
 } as const;
+
+/** هل ضُبطت بيانات التواصل الحقيقية؟ تُستعمل في فحص ما قبل الإطلاق. */
+export const usingPlaceholderContact =
+  !process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || !process.env.CONTACT_EMAIL;
 
 export type Locale = 'ar' | 'en';
 

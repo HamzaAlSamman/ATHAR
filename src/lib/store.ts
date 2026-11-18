@@ -1,46 +1,51 @@
-// مخزن JSON بسيط على نظام الملفات لحفظ الطلبات (leads) دون قاعدة بيانات.
-// مناسب للتطوير والاستضافة الذاتية. على بيئات serverless للقراءة فقط يُكتفى بالتسجيل في السجل.
+// مخزن طلبات التواصل.
+// الإنتاج: Redis المشترك (lib/kv). التطوير المحلي بدونه: ملف JSON في data/ (لا يعمل على serverless).
+import "server-only";
 import { promises as fs } from "fs";
 import path from "path";
+import { kvEnabled, redis } from "./kv";
+import type { Lead } from "./lead";
 
+export type { Lead };
+
+const LEADS_KEY = "athar:leads";
+const MAX_LEADS = 5000;
 const DATA_DIR = path.join(process.cwd(), "data");
+const LEADS_FILE = path.join(DATA_DIR, "leads.json");
 
-export interface Lead {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  projectType: string;
-  details: string;
-  source: string;
-  lang: string;
-  createdAt: string;
-}
-
-async function ensureDir() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-}
-
-async function readJson<T>(file: string, fallback: T): Promise<T> {
+async function readFileLeads(): Promise<Lead[]> {
   try {
-    const raw = await fs.readFile(path.join(DATA_DIR, file), "utf-8");
-    return JSON.parse(raw) as T;
+    return JSON.parse(await fs.readFile(LEADS_FILE, "utf-8")) as Lead[];
   } catch {
-    return fallback;
+    return [];
   }
 }
 
-async function writeJson(file: string, data: unknown): Promise<void> {
-  await ensureDir();
-  await fs.writeFile(path.join(DATA_DIR, file), JSON.stringify(data, null, 2), "utf-8");
-}
-
 export async function getLeads(): Promise<Lead[]> {
-  return readJson<Lead[]>("leads.json", []);
+  if (kvEnabled) {
+    const raw = await redis<string[]>("LRANGE", LEADS_KEY, 0, MAX_LEADS - 1);
+    return raw.flatMap((item) => {
+      try {
+        return [JSON.parse(item) as Lead];
+      } catch {
+        return [];
+      }
+    });
+  }
+  return readFileLeads();
 }
 
 export async function addLead(lead: Lead): Promise<void> {
-  const leads = await getLeads();
+  if (kvEnabled) {
+    await redis("LPUSH", LEADS_KEY, JSON.stringify(lead));
+    await redis("LTRIM", LEADS_KEY, 0, MAX_LEADS - 1);
+    return;
+  }
+  const leads = await readFileLeads();
   leads.unshift(lead);
-  await writeJson("leads.json", leads);
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.writeFile(LEADS_FILE, JSON.stringify(leads.slice(0, MAX_LEADS), null, 2), "utf-8");
 }
+
+/** أين تُحفظ الطلبات؟ يظهر في لوحة التحكم. */
+export const storageMode: "redis" | "file" = kvEnabled ? "redis" : "file";

@@ -305,7 +305,7 @@
 }
 
 .gradeLetter {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-size: 3.25rem;
   font-weight: 700;
   line-height: 1;
@@ -337,7 +337,7 @@
 }
 
 .host {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  font-family: var(--font-jakarta), system-ui, sans-serif !important;
   font-size: 1.4rem;
   overflow-wrap: anywhere;
   text-align: start;
@@ -448,7 +448,7 @@
   inset: 0;
   display: grid;
   place-content: center;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -513,7 +513,7 @@
   padding: 4px 12px;
   border-radius: 999px;
   text-align: center;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -783,4 +783,14 @@
   .progress span {
     transition: none;
   }
+}
+
+.ctaSuggestion {
+  margin-top: 10px;
+  color: var(--color-white) !important;
+  font-size: 15px;
+}
+
+.ctaSuggestion strong {
+  color: var(--color-mint);
 }

@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { projects, localized } from '@/content/projects';
+import { publishedProjects as projects, localized } from '@/content/projects';
 import styles from './Portfolio.module.css';
 
 export default function Portfolio() {
-  const { t, lang } = useLanguage();
+  const { t, lang, path } = useLanguage();
   const [activeTab, setActiveTab] = useState<string>('all');
   const [expandedProjectSlug, setExpandedProjectSlug] = useState<string | null>(null);
 
@@ -100,7 +100,7 @@ export default function Portfolio() {
                       </h4>
                       <p style={{ marginTop: '4px' }}>{localized(project.result, lang)}</p>
                     </div>
-                    <Link href={`/portfolio/${project.slug}`} className={styles.detailsBtn}>
+                    <Link href={path(`/portfolio/${project.slug}`)} className={styles.detailsBtn}>
                       <span>{lang === 'ar' ? 'فتح دراسة الحالة كاملة' : 'Open full case study'}</span>
                       <span>{lang === 'ar' ? '←' : '→'}</span>
                     </Link>

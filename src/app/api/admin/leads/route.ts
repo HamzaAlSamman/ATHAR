@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { getLeads } from "@/lib/store";
-import { ADMIN_COOKIE } from "../login/route";
+import { isAdmin } from "@/lib/admin-auth";
+import { getLeads, storageMode } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
-async function isAuthed(): Promise<boolean> {
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected) return false;
-  const store = await cookies();
-  return store.get(ADMIN_COOKIE)?.value === expected;
-}
-
 export async function GET() {
-  if (!(await isAuthed())) {
+  if (!(await isAdmin())) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
-  const leads = await getLeads();
-  return NextResponse.json({ ok: true, leads });
+  try {
+    const leads = await getLeads();
+    return NextResponse.json({ ok: true, leads, storage: storageMode }, { headers: { "Cache-Control": "no-store" } });
+  } catch (err) {
+    console.error("[admin] failed to read leads", err);
+    return NextResponse.json({ ok: false, error: "storage_error" }, { status: 500 });
+  }
 }

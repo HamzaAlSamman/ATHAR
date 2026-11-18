@@ -116,8 +116,9 @@
 }
 
 .price {
-  font-family: var(--font-ibm-plex), sans-serif;
+  font-family: var(--font-plex-arabic), var(--font-jakarta), sans-serif;
   font-size: 36px;
+  flex-wrap: wrap;
   font-weight: 800;
   color: var(--color-ink);
   display: flex;
@@ -206,4 +207,9 @@
   .title {
     font-size: 28px;
   }
+}
+
+/* سعر نصي ("تسعير مخصص") أصغر من الأرقام حتى لا ينكسر على سطرين كبيرين. */
+.priceText {
+  font-size: 24px;
 }

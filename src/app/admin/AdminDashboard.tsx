@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import type { Lead } from '@/lib/store';
+import type { Lead } from '@/lib/lead';
 import styles from './admin.module.css';
 
 export default function AdminDashboard() {

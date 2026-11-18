@@ -7,7 +7,7 @@ import { posts, localized } from '@/content/posts';
 import styles from './Blog.module.css';
 
 export default function Blog() {
-  const { t, lang } = useLanguage();
+  const { t, lang, path } = useLanguage();
 
   return (
     <section id="blog" className={styles.blog}>
@@ -27,7 +27,7 @@ export default function Blog() {
               <p className={styles.excerpt}>{localized(post.excerpt, lang)}</p>
 
               <Link
-                href={`/blog/${post.slug}`}
+                href={path(`/blog/${post.slug}`)}
                 className={styles.readMoreBtn}
                 id={`blog-read-more-${post.slug}`}
               >

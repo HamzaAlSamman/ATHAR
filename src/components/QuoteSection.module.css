@@ -35,7 +35,7 @@
 
 .quoteSymbolStart,
 .quoteSymbolEnd {
-  font-family: 'Plus Jakarta Sans', Georgia, serif;
+  font-family: var(--font-jakarta), Georgia, serif;
   font-size: 8rem;
   line-height: 1;
   color: var(--color-mint);
@@ -79,12 +79,12 @@
 }
 
 :global([dir="rtl"]) .blockquote {
-  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-cairo), system-ui, -apple-system, sans-serif;
   font-weight: 400;
 }
 
 :global([dir="ltr"]) .blockquote {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-jakarta), system-ui, -apple-system, sans-serif;
   font-weight: 500;
 }
 
@@ -113,7 +113,7 @@
 }
 
 :global([dir="rtl"]) .author {
-  font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-plex-arabic), system-ui, -apple-system, sans-serif;
   letter-spacing: 0;
 }
 

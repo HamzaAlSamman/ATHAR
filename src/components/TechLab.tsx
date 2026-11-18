@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { auditUi, fillText, findingText } from '@/locales/audit';
+import { formatPrice, suggestPackage } from '@/content/packages';
+import { savePrefill } from '@/lib/prefill';
 import type {
   AuditCategory,
   AuditErrorCode,
@@ -55,7 +57,7 @@ function ScoreRing({ score, label }: { score: number; label: string }) {
 }
 
 export default function TechLab({ initialUrl = '' }: { initialUrl?: string }) {
-  const { lang } = useLanguage();
+  const { lang, path } = useLanguage();
   const router = useRouter();
   const ui = auditUi[lang];
 
@@ -75,12 +77,12 @@ export default function TechLab({ initialUrl = '' }: { initialUrl?: string }) {
       setReport(data);
       setPhase('done');
       // الرابط في شريط العنوان يصير رابط التقرير نفسه، جاهزاً للنسخ والمشاركة.
-      window.history.replaceState(null, '', `/tech-lab?url=${encodeURIComponent(target)}`);
+      window.history.replaceState(null, '', `${path('/tech-lab')}?url=${encodeURIComponent(target)}`);
     } else {
       setErrorCode(data.error);
       setPhase('error');
     }
-  }, []);
+  }, [path]);
 
   const scan = useCallback(
     (target: string) => {
@@ -129,7 +131,7 @@ export default function TechLab({ initialUrl = '' }: { initialUrl?: string }) {
   };
 
   const shareLink = () =>
-    `${window.location.origin}/tech-lab?url=${encodeURIComponent(cleanTarget(url))}`;
+    `${window.location.origin}${path('/tech-lab')}?url=${encodeURIComponent(cleanTarget(url))}`;
 
   const handleCopy = async () => {
     try {
@@ -141,15 +143,16 @@ export default function TechLab({ initialUrl = '' }: { initialUrl?: string }) {
     }
   };
 
+  const suggestion = report ? suggestPackage(report.scores) : null;
+
   const handleFixRequest = () => {
-    if (!report) return;
+    if (!report || !suggestion) return;
     const fails = report.findings.filter((f) => f.status === 'fail').length;
-    // نموذج التواصل يقرأ هذه القيمة ويملأ تفاصيل الطلب تلقائياً.
-    localStorage.setItem(
-      'athar_prefill',
-      JSON.stringify({ tool: 'audit', url: report.host, grade: report.grade, score: report.scores.overall, fails })
-    );
-    router.push('/contact');
+    savePrefill({
+      packageId: suggestion.id,
+      audit: { host: report.host, grade: report.grade, score: report.scores.overall, fails },
+    });
+    router.push(path('/contact'));
   };
 
   const renderFinding = (finding: Finding) => {
@@ -359,6 +362,11 @@ export default function TechLab({ initialUrl = '' }: { initialUrl?: string }) {
               <div>
                 <h3>{ui.ctaTitle}</h3>
                 <p>{ui.ctaDesc}</p>
+                {suggestion && (
+                  <p className={styles.ctaSuggestion}>
+                    {ui.suggested}: <strong>{suggestion.title[lang]}</strong> · {formatPrice(suggestion, lang)}
+                  </p>
+                )}
               </div>
               <button type="button" onClick={handleFixRequest} className={styles.ctaBtn}>
                 {ui.ctaBtn}

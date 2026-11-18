@@ -15,6 +15,8 @@ export interface Project {
   cover: string;
   metrics: { value: string; label: { ar: string; en: string } }[];
   stack: string[];
+  /** يظهر للعامة فقط حين يكون مشروعاً حقيقياً بنتائج موثّقة. */
+  published: boolean;
 }
 
 export const projects: Project[] = [
@@ -48,6 +50,7 @@ export const projects: Project[] = [
       { value: "-40%", label: { ar: "السلال المتروكة", en: "Cart abandonment" } },
     ],
     stack: ["Next.js", "Salla API", "Mada", "Apple Pay"],
+    published: false,
   },
   {
     slug: "alraid-engineering-consultations",
@@ -79,6 +82,7 @@ export const projects: Project[] = [
       { value: "24/7", label: { ar: "حجز ذاتي", en: "Self-booking" } },
     ],
     stack: ["Next.js", "Booking system", "Admin dashboard"],
+    published: false,
   },
   {
     slug: "sanad-logistics-identity",
@@ -109,11 +113,15 @@ export const projects: Project[] = [
       { value: "1:1", label: { ar: "تناغم عربي/لاتيني", en: "AR/EN harmony" } },
     ],
     stack: ["Brand identity", "Logotype", "Guidelines"],
+    published: false,
   },
 ];
 
+// المشاريع المعروضة للعامة. فارغة حتى تُضاف مشاريع حقيقية بنتائج يمكن إثباتها.
+export const publishedProjects: Project[] = projects.filter((p) => p.published);
+
 export function getProject(slug: string): Project | undefined {
-  return projects.find((p) => p.slug === slug);
+  return publishedProjects.find((p) => p.slug === slug);
 }
 
 export function localized<T>(field: { ar: T; en: T }, lang: Locale): T {

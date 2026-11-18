@@ -1,230 +1,288 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { siteConfig } from '@/lib/config';
+import { allPackages, formatPrice, getPackage } from '@/content/packages';
+import { takePrefill } from '@/lib/prefill';
 import styles from './Contact.module.css';
+
+type Status = 'idle' | 'sending' | 'sent' | 'error';
+
+const BUILD_TYPES = ['web', 'store', 'other'] as const;
+
+const TEXT = {
+  ar: {
+    requestLabel: 'ماذا تحتاج؟',
+    web: 'بناء موقع جديد',
+    store: 'بناء متجر إلكتروني',
+    other: 'شيء آخر',
+    fixGroup: 'إصلاح موقع حالي',
+    buildGroup: 'مشروع جديد',
+    detailsPlaceholder: 'رابط موقعك الحالي إن وُجد، وما الذي تريد تحقيقه.',
+    sending: 'جارٍ الإرسال...',
+    required: 'اكتب اسمك ورقم جوالك حتى نتمكن من الرد عليك.',
+    invalidPhone: 'رقم الجوال غير صحيح. اكتبه مع رمز الدولة، مثل +966 5x xxx xxxx',
+    failed: 'تعذّر إرسال الطلب. جرّب مرة أخرى أو تواصل معنا عبر واتساب.',
+    auditLine: 'أرغب في إصلاح موقعي بناءً على تقرير فحص مختبر أثر (الدرجة {grade}، {score}/100{fails}): https://{host}',
+    failsPart: '، المشاكل المؤثرة: {fails}',
+    waIntro: 'مرحباً أثر، أنا {name}.',
+    waRequest: 'الطلب: {request}',
+  },
+  en: {
+    requestLabel: 'What do you need?',
+    web: 'A new website',
+    store: 'A new online store',
+    other: 'Something else',
+    fixGroup: 'Fix an existing site',
+    buildGroup: 'New project',
+    detailsPlaceholder: 'Your current site link if you have one, and what you want to achieve.',
+    sending: 'Sending...',
+    required: 'Enter your name and phone number so we can reply.',
+    invalidPhone: 'That phone number looks wrong. Include the country code, e.g. +966 5x xxx xxxx',
+    failed: 'Could not send your request. Try again or contact us on WhatsApp.',
+    auditLine: 'I would like to fix my website based on the ATHR Lab audit (grade {grade}, {score}/100{fails}): https://{host}',
+    failsPart: ', {fails} significant issues',
+    waIntro: 'Hello ATHR, I am {name}.',
+    waRequest: 'Request: {request}',
+  },
+} as const;
+
+function fill(template: string, data: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (_, k: string) => String(data[k] ?? ''));
+}
 
 export default function Contact() {
   const { t, lang } = useLanguage();
+  const ui = TEXT[lang];
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [projectType, setProjectType] = useState('web');
+  const [request, setRequest] = useState<string>('web');
   const [details, setDetails] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
+  const [website, setWebsite] = useState(''); // حقل فخ للبوتات: مخفي عن البشر
+  const [status, setStatus] = useState<Status>('idle');
   const [error, setError] = useState('');
 
+  // تعبئة النموذج من التقرير أو صفحة الأسعار أو الحاسبة (التخزين المحلي متاح بعد الترطيب فقط).
   useEffect(() => {
-    // الاستماع لحدث حاسبة التسعير التفاعلية لتعبئة البيانات تلقائياً
-    const handleEstimateSelected = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      if (customEvent.detail) {
-        if (customEvent.detail.projectType) {
-          setProjectType(customEvent.detail.projectType);
-        }
-        if (customEvent.detail.details) {
-          setDetails(customEvent.detail.details);
-        }
-      }
-    };
+    const data = takePrefill();
+    if (!data) return;
+    const pkg = getPackage(data.packageId);
+    /* eslint-disable react-hooks/set-state-in-effect -- قراءة تخزين العميل مرة واحدة عند التحميل */
+    if (pkg) setRequest(pkg.id);
+    else if (data.requestType && (BUILD_TYPES as readonly string[]).includes(data.requestType)) setRequest(data.requestType);
+    else if (data.audit) setRequest('complete');
 
-    window.addEventListener('athar_estimate_selected', handleEstimateSelected);
-    
-    // التحقق من وجود بيانات فحص تقني في التخزين المحلي لتعبئة النموذج
-    try {
-      const storedPrefill = localStorage.getItem('athar_prefill');
-      if (storedPrefill) {
-        const data = JSON.parse(storedPrefill);
-        if (data.url) {
-          const host = String(data.url).slice(0, 200);
-          const grade = typeof data.grade === 'string' ? data.grade.slice(0, 1) : '';
-          const score = Number.isFinite(data.score) ? Number(data.score) : null;
-          const fails = Number.isFinite(data.fails) ? Number(data.fails) : null;
-          const hasResult = Boolean(grade) && score !== null;
-          const resultAr = hasResult
-            ? ` (الدرجة ${grade}، ${score}/100${fails ? `، المشاكل المؤثرة: ${fails}` : ''})`
-            : '';
-          const resultEn = hasResult
-            ? ` (grade ${grade}, ${score}/100${fails ? `, ${fails} significant issues` : ''})`
-            : '';
-
-          // تعبئة من نتائج المختبر التقني المحفوظة محلياً (تتم بعد الترطيب فقط).
-          // eslint-disable-next-line react-hooks/set-state-in-effect -- قراءة تخزين العميل عند التحميل
-          setProjectType('web');
-          setDetails(
-            lang === 'ar'
-              ? `أرغب في إصلاح مشاكل موقعي بناءً على تقرير فحص مختبر أثر${resultAr}: https://${host}`
-              : `I would like to fix my website based on the Athar Lab audit${resultEn}: https://${host}`
-          );
-        }
-        localStorage.removeItem('athar_prefill');
-      }
-    } catch (err) {
-      console.error('Error parsing athar_prefill:', err);
+    if (data.audit) {
+      const { host, grade, score, fails } = data.audit;
+      setDetails(
+        fill(ui.auditLine, {
+          host: String(host).slice(0, 200),
+          grade: String(grade).slice(0, 1),
+          score: Number(score) || 0,
+          fails: fails ? fill(ui.failsPart, { fails }) : '',
+        })
+      );
+    } else if (data.details) {
+      setDetails(String(data.details).slice(0, 2000));
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [ui]);
 
-    return () => window.removeEventListener('athar_estimate_selected', handleEstimateSelected);
-  }, [lang]);
+  const requestLabel = (value: string) => {
+    const pkg = getPackage(value);
+    if (pkg) return `${pkg.title[lang]} (${formatPrice(pkg, lang)})`;
+    return ui[value as (typeof BUILD_TYPES)[number]] ?? value;
+  };
+
+  const validate = (): string | null => {
+    if (!name.trim() || !phone.trim()) return ui.required;
+    if (phone.replace(/\D/g, '').length < 8) return ui.invalidPhone;
+    return null;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    if (!name || !phone) {
-      alert(lang === 'ar' ? 'الرجاء إدخال الاسم ورقم الجوال للتواصل.' : 'Please enter your name and phone number.');
+    const problem = validate();
+    if (problem) {
+      setError(problem);
+      setStatus('error');
       return;
     }
 
-    setSending(true);
+    setError('');
+    setStatus('sending');
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, projectType, details, lang, source: 'contact-form' }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          projectType: request,
+          details,
+          lang,
+          website,
+          source: getPackage(request) ? `package:${request}` : 'contact-form',
+        }),
       });
       if (!res.ok) throw new Error('request_failed');
-
-      setSubmitted(true);
+      setStatus('sent');
       setName('');
       setEmail('');
       setPhone('');
-
-      // تفريغ البيانات بعد 10 ثوانٍ وإغلاق التنبيه
-      setTimeout(() => {
-        setSubmitted(false);
-        setDetails('');
-      }, 10000);
+      setDetails('');
     } catch {
-      setError(
-        lang === 'ar'
-          ? 'تعذّر إرسال الطلب، يرجى المحاولة عبر الواتساب.'
-          : 'Could not send your request, please try via WhatsApp.'
-      );
-    } finally {
-      setSending(false);
+      setError(ui.failed);
+      setStatus('error');
     }
   };
 
   const handleWhatsApp = () => {
-    if (!name || !phone) {
-      alert(lang === 'ar' ? 'الرجاء إدخال الاسم ورقم الجوال للتواصل عبر الواتساب.' : 'Please enter your name and phone number first.');
-      return;
-    }
-    
-    // تنسيق الرسالة المرسلة للواتساب
-    const message = lang === 'ar' 
-      ? `السلام عليكم وكالة أثر، أنا ${name}، رقم جوالي: ${phone}. أرغب في استشارة حول مشروع: ${projectType === 'web' ? 'موقع تعريفي' : 'متجر إلكتروني'}. تفاصيل المشروع: ${details}`
-      : `Hello Athar Agency, I am ${name}, my phone is: ${phone}. I want a consultation for a ${projectType === 'web' ? 'Website' : 'E-store'}. Details: ${details}`;
-      
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${siteConfig.whatsapp}?text=${encodedMessage}`;
-
-    window.open(whatsappUrl, '_blank');
+    const lines = [
+      name.trim() ? fill(ui.waIntro, { name: name.trim() }) : '',
+      fill(ui.waRequest, { request: requestLabel(request) }),
+      details.trim(),
+    ].filter(Boolean);
+    window.open(`https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
   };
 
   return (
     <section id="contact" className={styles.contact}>
       <div className="container">
-        {/* رأس القسم */}
         <div className={styles.sectionHeader}>
           <h2 className={styles.title}>{t('contact.title')}</h2>
           <p className={styles.subtitle}>{t('contact.subtitle')}</p>
         </div>
 
-        {/* نموذج الاتصال */}
         <div className={styles.formWrapper}>
-          {submitted && (
-            <div className={styles.successAlert}>
+          {status === 'sent' && (
+            <div className={styles.successAlert} role="status">
               {t('contact.success')}
             </div>
           )}
-          {error && (
-            <div className={styles.successAlert} style={{ background: 'var(--color-coral)' }}>
+          {status === 'error' && error && (
+            <div className={styles.errorAlert} role="alert">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className={styles.form}>
-            {/* الاسم */}
+          <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="contact-name">{t('contact.name')} *</label>
-              <input 
-                type="text" 
+              <label className={styles.label} htmlFor="contact-name">
+                {t('contact.name')} *
+              </label>
+              <input
+                type="text"
                 id="contact-name"
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                placeholder={lang === 'ar' ? 'أحمد محمد' : 'John Doe'}
+                name="name"
+                autoComplete="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
+                maxLength={120}
                 className={styles.input}
               />
             </div>
 
-            {/* البريد الإلكتروني */}
             <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="contact-email">{t('contact.email')}</label>
-              <input 
-                type="email" 
-                id="contact-email"
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                placeholder="info@athar.agency"
-                className={styles.input}
-              />
-            </div>
-
-            {/* رقم الجوال */}
-            <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="contact-phone">{t('contact.phone')} *</label>
-              <input 
-                type="tel" 
+              <label className={styles.label} htmlFor="contact-phone">
+                {t('contact.phone')} *
+              </label>
+              <input
+                type="tel"
                 id="contact-phone"
-                value={phone} 
-                onChange={(e) => setPhone(e.target.value)} 
-                placeholder="+966 50 000 0000"
+                name="phone"
+                autoComplete="tel"
+                inputMode="tel"
+                dir="ltr"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+966 5x xxx xxxx"
                 required
+                maxLength={30}
                 className={styles.input}
               />
             </div>
 
-            {/* نوع المشروع */}
             <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="contact-project-type">{t('contact.projectType')}</label>
-              <select 
-                id="contact-project-type"
-                value={projectType} 
-                onChange={(e) => setProjectType(e.target.value)}
+              <label className={styles.label} htmlFor="contact-email">
+                {t('contact.email')}
+              </label>
+              <input
+                type="email"
+                id="contact-email"
+                name="email"
+                autoComplete="email"
+                dir="ltr"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                maxLength={160}
+                className={styles.input}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor="contact-request">
+                {ui.requestLabel}
+              </label>
+              <select
+                id="contact-request"
+                value={request}
+                onChange={(e) => setRequest(e.target.value)}
                 className={styles.select}
               >
-                <option value="web">{t('calculator.typeWeb')}</option>
-                <option value="store">{t('calculator.typeStore')}</option>
+                <optgroup label={ui.fixGroup}>
+                  {allPackages.map((pkg) => (
+                    <option key={pkg.id} value={pkg.id}>
+                      {requestLabel(pkg.id)}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label={ui.buildGroup}>
+                  {BUILD_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {ui[type]}
+                    </option>
+                  ))}
+                </optgroup>
               </select>
             </div>
 
-            {/* التفاصيل */}
             <div className={styles.inputGroup}>
-              <label className={styles.label} htmlFor="contact-details">{t('contact.details')}</label>
-              <textarea 
+              <label className={styles.label} htmlFor="contact-details">
+                {t('contact.details')}
+              </label>
+              <textarea
                 id="contact-details"
-                value={details} 
-                onChange={(e) => setDetails(e.target.value)} 
-                placeholder={lang === 'ar' ? 'اكتب تفاصيل فكرتك أو الباقة التي اخترتها...' : 'Describe your project idea or selected package...'}
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+                placeholder={ui.detailsPlaceholder}
+                maxLength={2000}
                 className={styles.textarea}
               />
             </div>
 
-            {/* أزرار الإجراءات */}
-            <button type="submit" className={styles.submitBtn} id="contact-submit-btn" disabled={sending}>
-              {sending ? (lang === 'ar' ? 'جارٍ الإرسال...' : 'Sending...') : t('contact.submit')}
+            <div className={styles.honeypot} aria-hidden="true">
+              <label htmlFor="contact-website">Website</label>
+              <input
+                id="contact-website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+              />
+            </div>
+
+            <button type="submit" className={styles.submitBtn} disabled={status === 'sending'}>
+              {status === 'sending' ? ui.sending : t('contact.submit')}
             </button>
 
-            <button 
-              type="button" 
-              className={styles.whatsappBtn} 
-              onClick={handleWhatsApp}
-              id="contact-whatsapp-btn"
-            >
+            <button type="button" className={styles.whatsappBtn} onClick={handleWhatsApp}>
               <span>{t('contact.whatsapp')}</span>
             </button>
           </form>

@@ -1,143 +1,126 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
-import { usePathname, useRouter } from 'next/navigation';
+import { stripLocale } from '@/lib/i18n';
 import styles from './Header.module.css';
 
+// روابط حقيقية (وليست #أقسام) حتى تتبعها محركات البحث وتعمل بفتح تبويب جديد.
+const NAV_ITEMS = [
+  { key: 'services', href: '/services' },
+  { key: 'pricing', href: '/pricing' },
+  { key: 'techLab', href: '/tech-lab' },
+  { key: 'blog', href: '/blog' },
+  { key: 'about', href: '/about' },
+  { key: 'contact', href: '/contact' },
+] as const;
+
 export default function Header() {
-  const { lang, toggleLanguage, t } = useLanguage();
+  const { lang, toggleLanguage, t, path } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
-  const router = useRouter();
+  const current = stripLocale(usePathname() ?? '/');
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent, item: { key: string, id: string }) => {
-    e.preventDefault();
-    setMobileMenuOpen(false);
+  // إغلاق القائمة بزر Escape.
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMobileMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileMenuOpen]);
 
-    const targetPath = item.key === 'home' ? '/' : `/${item.id}`;
-    if (pathname === targetPath) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      router.push(targetPath);
-    }
-  };
-
-  const handleLogoClick = () => {
-    if (pathname === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      router.push('/');
-    }
-  };
-
-  const navItems = [
-    { key: 'home', id: 'home' },
-    { key: 'services', id: 'services' },
-    { key: 'portfolio', id: 'portfolio' },
-    { key: 'techLab', id: 'tech-lab' },
-    { key: 'calculator', id: 'calculator' },
-    { key: 'about', id: 'about' },
-    { key: 'pricing', id: 'pricing' },
-    { key: 'blog', id: 'blog' },
-  ];
+  const close = () => setMobileMenuOpen(false);
+  const isActive = (href: string) => current === href || current.startsWith(`${href}/`);
+  const otherLang = lang === 'ar' ? 'English' : 'العربية';
 
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <div className={`container ${styles.navbar}`}>
-        {/* شعار أثر الرسمي */}
-        <div className={styles.logoContainer} onClick={handleLogoClick}>
-          <Image
-            src="/logo_transparent.png"
-            alt="ATHR Logo"
-            width={444}
-            height={456}
-            priority
-            className={styles.logoImage}
-          />
-        </div>
+        <Link href={path('/')} className={styles.logoContainer} onClick={close} aria-label={lang === 'ar' ? 'أثر — الرئيسية' : 'ATHR — Home'}>
+          <Image src="/logo_transparent.png" alt="" width={444} height={456} priority className={styles.logoImage} />
+        </Link>
 
-        {/* روابط التنقل للشاشات الكبيرة */}
-        <ul className={styles.navLinks}>
-          {navItems.map((item) => (
-            <li key={item.key}>
-              <a
-                href={`#${item.id}`}
-                className={styles.navLink}
-                onClick={(e) => handleNavClick(e, item)}
-              >
-                {t(`nav.${item.key}`)}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <nav aria-label={lang === 'ar' ? 'التنقل الرئيسي' : 'Main navigation'}>
+          <ul className={styles.navLinks}>
+            {NAV_ITEMS.map((item) => (
+              <li key={item.key}>
+                <Link
+                  href={path(item.href)}
+                  className={`${styles.navLink} ${isActive(item.href) ? styles.active : ''}`}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                >
+                  {t(`nav.${item.key}`)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        {/* الإجراءات: تبديل اللغة وطلب الاستشارة */}
         <div className={styles.actions}>
-          <button className={styles.langToggle} onClick={toggleLanguage}>
-            {lang === 'ar' ? 'English' : 'العربية'}
+          <button type="button" className={styles.langToggle} onClick={toggleLanguage} lang={lang === 'ar' ? 'en' : 'ar'}>
+            {otherLang}
           </button>
-          <a
-            href="#contact"
-            className={styles.consultBtn}
-            onClick={(e) => handleNavClick(e, { key: 'contact', id: 'contact' })}
-          >
-            {t('nav.contact')}
-          </a>
+          <Link href={path('/tech-lab')} className={styles.consultBtn}>
+            {t('nav.cta')}
+          </Link>
         </div>
 
-        {/* زر القائمة للجوال */}
         <button
+          type="button"
           className={`${styles.menuToggle} ${mobileMenuOpen ? styles.menuOpen : ''}`}
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle Menu"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          aria-label={lang === 'ar' ? 'القائمة' : 'Menu'}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
 
-        {/* القائمة للجوال */}
-        <nav className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.mobileMenuOpen : ''}`}>
+        <nav
+          id="mobile-menu"
+          className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.mobileMenuOpen : ''}`}
+          aria-label={lang === 'ar' ? 'قائمة الجوال' : 'Mobile menu'}
+          inert={!mobileMenuOpen}
+        >
           <ul className={styles.mobileLinks}>
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <li key={item.key}>
-                <a
-                  href={`#${item.id}`}
-                  className={styles.mobileLink}
-                  onClick={(e) => handleNavClick(e, item)}
+                <Link
+                  href={path(item.href)}
+                  className={`${styles.mobileLink} ${isActive(item.href) ? styles.active : ''}`}
+                  onClick={close}
                 >
                   {t(`nav.${item.key}`)}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
           <div className={styles.mobileActions}>
-            <button className={styles.langToggle} onClick={toggleLanguage}>
-              {lang === 'ar' ? 'English' : 'العربية'}
-            </button>
-            <a
-              href="#contact"
-              className={styles.consultBtn}
-              onClick={(e) => handleNavClick(e, { key: 'contact', id: 'contact' })}
+            <button
+              type="button"
+              className={styles.langToggle}
+              onClick={() => {
+                close();
+                toggleLanguage();
+              }}
             >
-              {t('nav.contact')}
-            </a>
+              {otherLang}
+            </button>
+            <Link href={path('/tech-lab')} className={styles.consultBtn} onClick={close}>
+              {t('nav.cta')}
+            </Link>
           </div>
         </nav>
       </div>

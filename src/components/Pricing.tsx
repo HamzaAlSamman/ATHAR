@@ -1,11 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
+import { savePrefill } from '@/lib/prefill';
 import styles from './Pricing.module.css';
 
 export default function Pricing() {
-  const { t, lang } = useLanguage();
+  const { t, lang, path } = useLanguage();
+  const router = useRouter();
 
   const plans = [
     {
@@ -22,31 +25,13 @@ export default function Pricing() {
     }
   ];
 
+  // باقات البناء تفتح نموذج التواصل معبّأً باسم الباقة (النموذج في صفحة مستقلة).
   const handleSelectPlan = (planKey: string, planTitle: string) => {
-    // إرسال حدث لتعبئة الحقول
     const details = lang === 'ar'
       ? `أرغب في الاستفسار عن باقة: ${planTitle}`
       : `I want to inquire about package: ${planTitle}`;
-
-    const event = new CustomEvent('athar_estimate_selected', {
-      detail: { projectType: planKey === 'basic' ? 'web' : 'store', details }
-    });
-    window.dispatchEvent(event);
-
-    // التمرير التلقائي لنموذج الاتصال
-    const element = document.getElementById('contact');
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    savePrefill({ requestType: planKey === 'basic' ? 'web' : planKey === 'pro' ? 'store' : 'other', details });
+    router.push(path('/contact'));
   };
 
   return (
@@ -82,7 +67,7 @@ export default function Pricing() {
                 <p className={styles.planDesc}>{t(`pricing.${plan.key}.desc`)}</p>
 
                 <div className={styles.priceWrapper}>
-                  <div className={styles.price}>
+                  <div className={`${styles.price} ${/^\d/.test(price) ? '' : styles.priceText}`}>
                     <span>{price}</span>
                     <span className={styles.currency}>{currency}</span>
                   </div>

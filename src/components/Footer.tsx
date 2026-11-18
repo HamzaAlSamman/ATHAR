@@ -2,33 +2,13 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { usePathname, useRouter } from 'next/navigation';
 import { siteConfig } from '@/lib/config';
 import styles from './Footer.module.css';
 
 export default function Footer() {
-  const { t } = useLanguage();
-  const pathname = usePathname();
-  const router = useRouter();
-
-  const handleNavClick = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    const targetPath = id === 'home' ? '/' : `/${id}`;
-    if (pathname === targetPath) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      router.push(targetPath);
-    }
-  };
-
-  const handleLogoClick = () => {
-    if (pathname === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      router.push('/');
-    }
-  };
+  const { t, path, lang } = useLanguage();
 
   const socialLinks = [
     {
@@ -69,25 +49,26 @@ export default function Footer() {
         </svg>
       )
     }
-  ];
+  ].filter((social) => social.url && social.url !== '#');
 
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.footerGrid}`}>
         {/* عمود شعار الشركة والوصف */}
         <div className={styles.infoCol}>
-          <div className={styles.logoContainer} onClick={handleLogoClick}>
+          <Link href={path('/')} className={styles.logoContainer} aria-label={lang === 'ar' ? 'أثر — الرئيسية' : 'ATHR — Home'}>
             <Image
               src="/logo_white.png"
-              alt="ATHR Logo"
+              alt=""
               width={400}
               height={400}
               className={styles.logoImage}
             />
-          </div>
+          </Link>
           <p className={styles.desc}>
             {t('footer.text')}
           </p>
+          {socialLinks.length > 0 && (
           <div className={styles.socials}>
             {socialLinks.map((social) => (
               <a key={social.name} href={social.url} className={styles.socialIcon} target="_blank" rel="noopener noreferrer" aria-label={social.name}>
@@ -95,27 +76,29 @@ export default function Footer() {
               </a>
             ))}
           </div>
+          )}
         </div>
 
-        {/* عمود روابط سريعة */}
-        <div className={styles.linksCol}>
-          <h4 className={styles.title}>{t('nav.home')}</h4>
-          <ul className={styles.linksList}>
-            <li><a href="#home" onClick={(e) => handleNavClick(e, 'home')} className={styles.link}>{t('nav.home')}</a></li>
-            <li><a href="#services" onClick={(e) => handleNavClick(e, 'services')} className={styles.link}>{t('nav.services')}</a></li>
-            <li><a href="#portfolio" onClick={(e) => handleNavClick(e, 'portfolio')} className={styles.link}>{t('nav.portfolio')}</a></li>
-            <li><a href="#tech-lab" onClick={(e) => handleNavClick(e, 'tech-lab')} className={styles.link}>{t('nav.techLab')}</a></li>
-          </ul>
-        </div>
-
-        {/* عمود خدمات وروابط فرعية */}
+        {/* عمود الخدمات */}
         <div className={styles.linksCol}>
           <h4 className={styles.title}>{t('nav.services')}</h4>
           <ul className={styles.linksList}>
-            <li><a href="#about" onClick={(e) => handleNavClick(e, 'about')} className={styles.link}>{t('nav.about')}</a></li>
-            <li><a href="#pricing" onClick={(e) => handleNavClick(e, 'pricing')} className={styles.link}>{t('nav.pricing')}</a></li>
-            <li><a href="#blog" onClick={(e) => handleNavClick(e, 'blog')} className={styles.link}>{t('nav.blog')}</a></li>
-            <li><a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className={styles.link}>{t('nav.contact')}</a></li>
+            <li><Link href={path('/tech-lab')} className={styles.link}>{t('nav.techLab')}</Link></li>
+            <li><Link href={path('/pricing')} className={styles.link}>{t('nav.pricing')}</Link></li>
+            <li><Link href={path('/services')} className={styles.link}>{t('nav.services')}</Link></li>
+            <li><Link href={path('/calculator')} className={styles.link}>{t('nav.calculator')}</Link></li>
+          </ul>
+        </div>
+
+        {/* عمود الشركة */}
+        <div className={styles.linksCol}>
+          <h4 className={styles.title}>{t('footer.company')}</h4>
+          <ul className={styles.linksList}>
+            <li><Link href={path('/about')} className={styles.link}>{t('nav.about')}</Link></li>
+            <li><Link href={path('/blog')} className={styles.link}>{t('nav.blog')}</Link></li>
+            <li><Link href={path('/contact')} className={styles.link}>{t('nav.contact')}</Link></li>
+            <li><Link href={path('/privacy')} className={styles.link}>{t('footer.privacy')}</Link></li>
+            <li><Link href={path('/terms')} className={styles.link}>{t('footer.terms')}</Link></li>
           </ul>
         </div>
       </div>

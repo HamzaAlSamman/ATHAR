@@ -581,6 +581,7 @@ export interface AuditUiText {
   ctaTitle: string;
   ctaDesc: string;
   ctaBtn: string;
+  suggested: string;
   method: string;
   errors: Record<AuditErrorCode, string>;
 }
@@ -626,8 +627,9 @@ export const auditUi: Record<AuditLang, AuditUiText> = {
     whatsapp: "مشاركة عبر واتساب",
     shareMessage: "تقرير فحص موقع {host}: الدرجة {grade} ({score}/100)",
     ctaTitle: "نصلح هذه المشاكل لك",
-    ctaDesc: "أرسل لنا التقرير ونعود إليك بخطة إصلاح وسعر ثابت.",
+    ctaDesc: "نرسل التقرير مع طلبك، ونعود إليك خلال يوم عمل بخطة الإصلاح وموعد التسليم.",
     ctaBtn: "اطلب إصلاح موقعي",
+    suggested: "الباقة المناسبة لنتيجتك",
     method:
       "الفحص يقرأ الصفحة كما تصل من الخادم قبل تشغيل JavaScript، وهي الصورة التي تراها محركات البحث أولاً. زمن الاستجابة مقاس من خوادمنا وقد يختلف عن موقع زائرك.",
     errors: {
@@ -681,8 +683,9 @@ export const auditUi: Record<AuditLang, AuditUiText> = {
     whatsapp: "Share on WhatsApp",
     shareMessage: "Website audit for {host}: grade {grade} ({score}/100)",
     ctaTitle: "We can fix these for you",
-    ctaDesc: "Send us the report and we will come back with a fix plan at a fixed price.",
+    ctaDesc: "We attach this report to your request and reply within one business day with the fix plan and delivery date.",
     ctaBtn: "Fix my website",
+    suggested: "Package that fits your result",
     method:
       "The audit reads the page as the server sends it, before JavaScript runs, which is what search engines see first. Response time is measured from our servers and may differ from your visitors' location.",
     errors: {

@@ -1,49 +1,66 @@
-# أثر (ATHR) — موقع الوكالة
+# أثر (ATHR) — موقع الوكالة + مختبر فحص المواقع
 
-موقع وكالة "أثر" لتصميم وتطوير المواقع والمتاجر الإلكترونية الفاخرة، مبني على **Next.js 16 (App Router) + React 19 + TypeScript**، ثنائي اللغة (عربي/إنجليزي، RTL/LTR).
+موقع وكالة "أثر" لتطوير المواقع والمتاجر. العرض الأساسي: **فحص مجاني وحقيقي** لأي موقع (السرعة، الأمان، السيو) بتقرير درجته من A إلى F، ثم **إصلاح بسعر ثابت**.
+
+مبني على **Next.js 16 (App Router) + React 19 + TypeScript**، بلغتين بروابط منفصلة (`/ar/...` و `/en/...`).
 
 ## التشغيل
 
 ```bash
 npm install
-cp .env.example .env.local   # ثم املأ القيم المطلوبة
+cp .env.example .env.local   # ثم املأ القيم
 npm run dev                  # http://localhost:3000
 npm run build && npm start   # نسخة الإنتاج
 ```
 
 ## متغيرات البيئة
 
-كل المتغيرات اختيارية — الموقع يعمل بدونها مع تدهور سلس (graceful fallback). راجع [.env.example](.env.example):
+التفاصيل في [.env.example](.env.example). الموقع يعمل بدون أغلبها، لكن قبل النشر للعامة يلزم:
 
 | المتغير | الوظيفة | بدونه |
 |---------|---------|-------|
-| `NEXT_PUBLIC_SITE_URL` | الرابط الرسمي (SEO/sitemap) | يستخدم `https://athr.agency` |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | رقم واتساب التواصل | رقم افتراضي |
-| `RESEND_API_KEY` | إرسال طلبات التواصل بالبريد | تُحفظ الطلبات محلياً فقط |
-| `PAGESPEED_API_KEY` | يرقّي فحص الأداء إلى Lighthouse كامل | يبقى فحصاً حقيقياً خفيفاً بدون مفتاح |
-| `ANTHROPIC_API_KEY` | مساعد أثر الذكي (Claude) | رسالة افتراضية توجّه للتواصل |
-| `ADMIN_PASSWORD` | الدخول للوحة التحكم `/admin` | اللوحة معطّلة (503) |
+| `NEXT_PUBLIC_SITE_URL` | الرابط الرسمي (SEO، sitemap، روابط المشاركة) | `https://athr.agency` |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | زر واتساب في نموذج التواصل | رقم وهمي |
+| `CONTACT_EMAIL` | بريد استقبال الطلبات | `hello@athr.agency` |
+| `KV_REST_API_URL` + `KV_REST_API_TOKEN` | Upstash Redis: الطلبات، حد الطلبات، تخزين التقارير | ملف محلي (يضيع على Vercel) |
+| `RESEND_API_KEY` | بريد إشعار بكل طلب | الطلب يُحفظ فقط |
+| `ADMIN_PASSWORD` | لوحة الطلبات `/admin` | اللوحة معطّلة |
+| `PAGESPEED_API_KEY` | قياس Lighthouse كامل في الفحص | قياس خفيف من الخادم |
+| `ANTHROPIC_API_KEY` | المساعد الذكي | رسالة افتراضية |
+| `NEXT_PUBLIC_CR_NUMBER` | قسم الموثوقية (رقم السجل التجاري) | القسم مخفي |
 
 ## البنية
 
 ```
 src/
-├── app/                # المسارات (App Router)
-│   ├── api/            # contact · chat · audit · admin
-│   ├── blog/[slug]/    # صفحات المقالات التفصيلية
-│   ├── portfolio/[slug]/ # دراسات الحالة التفصيلية
-│   ├── admin/          # لوحة تحكم الطلبات
-│   ├── sitemap.ts · robots.ts · opengraph-image.tsx
-│   └── layout.tsx      # يضبط lang/dir من الكوكي على الخادم + JSON-LD + المساعد
-├── components/         # مكوّنات الواجهة (Header, Hero, ... ChatWidget, JsonLd)
-├── content/            # مصدر الحقيقة للمقالات والمشاريع (ثنائي اللغة)
-├── context/            # سياق اللغة
-├── locales/            # نصوص الترجمة (مفصولة عن المنطق)
-└── lib/                # config (إعدادات مركزية) + store (مخزن الطلبات)
+├── proxy.ts               # يحوّل الروابط بدون لغة إلى /ar أو /en
+├── app/
+│   ├── [lang]/            # كل الصفحات العامة بلغتين
+│   │   ├── tech-lab/      # مختبر الفحص (رابط تقرير قابل للمشاركة: ?url=)
+│   │   ├── pricing/       # باقات الإصلاح + باقات البناء
+│   │   └── privacy · terms · blog · services · contact · ...
+│   ├── admin/             # لوحة الطلبات (تخطيط مستقل)
+│   ├── api/               # audit · contact · chat · admin
+│   └── sitemap.ts · robots.ts
+├── lib/
+│   ├── audit/             # محرّك الفحص (فحص سلبي + حماية SSRF)
+│   ├── kv.ts · rate-limit.ts · store.ts · admin-auth.ts
+│   └── i18n.ts · config.ts · prefill.ts
+├── content/
+│   ├── packages.ts        # ⭐ كل الأسعار (الإصلاح، الرعاية، الحاسبة)
+│   ├── projects.ts        # المعرض: يظهر فقط ما عليه published: true
+│   └── posts.ts
+└── locales/               # نصوص الواجهة + نصوص الفحص
 ```
 
-## ملاحظات
+## تعديل شائع
 
-- **اللغة:** تُحفظ في كوكي `athar_lang` ليضبط الخادم `<html lang/dir>` قبل الترطيب (SEO صحيح).
-- **الطلبات:** تُحفظ في `data/leads.json` (مستبعد من git) وتظهر في `/admin`.
-- **المختبر التقني:** أداة السرعة تجري فحصاً حقيقياً بدون أي مفتاح عبر `/api/audit` (تجلب الصفحة وتقيس TTFB، الحجم، الضغط، ترويسات الأمان، ووسوم SEO). مع `PAGESPEED_API_KEY` تترقّى لتقرير Lighthouse كامل. الراوت محمي ضد SSRF (يمنع العناوين المحلية/الخاصة).
+- **الأسعار:** `src/content/packages.ts` فقط. صفحة الأسعار والتقرير ونموذج التواصل والمساعد تقرأ منه. (باقات البناء الثلاث نصوصها في `src/locales/translations.ts` تحت `pricing`.)
+- **إظهار مشروع في المعرض:** `published: true` في `src/content/projects.ts`. صفحة المعرض مخفية ما دام لا يوجد مشروع منشور.
+
+## الأمان
+
+- الفحص سلبي: يقرأ ما يعلنه الموقع فقط. العناوين الداخلية محجوبة حتى عبر التحويلات وتبديل DNS.
+- حد طلبات مشترك (Redis) على الفحص والتواصل والمساعد وتسجيل دخول اللوحة.
+- ترويسات أمان كاملة من `next.config.ts` (CSP، HSTS، وغيرها).
+- جلسة اللوحة رمز موقّع (HMAC) وليست كلمة المرور.

@@ -1,0 +1,268 @@
+.servicesPage {
+  background-color: var(--color-ice);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+/* Page Hero */
+.heroSection {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-ink) 0%, var(--color-ink-light) 100%);
+  padding: 100px 0 80px;
+  text-align: center;
+  color: var(--color-white);
+  overflow: hidden;
+  border-bottom: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.glowOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.08) 0%, rgba(28, 40, 51, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tagline {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-mint);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .tagline {
+  letter-spacing: 0;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+:global([dir="rtl"]) .title {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: rgba(244, 246, 247, 0.8);
+  line-height: 1.6;
+}
+
+/* Services Grid Details */
+.gridSection {
+  padding: 80px 0;
+}
+
+.servicesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.serviceDetailCard {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: 40px;
+  box-shadow: 0 10px 30px var(--color-shadow);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.serviceInfo h2 {
+  font-size: 1.85rem;
+  color: var(--color-ink);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .serviceInfo h2 {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.serviceDesc {
+  font-size: 1.05rem;
+  color: var(--color-ink-muted);
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+/* Tech Stack Badges */
+.techBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.techBadge {
+  background-color: var(--color-ice);
+  color: var(--color-ink-light);
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+/* Feature Checkbox Lists */
+.featuresWrapper {
+  border-inline-start: 1px solid var(--color-border);
+  padding-inline-start: 40px;
+}
+
+.featuresTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 20px;
+}
+
+:global([dir="rtl"]) .featuresTitle {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.featuresList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.98rem;
+  color: var(--color-ink-light);
+  line-height: 1.4;
+}
+
+.featureCheckDot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-mint);
+  border-radius: 50%;
+  margin-top: 7px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15);
+}
+
+/* Bottom Lead Callout Box */
+.ctaSection {
+  padding: 0 0 100px 0;
+}
+
+.ctaCard {
+  background-color: var(--color-ink);
+  border: 1px solid rgba(46, 204, 113, 0.2);
+  border-radius: var(--border-radius-lg);
+  padding: 50px 40px;
+  text-align: center;
+  color: var(--color-white);
+  box-shadow: 0 15px 40px rgba(28, 40, 51, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right, rgba(46, 204, 113, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.ctaTitle {
+  font-size: 1.85rem;
+  color: var(--color-ice);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .ctaTitle {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.ctaDesc {
+  font-size: 1.1rem;
+  color: rgba(244, 246, 247, 0.7);
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  line-height: 1.6;
+}
+
+.ctaBtn {
+  background-color: var(--color-mint);
+  color: var(--color-white);
+  padding: 14px 32px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(46, 204, 113, 0.2);
+}
+
+.ctaBtn:hover {
+  background-color: var(--color-mint-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .serviceDetailCard {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .featuresWrapper {
+    border-inline-start: none;
+    border-top: 1px solid var(--color-border);
+    padding-inline-start: 0;
+    padding-top: 30px;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 80px 0 60px;
+  }
+  
+  .gridSection {
+    padding: 60px 0;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .ctaCard {
+    padding: 40px 20px;
+  }
+}

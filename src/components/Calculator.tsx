@@ -1,11 +1,15 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
+import { buildRates } from '@/content/packages';
+import { savePrefill } from '@/lib/prefill';
 import styles from './Calculator.module.css';
 
 export default function Calculator() {
-  const { t, lang } = useLanguage();
+  const { t, lang, path } = useLanguage();
+  const router = useRouter();
   
   const [projectType, setProjectType] = useState<'web' | 'store'>('web');
   const [pages, setPages] = useState<number>(5);
@@ -16,21 +20,14 @@ export default function Calculator() {
   
   // التكلفة والمدة قيم مشتقة من الاختيارات — تُحسب أثناء العرض بدل تخزينها في حالة.
   const { cost, days } = useMemo(() => {
-    const isAr = lang === 'ar';
-
-    // قيم التكلفة
-    const baseCost = projectType === 'web'
-      ? (isAr ? 3000 : 800)
-      : (isAr ? 7500 : 2000);
-
-    const extraPagesCost = pages <= 3
-      ? 0
-      : (pages - 3) * (isAr ? 200 : 50);
-
-    const seoCost = featureSeo ? (isAr ? 1200 : 320) : 0;
-    const langCost = featureLang ? (isAr ? 1500 : 400) : 0;
-    const payCost = featurePay ? (isAr ? 1500 : 400) : 0;
-    const blogCost = featureBlog ? (isAr ? 1000 : 270) : 0;
+    // عملة واحدة (الدولار) للغتين، والأسعار من مصدر واحد مع صفحة الأسعار.
+    const r = buildRates;
+    const baseCost = r.base[projectType];
+    const extraPagesCost = Math.max(0, pages - r.includedPages) * r.extraPage;
+    const seoCost = featureSeo ? r.seo : 0;
+    const langCost = featureLang ? r.bilingual : 0;
+    const payCost = featurePay ? r.payments : 0;
+    const blogCost = featureBlog ? r.blog : 0;
 
     const totalCost = baseCost + extraPagesCost + seoCost + langCost + payCost + blogCost;
 
@@ -45,34 +42,18 @@ export default function Calculator() {
     const totalDays = baseDays + extraPagesDays + seoDays + langDays + payDays + blogDays;
 
     return { cost: totalCost, days: totalDays };
-  }, [projectType, pages, featureSeo, featureLang, featurePay, featureBlog, lang]);
+  }, [projectType, pages, featureSeo, featureLang, featurePay, featureBlog]);
 
   const handleCTA = () => {
-    // صياغة تفاصيل المشروع لإرسالها لنموذج الاتصال
-    const details = lang === 'ar' 
-      ? `أرغب في تنفيذ مشروع: ${projectType === 'web' ? 'موقع تعريفي' : 'متجر إلكتروني'}، بعدد صفحات: ${pages}. الميزات الإضافية: ${featureSeo ? 'تهيئة السيو، ' : ''}${featureLang ? 'ثنائي اللغة، ' : ''}${featurePay ? 'بوابات الدفع والشحن، ' : ''}${featureBlog ? 'نظام المدونة' : ''}. التكلفة التقديرية: ${cost} ريال سعودي`
-      : `I want to execute: ${projectType === 'web' ? 'Corporate Website' : 'E-Store'} with ${pages} pages. Extras: ${featureSeo ? 'SEO, ' : ''}${featureLang ? 'Multilingual, ' : ''}${featurePay ? 'Payments, ' : ''}${featureBlog ? 'CMS Blog' : ''}. Estimate: ${cost} USD`;
-    
-    // إرسال حدث مخصص للموقع لتعبئة نموذج الاتصال
-    const event = new CustomEvent('athar_estimate_selected', { 
-      detail: { projectType, details } 
-    });
-    window.dispatchEvent(event);
-
-    // التمرير السلس لنموذج الاتصال
-    const element = document.getElementById('contact');
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    const extrasAr = [featureSeo && 'تهيئة السيو', featureLang && 'ثنائي اللغة', featurePay && 'بوابات الدفع والشحن', featureBlog && 'مدونة'].filter(Boolean).join('، ');
+    const extrasEn = [featureSeo && 'SEO', featureLang && 'Bilingual', featurePay && 'Payments', featureBlog && 'Blog'].filter(Boolean).join(', ');
+    const kindAr = projectType === 'web' ? 'موقع تعريفي' : 'متجر إلكتروني';
+    const kindEn = projectType === 'web' ? 'company website' : 'online store';
+    const details = lang === 'ar'
+      ? `أرغب في تنفيذ ${kindAr} بعدد صفحات ${pages}${extrasAr ? `، مع: ${extrasAr}` : ''}. التكلفة التقديرية من الحاسبة: ${cost} دولار.`
+      : `I want a ${kindEn} with ${pages} pages${extrasEn ? `, plus: ${extrasEn}` : ''}. Calculator estimate: $${cost}.`;
+    savePrefill({ requestType: projectType, details });
+    router.push(path('/contact'));
   };
 
   return (
@@ -213,7 +194,7 @@ export default function Calculator() {
               <span className={styles.resultLabel}>{t('calculator.costLabel')}</span>
               <div className={styles.priceVal}>
                 <span>{cost.toLocaleString()}</span>
-                <span className={styles.priceCurrency}>{lang === 'ar' ? 'ريال سعودي' : 'USD'}</span>
+                <span className={styles.priceCurrency}>{lang === 'ar' ? 'دولار' : 'USD'}</span>
               </div>
             </div>
 

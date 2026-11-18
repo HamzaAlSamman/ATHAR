@@ -1,0 +1,258 @@
+.portfolioPage {
+  background-color: var(--color-ice);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+/* Page Hero */
+.heroSection {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-ink) 0%, var(--color-ink-light) 100%);
+  padding: 100px 0 80px;
+  text-align: center;
+  color: var(--color-white);
+  overflow: hidden;
+  border-bottom: 1px solid rgba(46, 204, 113, 0.1);
+}
+
+.glowOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.08) 0%, rgba(28, 40, 51, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tagline {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-mint);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .tagline {
+  letter-spacing: 0;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+:global([dir="rtl"]) .title {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: rgba(244, 246, 247, 0.8);
+  line-height: 1.6;
+}
+
+/* Methodology section */
+.methodologySection {
+  padding: 80px 0;
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.sectionHeader h2 {
+  font-size: 2.25rem;
+  color: var(--color-ink);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .sectionHeader h2 {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.sectionHeader p {
+  font-size: 1.1rem;
+  color: var(--color-ink-muted);
+}
+
+.methodologyGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.methodologyCard {
+  background-color: var(--color-ice);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: 24px 18px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.methodologyCard:hover {
+  border-color: var(--color-mint);
+  transform: translateY(-4px);
+}
+
+.stepNum {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-mint);
+  opacity: 0.2;
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  line-height: 1;
+}
+
+:global([dir="rtl"]) .stepNum {
+  right: auto;
+  left: 10px;
+}
+
+.stepTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+  line-height: 1.3;
+}
+
+:global([dir="rtl"]) .stepTitle {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.mainTitleText {
+  display: block;
+}
+
+.stepSubTitle {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.stepDesc {
+  font-size: 0.88rem;
+  color: var(--color-ink-muted);
+  line-height: 1.5;
+  position: relative;
+  z-index: 2;
+}
+
+/* Portfolio grid */
+.portfolioSection {
+  padding: 80px 0;
+}
+
+/* Bottom CTA Callout Box */
+.ctaSection {
+  padding: 0 0 100px 0;
+}
+
+.ctaCard {
+  background-color: var(--color-ink);
+  border: 1px solid rgba(46, 204, 113, 0.2);
+  border-radius: var(--border-radius-lg);
+  padding: 50px 40px;
+  text-align: center;
+  color: var(--color-white);
+  box-shadow: 0 15px 40px rgba(28, 40, 51, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaTitle {
+  font-size: 1.85rem;
+  color: var(--color-ice);
+  margin-bottom: 16px;
+}
+
+:global([dir="rtl"]) .ctaTitle {
+  font-family: var(--font-plex-arabic), sans-serif;
+}
+
+.ctaDesc {
+  font-size: 1.1rem;
+  color: rgba(244, 246, 247, 0.7);
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  line-height: 1.6;
+}
+
+.ctaBtn {
+  background-color: var(--color-mint);
+  color: var(--color-white);
+  padding: 14px 32px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(46, 204, 113, 0.2);
+}
+
+.ctaBtn:hover {
+  background-color: var(--color-mint-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .methodologyGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .methodologyGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .heroSection {
+    padding: 80px 0 60px;
+  }
+  
+  .methodologySection,
+  .portfolioSection {
+    padding: 60px 0;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .ctaCard {
+    padding: 40px 20px;
+  }
+}
