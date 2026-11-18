@@ -79,11 +79,11 @@ export default function TechLab() {
     await finishScan();
   };
 
-  // إنهاء الفحص: لأداة السرعة نحاول جلب نتائج حقيقية من PageSpeed، وإلا نعود للمحاكاة.
+  // إنهاء الفحص: لأداة السرعة نجلب نتائج حقيقية من /api/audit (فحص فعلي بدون مفتاح)، وإلا نعود للمحاكاة.
   async function finishScan() {
     if (activeTool === 'speed') {
       try {
-        const res = await fetch(`/api/pagespeed?url=${encodeURIComponent(url.trim())}`);
+        const res = await fetch(`/api/audit?url=${encodeURIComponent(url.trim())}`);
         if (res.ok) {
           const data = await res.json();
           const s = data?.scores;
